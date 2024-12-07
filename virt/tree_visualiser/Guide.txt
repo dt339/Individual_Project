@@ -1,0 +1,8 @@
+TO START DJANGO PROJECT!!!
+
+Use cmd
+Go to Folder Individual_Project
+Run 'virt\Scripts\activate.bat' to start virtual environment
+Go to The outer Tree_Visualiser folder (inside of virt)
+Run 'py manage.py runserver' to start the server (make pages show up)
+http://127.0.0.1:8000/home/

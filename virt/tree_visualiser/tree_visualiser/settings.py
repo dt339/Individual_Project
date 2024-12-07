@@ -55,7 +55,7 @@ ROOT_URLCONF = 'tree_visualiser.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['tree_logic'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

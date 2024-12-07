@@ -1,0 +1,72 @@
+  body {
+    background-color: lightblue;
+    display: grid;
+    place-items: center;
+  }
+  
+  h1 {
+    color: navy;
+    margin-left: 20px;
+  }
+
+  p {
+    color: red;    
+    margin-left: 20px;
+  }
+
+  .navbar {
+    width: 100%;
+    background-color: #555;
+    overflow: auto;
+  }
+
+  .navbar a {
+    float: left;
+    text-align: center;
+    padding: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .navbar a:hover {
+    background-color: #000;
+  }
+
+  .node {
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+  }
+
+  .box {
+    place-items: center;
+    margin: 5px;
+    border: 2px solid black;
+    background-color: rgb(255, 255, 255);
+    width: 90%;
+    height: 1000px;
+  }
+
+  .inputBar {
+    background-color: #555;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
+  #svg {
+    place-items: center;
+    margin: 5px;
+    border: 2px solid black;
+    background-color: rgb(255, 255, 255);
+    width: 90%;
+    height: 1000px;
+  }
+
+  
+  

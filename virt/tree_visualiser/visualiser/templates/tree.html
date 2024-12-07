@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Tree
+{% endblock %}
+
+{% block content %}
+    <script src="{% static 'displayTree.js' %}"></script>
+    
+    <h1>TREE</h1>        
+
+    <div class="box" id="treeBox"></div>
+
+    <div class="inputBar">
+        <!-- <form action="lmao(2)">
+            <label for="inNode">Node Value: </label>
+            <input type="text" id="inNode" name="inNode">
+            <input type="submit">
+        </form>
+        <a href="/BST/">BST</a>
+        <a href="/Tree/">Tree</a> -->
+        <button onclick="myFun({{tree_data}})">Lmao</button>
+        <button onclick="createRoot('1', 10)">CREATE ROOT</button> 
+        <button onclick="newElem('2', 20, '1', 'r')">CREATE 20</button> 
+        <button onclick="newElem('3', 5, '1', 'l')">CREATE 5</button> 
+        <button onclick="newElem('4', 7, '3', 'r')">CREATE 7</button> 
+
+        <p>Break</p>
+        <button onclick="insertNode(10)">CREATE 10</button> 
+        <button onclick="insertNode(20)">CREATE 20</button> 
+        <button onclick="insertNode(5)">CREATE 5</button> 
+        <button onclick="insertNode(7)">CREATE 7</button> 
+        <button onclick="insertNode(30)">CREATE 30</button> 
+        <button onclick="insertNode(500)">CREATE 500</button> 
+        <button onclick="insertNode(1)">CREATE 1</button> 
+        <button onclick="insertNode(12)">CREATE 12</button> 
+
+    </div>
+
+    <!-- <div class="box" id="parentDiv">  
+        <h1> {{ counter }}</h1>    
+            need a way of storing what to compare against - current root or something
+        <p class="node root">{{tree_data.0}}</p>
+        {% for value in tree_data %}
+            {% if value == tree_data.0 %}
+                <div class="root node">{{ value }}</div>
+            {% else %}
+                {% if value >= tree_data.0 %}
+                    <div class="node right">{{ value }}</div>
+                {% else %}
+                    <div class="node left">{{ value }}</div>
+                {% endif %}        
+            {% endif %}
+        {% endfor %}
+    </div> -->
+
+
+
+{% endblock %}
