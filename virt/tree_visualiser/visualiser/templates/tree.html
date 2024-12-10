@@ -7,10 +7,16 @@
 
 {% block content %}
     <script src="{% static 'displayTree.js' %}"></script>
+    <script src="{% static 'baseLogic.js' %}"></script>
     
-    <h1>TREE</h1>        
+    <h1>TREE</h1>    
 
-    <div class="box" id="treeBox"></div>
+    <div class="tree-canvas" id="treeBox">
+        <canvas width="1500" id="myCanvas" height="600" style="border:1px solid #000000;">
+        </canvas>  
+    </div>
+
+    <p>Footer</p>
 
     <div class="inputBar">
         <!-- <form action="lmao(2)">
@@ -20,6 +26,7 @@
         </form>
         <a href="/BST/">BST</a>
         <a href="/Tree/">Tree</a> -->
+        <!-- <button onclick="swap('ball1', 'ball2')">AAAA</button>
         <button onclick="myFun({{tree_data}})">Lmao</button>
         <button onclick="createRoot('1', 10)">CREATE ROOT</button> 
         <button onclick="newElem('2', 20, '1', 'r')">CREATE 20</button> 
@@ -35,6 +42,10 @@
         <button onclick="insertNode(500)">CREATE 500</button> 
         <button onclick="insertNode(1)">CREATE 1</button> 
         <button onclick="insertNode(12)">CREATE 12</button> 
+
+        <p>Break</p> -->
+        <input id="nodeInsert" type="text">
+        <button onclick="userInputNode()">Insert!</button>
 
     </div>
 

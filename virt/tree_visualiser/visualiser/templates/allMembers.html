@@ -1,14 +1,22 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
+  <head>    
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  </head>
 <body>
 
-<h1>Members</h1>
-  
-<ul>
-  {% for x in mymembers %}
-    <li>{{ x.firstname }} {{ x.lastname }}</li>
-  {% endfor %}
-</ul>
+  <script src="{% static 'baseLogic.js' %}"></script>
+
+
+<p>Bill!!!?</p>
+<div class="tree-canvas" id="treeBox" >
+    <canvas width="1500" id="myCanvas" height="600" >
+    </canvas>  
+</div>
+
+<button onclick="balls()">Resize</button>
 
 </body>
 </html>

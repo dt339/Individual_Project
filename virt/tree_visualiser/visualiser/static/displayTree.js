@@ -86,7 +86,12 @@ function insertNode(val) {
 }
 
 function lmao(root) {
-    alert(root);
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(0, 0);
+    ctx.lineTo(200, 100);
+    ctx.stroke();
+    //alert(root);
     //document.write(100);
 }
 
@@ -104,11 +109,9 @@ function createRoot(newID, value) {
     const parentDiv = document.getElementById('treeBox');
     const pos = parentDiv.getBoundingClientRect();
 
-    elem.style.position = 'absolute';
-    const xx = pos.right - (pos.right-pos.left)/2 - 10;
-    const yy = pos.top;
+    const xx = (parentDiv.offsetWidth /2) - 10;
     elem.style.left = xx+ 'px';
-    elem.style.top = yy+ 'px';
+    elem.style.top = '0px';
     parentDiv.appendChild(elem);
 }
 
@@ -135,7 +138,94 @@ function newElem(newID, value, parentNode, direction) {
         elem.style.top = yy+ 'px';
     }
     parentDiv.appendChild(elem);
-    drawLine(elem, refElem);
 }
 
+function userInputNode() {
+    var inVal = document.getElementById("nodeInsert").value;
+    if (inVal == '') {
+        alert("No value entered!");
+    } else {
+        if (isNaN(inVal))
+        {
+            alert("Must input numbers!");
+        } else {
+            insertNode(inVal);            
+        }
+    }
+}
 
+function drawLine(elem1, elem2) {
+
+    const canv = document.getElementById("myCanvas");
+    const ctx = canv.getContext("2d");
+
+    const ref1 = document.getElementById(elem1);
+    const ref2 = document.getElementById(elem2);
+    const pos1 = ref1.getBoundingClientRect();
+    const pos2 = ref2.getBoundingClientRect();
+    
+    ctx.beginPath();
+    //alert(pos1.left + "-" + pos1.top);
+    ctx.moveTo(pos1.left, pos1.top);
+    ctx.lineTo(pos2.left, pos2.top);
+    ctx.stroke();
+}
+
+function swap(id1, id2) {
+    const ref1 = document.getElementById(elem1);
+    const ref2 = document.getElementById(elem2);
+    const pos1 = ref1.getBoundingClientRect();
+    const pos2 = ref2.getBoundingClientRect();
+
+    distX1 = 
+    distY1 =
+    distX2 =
+    distY2 =
+    move(elem1, pos2.left-pos1.left, pos2.top-pos1.top);
+    move(elem2, pos1.left-pos2.left, pos1.top-pos2.top);
+
+    var id = null;
+    var elem1 = document.getElementById(id1);
+    var elem2 = document.getElementById(id2);
+    var prog1 = 0;
+    var prog2 = 0;
+
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    alert("move");
+    function frame() {
+        if (pos == distX) {
+            clearInterval(id);
+        } else {
+            if (distX > 0) {
+                pos++;
+            } else {
+                pos--;
+            }            
+            elem1.style.top = (pos * distY/distX) + "px";
+            elem1.style.left = pos + "px";
+
+            elem2.style.top = (pos * distY/distX) + "px";
+            elem2.style.left = pos + "px";
+        }
+    }
+}
+
+function baseMove() {
+    var id = null;
+    var elem = document.getElementById("moving");
+    var pos = 0;
+
+    clearInterval(id);
+    id = setInterval(frame, 10);
+
+    function frame() {
+        if (pos == -350) {
+            clearInterval(id);
+        } else {
+            pos--;
+            //elem.style.top = pos + "px";
+            elem.style.left = pos + "px";
+        }
+    }
+}
