@@ -58,20 +58,34 @@ class Tree {
     }
 
     recursiveInsert(newNode, curNode) {
+        alert("1NewNode val:" + newNode.getVal);
+        alert("1CurNode val:" + curNode.getVal);
+        alert(newNode.getVal > curNode.getVal);
+        //Checks to see if the new node is greater than the node currently being checked.
         if (newNode.getVal > curNode.getVal) {
+            alert(newNode.getVal + " > " + curNode.getVal);
+            //Checks to see if the current node has a right child.
             if (curNode.getRight == 0) {
+                //If no right child exists, sets the new node as the right child.
                 curNode.setRight = newNode;
                 newElem(newNode.getVal, newNode.getVal, curNode.getId, 'r');
             } else {
+                //If a right child exists, compare the new node to the right child.
+                //(Recursion)
                 this.recursiveInsert(newNode, curNode.getRight);
             }
         } else if (newNode.getVal < curNode.getVal) {
+            //Checks to see if the new node is less than the current node.
+            alert(newNode.getVal + " < " + curNode.getVal);
+            //If the current node has no left child, set the new node as the left child.
             if (curNode.getLeft == 0) {
                 curNode.setLeft = newNode;
                 newElem(newNode.getVal, newNode.getVal, curNode.getId, 'l');
             } else {
+                //If a left child exists, compare the new node and the left child.
                 this.recursiveInsert(newNode, curNode.getLeft);
             }
+            //If the new node is equal to the current node it already exists and cannot be enetered.
         } else if (newNode.getVal == curNode.getVal) {
             alert("Node already exists!");
         }
@@ -81,7 +95,8 @@ class Tree {
 const newTree = new Tree();
 
 function insertNode(val) {
-    const newNode = new Node(val, val);
+    var intInput = parseInt(val, 10); 
+    const newNode = new Node(intInput, intInput);
     newTree.insert(newNode);
 }
 
@@ -122,18 +137,19 @@ function newElem(newID, value, parentNode, direction) {
     elem.textContent = value;
 
     const parentDiv = document.getElementById('treeBox');
+    const containerPos = parentDiv.getBoundingClientRect();
     const refElem = document.getElementById(parentNode)
-    const pos = refElem.getBoundingClientRect();
-    elem.style.position = 'absolute';
+    const refPos = refElem.getBoundingClientRect();
+    
 
     if (direction == 'r') {
-        const xx = pos.right + 50;
-        const yy = pos.top + 100;
+        const xx = (refPos.left - containerPos.left + refPos.width + 10);
+        const yy = (refPos.top - containerPos.top + refPos.height + 10);
         elem.style.left = xx+ 'px';
         elem.style.top = yy+ 'px';
     } else {
-        const xx = pos.right - 110;
-        const yy = pos.top + 100;
+        const xx = (refPos.left - containerPos.left - refPos.width - 10);
+        const yy = (refPos.top - containerPos.top + refPos.height + 10);
         elem.style.left = xx+ 'px';
         elem.style.top = yy+ 'px';
     }
