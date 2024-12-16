@@ -7,15 +7,19 @@
 
 {% block content %}
     <script src="{% static 'displayTree.js' %}"></script>
-    <script src="{% static 'baseLogic.js' %}"></script>
+    <script src="{% static 'windowLogic.js' %}"></script>
     
     <h1>TREE</h1>    
+
+    <!-- <button onclick="lmao()">Swap</button> -->
+
 
     <div class="tree-canvas" id="treeBox">
         <canvas width="1500" id="myCanvas" height="600" style="border:1px solid #000000;">
         </canvas>  
     </div>
 
+    
     <p>Footer</p>
 
     <div class="inputBar">
@@ -47,6 +51,8 @@
         <input id="nodeInsert" type="text">
         <button onclick="userInputNode()">Insert!</button>
 
+        <input id="nodeRemove" type="text">
+        <button onclick="userRemoveNode()">Remove!</button>
     </div>
 
     <!-- <div class="box" id="parentDiv">  
