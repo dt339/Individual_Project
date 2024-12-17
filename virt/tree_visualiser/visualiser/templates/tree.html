@@ -6,12 +6,14 @@
 {% endblock %}
 
 {% block content %}
+    <script src="{% static 'BSTClass.js' %}"></script>
     <script src="{% static 'displayTree.js' %}"></script>
     <script src="{% static 'windowLogic.js' %}"></script>
     
-    <h1>TREE</h1>    
+    <h1 id="David">TREE</h1>    
 
-    <!-- <button onclick="lmao()">Swap</button> -->
+    <button onclick="myNameIsDavid()">Test Test</button>
+    <button onclick="lmao()">Swap</button>
 
 
     <div class="tree-canvas" id="treeBox">
@@ -53,6 +55,11 @@
 
         <input id="nodeRemove" type="text">
         <button onclick="userRemoveNode()">Remove!</button>
+
+        <div class="sliderContainer">
+            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="4" value="1" step="0.25" class="slider" id="speedSlider">
+            <label id="speedLabel" for="speedSlider">x1</label>
+        </div>
     </div>
 
     <!-- <div class="box" id="parentDiv">  

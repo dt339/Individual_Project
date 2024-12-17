@@ -65,3 +65,11 @@
     width: 50px;
     height: 50px;
   }
+
+  .sliderContainer {
+    width: 100%;
+  }
+
+  .slider {
+    background: blue;
+  }

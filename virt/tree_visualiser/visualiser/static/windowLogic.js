@@ -1,6 +1,15 @@
 window.onresize = resizeCanvas;
 window.onload = function(){resizeCanvas()};
 
+var animationSpeed = 1;
+
+function updateAnimSpeed() {    
+    const mySlider = document.getElementById('speedSlider');
+    const sliderLabel = document.getElementById('speedLabel');
+    animationSpeed = mySlider.value;
+    sliderLabel.innerText = "x" + animationSpeed;
+}
+
 function resizeCanvas() {
     const canv = document.getElementById("myCanvas");
     const treeBox = document.getElementById("treeBox");
