@@ -5,33 +5,209 @@ function recursiveMove(movedRoot) {
     const movedNodePos = movedNode.getBoundingClientRect();
     const cont = document.getElementById('treeBox');
     const contPos = cont.getBoundingClientRect();
+
+    let rightAnim = null;
+    let leftAnim = null;
+
     if (movedRoot.getRight != null) {
+
+
         const toMove = document.getElementById(movedRoot.getRight.getId);
-        const toMovePos = toMove.getBoundingClientRect();
-        move(movedRoot.getRight.getId, toMovePos.left - contPos.left + (toMovePos.width/2), toMovePos.top - contPos.top, (movedNodePos.left - contPos.left + movedNodePos.width + 100), (movedNodePos.top - contPos.top + movedNodePos.height + 50));
-        setTimeout(() => recursiveMove(movedRoot.getRight), 2000);
-    } else {
-        const canv = document.getElementById("myCanvas");
-        const ctx = canv.getContext("2d");
-        ctx.clearRect(0,0, canv.width, canv.height);
-        setTimeout(() => redrawTree(newTree.getRoot, movedRoot), 5000);
-    }
+        const toMovePos = toMove.getBoundingClientRect();        
+
+        var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
+        var initPosY = toMovePos.top - contPos.top;
+        var destX = (movedNodePos.left - contPos.left + movedNodePos.width + 100);
+        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+
+        var xDistance = destX-initPosX;
+        var yDistance = destY-initPosY;
+        var yIncrement = yDistance/xDistance;
+
+        var xPos = initPosX;
+        var yPos = initPosY;   
+
+        var xDirection = 'r';
+        if (initPosX > destX) {
+            xDirection = 'l';
+        }
+
+        clearInterval(rightAnim);
+        rightAnim = setInterval(rightFrame, 10);
+        function rightFrame() {
+            if (xDirection == 'r') {
+                if (xPos >= destX) {
+                    clearInterval(rightAnim);
+                    drawLine(movedRoot.getId, movedRoot.getRight.getId);
+                    recursiveMove(movedRoot.getRight);
+                } else {
+                    xPos+=1;
+                    toMove.style.left = xPos + "px";
+                    yPos += yIncrement;
+                    toMove.style.top = yPos + "px";
+                }
+            } else {
+                if (xPos <= destX) {
+                    clearInterval(rightAnim);
+                    drawLine(movedRoot.getId, movedRoot.getRight.getId);
+                    recursiveMove(movedRoot.getRight);
+                } else {
+                    xPos-=1;
+                    toMove.style.left = xPos + "px";
+                    yPos -= yIncrement;
+                    toMove.style.top = yPos + "px";
+                }
+            }
+        }
+
+        //move(movedRoot.getRight.getId, toMovePos.left - contPos.left + (toMovePos.width/2), toMovePos.top - contPos.top, (movedNodePos.left - contPos.left + movedNodePos.width + 100), (movedNodePos.top - contPos.top + movedNodePos.height + 50));
+        //setTimeout(() => recursiveMove(movedRoot.getRight), 2000);
+    } 
+    if (movedRoot.getLeft != null) {
+        const toMoveL = document.getElementById(movedRoot.getLeft.getId);
+        const toMovePosL = toMoveL.getBoundingClientRect();        
+
+        var initPosXL = toMovePosL.left - contPos.left + (toMovePosL.width/2);
+        var initPosYL = toMovePosL.top - contPos.top;
+        var destXL = (movedNodePos.left - contPos.left - movedNodePos.width - 100);
+        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+
+        // const xx = (refPos.left - containerPos.left - refPos.width - ((10-depth)* 10));
+        // const yy = (refPos.top - containerPos.top + refPos.height + ((5-depth)* 10));
+
+        var xDistanceL = destXL-initPosXL;
+        var yDistanceL = destYL-initPosYL;
+        var yIncrementL = yDistanceL/xDistanceL;
+
+        var xPosL = initPosXL;
+        var yPosL = initPosY;   
+
+        var xDirectionL = 'r';
+        if (initPosXL > destXL) {
+            xDirectionL = 'l';
+        }
+
+        clearInterval(leftAnim);
+        leftAnim = setInterval(leftFrame, 10);
+        function leftFrame() {
+            if (xDirectionL == 'r') {
+                if (xPosL >= destXL) {
+                    clearInterval(leftAnim);
+                    drawLine(movedRoot.getId, movedRoot.getLeft.getId);
+                    recursiveMove(movedRoot.getLeft);
+                } else {
+                    xPosL+=1;
+                    toMoveL.style.left = xPosL + "px";
+                    yPosL += yIncrementL;
+                    toMoveL.style.top = yPosL + "px";
+                }
+            } else {
+                if (xPosL <= destXL) {
+                    clearInterval(leftAnim);
+                    drawLine(movedRoot.getId, movedRoot.getLeft.getId);
+                    recursiveMove(movedRoot.getLeft);
+                } else {
+                    xPosL-=1;
+                    toMoveL.style.left = xPosL + "px";
+                    yPosL -= yIncrementL;
+                    toMoveL.style.top = yPosL + "px";
+                }
+            }
+        }
+
+        //move(movedRoot.getRight.getId, toMovePos.left - contPos.left + (toMovePos.width/2), toMovePos.top - contPos.top, (movedNodePos.left - contPos.left + movedNodePos.width + 100), (movedNodePos.top - contPos.top + movedNodePos.height + 50));
+        //setTimeout(() => recursiveMove(movedRoot.getRight), 2000);
+    } 
+
 }
 
-function setUpMove(movingNode, destinationNode) {
+function initialMove(movingNode, destinationNode) {
     const cont = document.getElementById('treeBox');
     const contPos = cont.getBoundingClientRect();
-    const childNode = document.getElementById(movingNode);
+    const childNode = document.getElementById(movingNode.getId);
     const childNodePos = childNode.getBoundingClientRect();
     const remNode = document.getElementById(destinationNode);
     const remNodePos = remNode.getBoundingClientRect();
-    move(movingNode, childNodePos.left - contPos.left + (childNodePos.width/2), childNodePos.top - contPos.top, remNodePos.left - contPos.left, remNodePos.top - contPos.top)
+
+    var id = null;
+
+    var initPosX = childNodePos.left - contPos.left + (childNodePos.width/2)
+    var initPosY = childNodePos.top - contPos.top
+    var destX = remNodePos.left - contPos.left
+    var destY = remNodePos.top - contPos.top
+
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+    var yIncrement = yDistance/xDistance;
+
+    var xPos = initPosX;
+    var yPos = initPosY;   
+
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    function frame() {
+        if (xDirection == 'r') {
+            if (xPos >= destX) {
+                clearInterval(id);
+                recursiveMove(movingNode);
+                drawLine(movingNode.getParent.getId, movingNode.getId);
+            } else {
+                xPos+=1;
+                childNode.style.left = xPos + "px";
+                yPos += yIncrement;
+                childNode.style.top = yPos + "px";
+            }
+        } else {
+            if (xPos <= destX) {
+                clearInterval(id);
+                recursiveMove(movingNode);
+                drawLine(movingNode.getParent.getId, movingNode.getId);
+            } else {
+                xPos-=1;
+                childNode.style.left = xPos + "px";
+                yPos -= yIncrement;
+                childNode.style.top = yPos + "px";
+            }
+        }
+
+    }
+
+    //move(movingNode, childNodePos.left - contPos.left + (childNodePos.width/2), childNodePos.top - contPos.top, remNodePos.left - contPos.left, remNodePos.top - contPos.top)
 }
 
 function insertNode(val) {
     var intInput = parseInt(val, 10); 
     const newNode = new Node(intInput, intInput);
     newTree.insert(newNode);
+}
+
+function userInputNode() {
+    var inVal = document.getElementById("nodeInsert").value;
+    if (inVal == '') {
+        alert("No value entered!");
+    } else {
+        if (inVal.includes(",")) {
+            var nodeArr = inVal.split(",").map(item => item.trim());
+            for (x in nodeArr) {
+                if (x != '') {
+                    insertNode(nodeArr[x]);
+                }
+            }
+        } else { 
+            if (isNaN(inVal))
+            {
+                alert("Must input numbers!");
+            } else {
+                insertNode(inVal);            
+            }
+        }
+    }
+    document.getElementById("nodeInsert").value = '';
 }
 
 function userRemoveNode() {
@@ -44,29 +220,50 @@ function userRemoveNode() {
             alert("Must input numbers!");
         } else {
             var intInput = parseInt(inVal, 10);     
-            newTree.removeNode(intInput);     
+            newTree.nodeSearch(newTree.getRoot, intInput, newTree.removeNode);     
         }
     }
     document.getElementById("nodeRemove").value = '';
 }
 
 function lmao() {
-    const newImposter = new Imposter('displayTree');
-    newImposter.soundAlarm();
+    redrawTree(newTree.getRoot, 10);
 }
 
 function myFunction() {
     alert('Hello');
 }
 
+function userSearchNode() {
+    var inVal = document.getElementById("nodeSearch").value;
+    if (inVal == '') {
+        alert("No value entered!");
+    } else {
+        if (isNaN(inVal))
+        {
+            alert("Must input numbers!");
+        } else {
+            var intInput = parseInt(inVal, 10);
+            newTree.nodeSearch(newTree.getRoot, intInput, null);
+        }
+    }
+    document.getElementById("nodeSearch").value = '';
+}
+
+function highlightNode(nodeId, nodeColour) {
+    var nodeToHighlight = document.getElementById(nodeId);  
+    nodeToHighlight.style.backgroundColor = nodeColour;
+}
+
 function redrawTree(curNode, searchNode) {
-    if (curNode.getId != searchNode.getId) {
+    if (curNode.getId != searchNode) {
+        if (curNode.getParent != null) {
+            drawLine(curNode.getParent.getId, curNode.getId);
+        }
         if (curNode.getLeft != null) {
-            drawLine(curNode.getId, curNode.getLeft.getId);
             redrawTree(curNode.getLeft, searchNode);
         } 
         if (curNode.getRight != null) {
-            drawLine(curNode.getId, curNode.getRight.getId);
             redrawTree(curNode.getRight, searchNode);
         } 
     }
@@ -175,30 +372,6 @@ function newElem(newID, value, parentNode, direction, depth) {
     }
     parentDiv.appendChild(elem);
     drawLine(parentNode, newID);
-}
-
-function userInputNode() {
-    var inVal = document.getElementById("nodeInsert").value;
-    if (inVal == '') {
-        alert("No value entered!");
-    } else {
-        if (inVal.includes(",")) {
-            var nodeArr = inVal.split(",").map(item => item.trim());
-            for (x in nodeArr) {
-                if (x != '') {
-                    insertNode(nodeArr[x]);
-                }
-            }
-        } else { 
-            if (isNaN(inVal))
-            {
-                alert("Must input numbers!");
-            } else {
-                insertNode(inVal);            
-            }
-        }
-    }
-    document.getElementById("nodeInsert").value = '';
 }
 
 function drawLine(elem1, elem2) {

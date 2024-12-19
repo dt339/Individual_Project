@@ -7,6 +7,7 @@ class Node {
         this.parent = null;
     }
 
+    //getters and setters for node values
     get getVal() {
         return this.nodeVal;
     }
@@ -51,7 +52,7 @@ class Tree {
 
     get getRoot() {
         return this.rootNode;
-    }
+    }    
 
     set setRoot(r) {
         this.rootNode = r;
@@ -61,12 +62,21 @@ class Tree {
         if (this.getRoot == null) {
             this.setRoot = newNode;
             createRoot(newNode.getVal, newNode.getVal);
+            highlightNode(newNode.getVal, "lightblue");
+            setTimeout(() => highlightNode(newNode.getVal, "white"), 2000/getAnimSpeed());
         } else {
             this.recursiveInsert(newNode, this.getRoot, 0);
         }
     }
 
     recursiveInsert(newNode, curNode, depth) {
+
+        //Highlights the current node and un-highlights the previous node
+        highlightNode(curNode.getId, "lightblue");
+        if (curNode.getParent) {
+            highlightNode(curNode.getParent.getId, "white");
+        }
+
         //Checks to see if the new node is greater than the node currently being checked.
         if (newNode.getVal > curNode.getVal) {
             //Checks to see if the current node has a right child.
@@ -75,11 +85,15 @@ class Tree {
                 newNode.setParent = curNode;
                 curNode.setRight = newNode;
                 newElem(newNode.getVal, newNode.getVal, curNode.getId, 'r', depth);
+                highlightNode(newNode.getId, "lightblue");
+                setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
+                setTimeout(() => highlightNode(newNode.getId, "white"), 4000/getAnimSpeed());
             } else {
                 //If a right child exists, compare the new node to the right child.
                 //(Recursion)                
                 depth++;
-                this.recursiveInsert(newNode, curNode.getRight, depth);
+                //this.recursiveInsert(newNode, curNode.getRight, depth);
+                setTimeout(() => this.recursiveInsert(newNode, curNode.getRight, depth), 2000/getAnimSpeed());
             }
         } else if (newNode.getVal < curNode.getVal) {
             //Checks to see if the new node is less than the current node.
@@ -88,110 +102,130 @@ class Tree {
                 newNode.setParent = curNode;
                 curNode.setLeft = newNode;
                 newElem(newNode.getVal, newNode.getVal, curNode.getId, 'l', depth);
+                highlightNode(newNode.getId, "lightblue");
+                setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
+                setTimeout(() => highlightNode(newNode.getId, "white"), 4000/getAnimSpeed());
             } else {
                 //If a left child exists, compare the new node and the left child.
                 depth++;
-                this.recursiveInsert(newNode, curNode.getLeft, depth);
+                //this.recursiveInsert(newNode, curNode.getLeft, depth);
+                setTimeout(() => this.recursiveInsert(newNode, curNode.getLeft, depth), 2000/getAnimSpeed());
             }
             //If the new node is equal to the current node it already exists and cannot be enetered.
         } else if (newNode.getVal == curNode.getVal) {
             alert("Node already exists!");
+            highlightNode(curNode.getId, "red");
+            setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
         }
     }
 
-    removeNode(toRem) {
-        if (this.getRoot == null) {
-            alert("No data in tree to be removed!");
-        } else if (this.getRoot.getVal == toRem) {
-            alert("Node Found!");
-            if (this.getRoot.getLeft == null && this.getRoot.getRight == null) {
-                alert("Removed")
-                this.setRoot = null;
-                const node = document.getElementById(toRem);
-                node.remove();
+    removeNode(nodeToRem, passedRoot) {
+  
+        if (nodeToRem.getLeft == null && nodeToRem.getRight == null) {
+            alert("leaf");
+            if (nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                nodeToRem.getParent.setRight = null;
             } else {
-                alert("Node had children")
+                nodeToRem.getParent.setLeft = null;
             }
-            
+            const nodeElem = document.getElementById(nodeToRem.getId);
+            nodeElem.remove();
+            alert("LEAF so removed");
+
+            const canv = document.getElementById("myCanvas");
+            const ctx = canv.getContext("2d");
+            ctx.clearRect(0,0, canv.width, canv.height);
+            redrawTree(passedRoot, null);
 
         } else {
-            this.recursiveRemove(toRem, this.getRoot);
-        }
-    }
-
-    recursiveRemove(toRem, curNode) {
-        if (curNode == null) {
-            alert("Node Doesn't exist!");
-        }
-        if (toRem == curNode.getVal) {
-            alert("Node Found!");
-            alert("Parent - " + curNode.getParent.getVal);
-            if (curNode.getLeft == null && curNode.getRight == null) {
-                if (curNode.getVal > curNode.getParent.getVal) {
-                    curNode.getParent.setRight = null;
+            if (nodeToRem.getLeft == null && nodeToRem.getRight != null) {
+                if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                    nodeToRem.getParent.setRight = nodeToRem.getRight;
                 } else {
-                    curNode.getParent.setLeft = null;
+                    nodeToRem.getParent.setLeft = nodeToRem.getRight;
                 }
-                const node = document.getElementById(toRem);
-                node.remove();
-                alert("LEAF so removed");
-            } else {
-                if (curNode.getLeft == null && curNode.getRight != null) {
-                    if(curNode.getVal > curNode.getParent.getVal) {
-                        curNode.getParent.setRight = curNode.getRight;
-                    } else {
-                        curNode.getParent.setLeft = curNode.getRight;
-                    }
+                nodeToRem.getRight.setParent = nodeToRem.getParent;
 
-                    setUpMove(curNode.getRight.getId, toRem);
+                initialMove(nodeToRem.getRight, nodeToRem.getId);
 
-                    const remNode = document.getElementById(toRem);
-                    remNode.remove();
-                    setTimeout(() => recursiveMove(curNode.getRight), 2000);
-                    alert("Node removed!")
-                } else if (curNode.getLeft != null && curNode.getRight == null) {
-                    if(curNode.getVal > curNode.getParent.getVal) {
-                        curNode.getParent.setRight = curNode.getLeft;
-                    } else {
-                        curNode.getParent.setLeft = curNode.getLeft;
-                    }
-                    
-                    setUpMove(curNode.getLeft.getId, toRem);
+                const remNode = document.getElementById(nodeToRem.getId);
+                remNode.remove();
 
-                    const remNode = document.getElementById(toRem);
-                    remNode.remove();
-                    alert("Node removed!")
-                } else if (curNode.getLeft != null && curNode.getRight != null) {
-                    if(curNode.getVal > curNode.getParent.getVal) {
-                        curNode.getParent.setRight = curNode.getLeft;
-                    } else {
-                        curNode.getParent.setLeft = curNode.getLeft;
-                    }
-                    
-                } else{
-                    alert("Something went wrong");
+                const canv = document.getElementById("myCanvas");
+                const ctx = canv.getContext("2d");
+                ctx.clearRect(0,0, canv.width, canv.height);
+
+                redrawTree(passedRoot, nodeToRem.getRight.getId);
+
+                alert("Node removed!");
+            } else if (nodeToRem.getLeft != null && nodeToRem.getRight == null) {
+                if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                    nodeToRem.getParent.setRight = nodeToRem.getLeft;
+                } else {
+                    nodeToRem.getParent.setLeft = nodeToRem.getLeft;
                 }
-            }          
+                nodeToRem.getLeft.setParent = nodeToRem.getParent;
 
-        } else if (toRem > curNode.getVal) {
-            this.recursiveRemove(toRem, curNode.getRight);
-        } else if (toRem < curNode.getVal) {
-            this.recursiveRemove(toRem, curNode.getLeft);
-        }   
+                initialMove(nodeToRem.getLeft, nodeToRem.getId);
+
+                const remNode = document.getElementById(nodeToRem.getId);
+                remNode.remove();
+
+                const canv = document.getElementById("myCanvas");
+                const ctx = canv.getContext("2d");
+                ctx.clearRect(0,0, canv.width, canv.height);
+                redrawTree(passedRoot, nodeToRem.getLeft.getId);
+
+                alert("Node removed!")
+            } else if (curNode.getLeft != null && curNode.getRight != null) {
+                if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                    nodeToRem.getParent.setRight = curNode.getLeft;
+                } else {
+                    nodeToRem.getParent.setLeft = curNode.getLeft;
+                }
+                
+            } else{
+                alert("Something went wrong");
+            }
+        }
+        
     }
 
-
-    // if (direction == 'r') {
-    //     const xx = (refPos.left - containerPos.left + refPos.width + ((10-depth)* 10));
-    //     const yy = (refPos.top - containerPos.top + refPos.height + ((5-depth)* 10));
-    //     elem.style.left = xx+ 'px';
-    //     elem.style.top = yy+ 'px';
-    // } else {
-    //     const xx = (refPos.left - containerPos.left - refPos.width - ((10-depth)* 10));
-    //     const yy = (refPos.top - containerPos.top + refPos.height + ((5-depth)* 10));
-    //     elem.style.left = xx+ 'px';
-    //     elem.style.top = yy+ 'px';
-    // }
+    nodeSearch(curNode, searchNode, endFunc) {
+        highlightNode(curNode.getId, "lightblue");
+        if (curNode.getParent) {
+            highlightNode(curNode.getParent.getId, "white");
+        }
+        if (curNode.getVal == searchNode) {
+            highlightNode(curNode.getId, "lightgreen");
+            setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
+            if(endFunc != null) {
+                highlightNode(curNode.getId, "red")
+                setTimeout(() => endFunc(curNode, this.getRoot), 2000/getAnimSpeed());
+            }
+            return curNode;
+        } else {
+            if (searchNode > curNode.getVal) {
+                if (curNode.getRight != null) {
+                    setTimeout(() => this.nodeSearch(curNode.getRight, searchNode, endFunc), 2000/getAnimSpeed());
+                } else {
+                    highlightNode(curNode.getId, "red");
+                    alert("Value does not exist!");
+                    setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
+                    return null;
+                }                
+            } else {
+                if (curNode.getLeft != null) {
+                    setTimeout(() => this.nodeSearch(curNode.getLeft, searchNode, endFunc), 2000/getAnimSpeed());
+                } else {
+                    highlightNode(curNode.getId, "red");
+                    alert("Value does not exist!");
+                    setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
+                    return null;
+                }      
+            }            
+        }
+    }
 
 }
 

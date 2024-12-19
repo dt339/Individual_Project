@@ -12,8 +12,8 @@
     
     <h1 id="David">TREE</h1>    
 
-    <button onclick="myNameIsDavid()">Test Test</button>
-    <button onclick="lmao()">Swap</button>
+    <!-- <button onclick="myNameIsDavid()">Test Test</button> -->
+    <button onclick="lmao()">Redraw</button>
 
 
     <div class="tree-canvas" id="treeBox">
@@ -56,9 +56,12 @@
         <input id="nodeRemove" type="text">
         <button onclick="userRemoveNode()">Remove!</button>
 
+        <input id="nodeSearch" type="text">
+        <button onclick="userSearchNode()">Search!</button>
+
         <div class="sliderContainer">
-            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="4" value="1" step="0.25" class="slider" id="speedSlider">
-            <label id="speedLabel" for="speedSlider">x1</label>
+            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="10" value="10" step="0.25" class="slider" id="speedSlider">
+            <label id="speedLabel" for="speedSlider">x10</label>
         </div>
     </div>
 

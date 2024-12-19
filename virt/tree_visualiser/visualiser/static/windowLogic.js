@@ -1,13 +1,17 @@
 window.onresize = resizeCanvas;
 window.onload = function(){resizeCanvas()};
 
-var animationSpeed = 1;
+var animationSpeed = 10;
 
 function updateAnimSpeed() {    
     const mySlider = document.getElementById('speedSlider');
     const sliderLabel = document.getElementById('speedLabel');
     animationSpeed = mySlider.value;
     sliderLabel.innerText = "x" + animationSpeed;
+}
+
+function getAnimSpeed() {
+    return animationSpeed;
 }
 
 function resizeCanvas() {
