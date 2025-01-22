@@ -22,7 +22,9 @@ function recursiveMove(movedRoot) {
 
         var xDistance = destX-initPosX;
         var yDistance = destY-initPosY;
-        var yIncrement = yDistance/xDistance;
+
+        var xIncrement = 1*getAnimSpeed();
+        var yIncrement = (yDistance/xDistance) * getAnimSpeed();
 
         var xPos = initPosX;
         var yPos = initPosY;   
@@ -41,7 +43,7 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     recursiveMove(movedRoot.getRight);
                 } else {
-                    xPos+=1;
+                    xPos+=xIncrement;
                     toMove.style.left = xPos + "px";
                     yPos += yIncrement;
                     toMove.style.top = yPos + "px";
@@ -52,7 +54,7 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     recursiveMove(movedRoot.getRight);
                 } else {
-                    xPos-=1;
+                    xPos-=xIncrement;
                     toMove.style.left = xPos + "px";
                     yPos -= yIncrement;
                     toMove.style.top = yPos + "px";
@@ -77,10 +79,12 @@ function recursiveMove(movedRoot) {
 
         var xDistanceL = destXL-initPosXL;
         var yDistanceL = destYL-initPosYL;
-        var yIncrementL = yDistanceL/xDistanceL;
+
+        var xIncrementL = 1*getAnimSpeed();
+        var yIncrementL = (yDistanceL/xDistanceL) * getAnimSpeed();
 
         var xPosL = initPosXL;
-        var yPosL = initPosY;   
+        var yPosL = initPosYL;   
 
         var xDirectionL = 'r';
         if (initPosXL > destXL) {
@@ -96,7 +100,7 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     recursiveMove(movedRoot.getLeft);
                 } else {
-                    xPosL+=1;
+                    xPosL+=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
                     yPosL += yIncrementL;
                     toMoveL.style.top = yPosL + "px";
@@ -107,7 +111,7 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     recursiveMove(movedRoot.getLeft);
                 } else {
-                    xPosL-=1;
+                    xPosL-=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
                     yPosL -= yIncrementL;
                     toMoveL.style.top = yPosL + "px";
@@ -138,7 +142,9 @@ function initialMove(movingNode, destinationNode) {
 
     var xDistance = destX-initPosX;
     var yDistance = destY-initPosY;
-    var yIncrement = yDistance/xDistance;
+
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance) * getAnimSpeed();
 
     var xPos = initPosX;
     var yPos = initPosY;   
@@ -157,7 +163,7 @@ function initialMove(movingNode, destinationNode) {
                 recursiveMove(movingNode);
                 drawLine(movingNode.getParent.getId, movingNode.getId);
             } else {
-                xPos+=1;
+                xPos+=xIncrement;
                 childNode.style.left = xPos + "px";
                 yPos += yIncrement;
                 childNode.style.top = yPos + "px";
@@ -168,7 +174,7 @@ function initialMove(movingNode, destinationNode) {
                 recursiveMove(movingNode);
                 drawLine(movingNode.getParent.getId, movingNode.getId);
             } else {
-                xPos-=1;
+                xPos-=xIncrement;
                 childNode.style.left = xPos + "px";
                 yPos -= yIncrement;
                 childNode.style.top = yPos + "px";
@@ -180,34 +186,46 @@ function initialMove(movingNode, destinationNode) {
     //move(movingNode, childNodePos.left - contPos.left + (childNodePos.width/2), childNodePos.top - contPos.top, remNodePos.left - contPos.left, remNodePos.top - contPos.top)
 }
 
-function insertNode(val) {
-    var intInput = parseInt(val, 10); 
-    const newNode = new Node(intInput, intInput);
-    newTree.insert(newNode);
-}
-
 function userInputNode() {
     var inVal = document.getElementById("nodeInsert").value;
     if (inVal == '') {
         alert("No value entered!");
     } else {
         if (inVal.includes(",")) {
+            setCurrProcess("insert");
             var nodeArr = inVal.split(",").map(item => item.trim());
-            for (x in nodeArr) {
-                if (x != '') {
-                    insertNode(nodeArr[x]);
-                }
+
+            var allNumbers = true;
+            for (let i = 0; i < nodeArr.length; i++) {
+                if (isNaN(nodeArr[i])) {
+                    allNumbers = false;
+                }                
             }
+
+            if (allNumbers) {
+                var intInput = parseInt(nodeArr[0], 10); 
+                newTree.insert(intInput, nodeArr); 
+            } else {
+                alert("Must input numbers!");
+            }
+
+
         } else { 
             if (isNaN(inVal))
             {
                 alert("Must input numbers!");
-            } else {
-                insertNode(inVal);            
+            } else { 
+                setCurrProcess("insert");
+                var intInput = parseInt(inVal, 10);                 
+                newTree.insert(intInput, [intInput]);          
             }
         }
     }
     document.getElementById("nodeInsert").value = '';
+}
+
+function insertMultiple(nodeArr) {
+
 }
 
 function userRemoveNode() {
@@ -219,15 +237,23 @@ function userRemoveNode() {
         {
             alert("Must input numbers!");
         } else {
-            var intInput = parseInt(inVal, 10);     
-            newTree.nodeSearch(newTree.getRoot, intInput, newTree.removeNode);     
+            var intInput = parseInt(inVal, 10);  
+            setCurrProcess("remove");   
+            newTree.searchAndRemove(newTree.getRoot, intInput);     
         }
     }
     document.getElementById("nodeRemove").value = '';
 }
 
 function lmao() {
-    redrawTree(newTree.getRoot, 10);
+    const elem = document.createElement('p');
+    elem.id = 1;
+    elem.className = "codeLine";
+    elem.textContent = "bILL";
+
+    const parentDiv = document.getElementById('codePanel');
+
+    parentDiv.appendChild(elem);
 }
 
 function myFunction() {
@@ -243,8 +269,10 @@ function userSearchNode() {
         {
             alert("Must input numbers!");
         } else {
+            setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
-            newTree.nodeSearch(newTree.getRoot, intInput, null);
+            newTree.nodeSearch(newTree.getRoot, intInput);
+            
         }
     }
     document.getElementById("nodeSearch").value = '';

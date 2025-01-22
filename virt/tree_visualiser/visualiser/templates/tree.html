@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+    <script src="{% static 'PseudocodeHandler.js' %}"></script>
     <script src="{% static 'BSTClass.js' %}"></script>
     <script src="{% static 'displayTree.js' %}"></script>
     <script src="{% static 'windowLogic.js' %}"></script>
@@ -13,16 +14,23 @@
     <h1 id="David">TREE</h1>    
 
     <!-- <button onclick="myNameIsDavid()">Test Test</button> -->
-    <button onclick="lmao()">Redraw</button>
+    <button onclick="highlightLine('1')">highlight</button>
+    <button onclick="emptyBox()">empty</button>
+    <button onclick="sussyBox()">sus</button>
 
 
     <div class="tree-canvas" id="treeBox">
-        <canvas width="1500" id="myCanvas" height="600" style="border:1px solid #000000;">
+        <canvas id="myCanvas" style="border:1px solid #000000;">
         </canvas>  
     </div>
 
-    
     <p>Footer</p>
+
+    <!-- <div id="codePanel" class="codePanel">
+        code?
+        <br>
+        AAA
+    </div> -->
 
     <div class="inputBar">
         <!-- <form action="lmao(2)">
@@ -63,6 +71,16 @@
             <input onchange="updateAnimSpeed()" type="range" min="0.25" max="10" value="10" step="0.25" class="slider" id="speedSlider">
             <label id="speedLabel" for="speedSlider">x10</label>
         </div>
+
+        <label>
+            Successor:
+            <input oninput="updateSuccessorMode()" id="successorCheckBox" type="checkbox">
+        </label>
+
+        <label>
+            Show Code:
+            <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
+        </label>
     </div>
 
     <!-- <div class="box" id="parentDiv">  

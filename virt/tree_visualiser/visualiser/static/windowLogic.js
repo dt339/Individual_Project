@@ -1,19 +1,53 @@
+//Changes the size of the space where the tree is created to fit the page when it is created or resized.
 window.onresize = resizeCanvas;
 window.onload = function(){resizeCanvas()};
 
+//Stores information used for UI elements.
 var animationSpeed = 10;
+var successorMode = false;
+var showCode = false;
 
+//Gets the value of the speed slider and sets the animation speed to that value.
 function updateAnimSpeed() {    
     const mySlider = document.getElementById('speedSlider');
     const sliderLabel = document.getElementById('speedLabel');
     animationSpeed = mySlider.value;
+    //Updates the label attached to the speed slider.
     sliderLabel.innerText = "x" + animationSpeed;
 }
 
+//Switches between Successor and Precessor modes.
+function updateSuccessorMode() {
+    successorMode = !successorMode;
+}
+
+
+function updateShowCode() {
+    //Hides the pseudocode box if it was visible.
+    if (showCode == true) {
+        showCode = false;
+        hideCodeBox();
+    } else {
+        //Shows the pseudocode box if it was not being currently shown.
+        showCode = true;
+        showCodeBox();
+    }
+}
+
+//Returns the variables.
 function getAnimSpeed() {
     return animationSpeed;
 }
 
+function getSuccessorMode() {
+    return successorMode;
+}
+
+function getShowCode() {
+    return showCode;
+}
+
+//Changes the size of the area where the tree is visualized to fit the current window.
 function resizeCanvas() {
     const canv = document.getElementById("myCanvas");
     const treeBox = document.getElementById("treeBox");
@@ -23,21 +57,4 @@ function resizeCanvas() {
     treeBox.offsetHeight = window.innerHeight *0.9;
     ctx.canvas.width  = window.innerWidth *0.9;
     ctx.canvas.height = window.innerHeight * 0.9;
-}
-
-function balls() {
-    const container = document.getElementById('treeBox');
-
-    // Create a new element
-    const newElement = document.createElement('div');
-    //newElement.className = 'node';
-    newElement.style.position = 'absolute'; // Make it positionable within the parent
-    newElement.style.left = '0'; // X-coordinate
-    newElement.style.top = '0'; // Y-coordinate
-    newElement.style.width = '50px'; // Width of the element
-    newElement.style.height = '50px'; // Height of the element
-    newElement.style.backgroundColor = 'red'; // Background color
-
-    // Add the element to the container
-    container.appendChild(newElement);
 }
