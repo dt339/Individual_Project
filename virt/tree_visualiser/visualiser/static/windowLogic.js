@@ -16,11 +16,6 @@ function updateAnimSpeed() {
     sliderLabel.innerText = "x" + animationSpeed;
 }
 
-//Switches between Successor and Precessor modes.
-function updateSuccessorMode() {
-    successorMode = !successorMode;
-}
-
 
 function updateShowCode() {
     //Hides the pseudocode box if it was visible.
@@ -57,4 +52,6 @@ function resizeCanvas() {
     treeBox.offsetHeight = window.innerHeight *0.9;
     ctx.canvas.width  = window.innerWidth *0.9;
     ctx.canvas.height = window.innerHeight * 0.9;
+
+    
 }

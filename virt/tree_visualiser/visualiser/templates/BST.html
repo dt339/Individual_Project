@@ -1,13 +1,54 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
-  Visualiser - BST
+  Tree
 {% endblock %}
 
 {% block content %}
-    <h1>BINARY SEARCH TREE</h1>
-    <p>RAHHHHHHH</p>
-    <br/><a href="../home/">Home</a>  
+    <script src="{% static 'PseudocodeHandler.js' %}"></script>
+    <script src="{% static 'BSTClass.js' %}"></script>
+    <script src="{% static 'displayTree.js' %}"></script>
+    <script src="{% static 'windowLogic.js' %}"></script>
+    
+    <h1 id="David">Binary Search Tree</h1>    
+
+   
+    <!-- <button onclick="highlightLine('1')">highlight</button>
+    <button onclick="emptyBox()">empty</button>
+    <button onclick="sussyBox()">sus</button> -->
+
+
+    <div class="tree-canvas" id="treeBox">
+        <canvas id="myCanvas" style="border:1px solid #000000;">
+        </canvas>  
+    </div>
+
+    <p>Footer</p>
+
+    <div class="inputBar">
+
+        <input id="nodeInsert" type="text">
+        <button onclick="userInputNode()">Insert!</button>
+
+        <input id="nodeRemove" type="text">
+        <button onclick="userRemoveNode()">Remove!</button>
+
+        <input id="nodeSearch" type="text">
+        <button onclick="userSearchNode()">Search!</button>
+
+        <div class="sliderContainer">
+            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="10" value="10" step="0.25" class="slider" id="speedSlider">
+            <label id="speedLabel" for="speedSlider">x10</label>
+        </div>
+
+        <label>
+            Show Code:
+            <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
+        </label>
+    </div>
+
+
+
 
 {% endblock %}
-

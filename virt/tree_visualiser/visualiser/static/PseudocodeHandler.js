@@ -1,4 +1,3 @@
-
 //Stores the lines of pseudocode for the different processes.
 //CHANGE TO FILE OR SOMETHING
 const noneProcess = ["No current process!"];
@@ -14,7 +13,7 @@ var codeBox = null;
 var currHigh = "L0";
 
 function setCurrProcess(p) {
-    //Removes previos lines from box.
+    //Removes previous lines from box.
     if (codeBox != null) {
         emptyBox();
     }
@@ -43,21 +42,21 @@ function getCurrProcess() {
     return currProcess;
 }
 
-function sussyBox() {
-    showCodeBox()
-    setCurrProcess("search");
-
-}
-
 function showCodeBox() {
-    //Creates a new code box.
-    //CHANGE TO HIDDEN MAKES IT SIMPLER
-    codeBox = document.createElement('div');
-    codeBox.id = 'codePanel';
-    codeBox.className = "codePanel";
-    codeBox.textContent = "PseudoCode:";
+    //Creates a new code box if it has not been previously shown.
+    //Shows the code box if it already exists.
 
-    document.body.appendChild(codeBox);
+    if (codeBox == null) {
+        codeBox = document.createElement('div');
+        codeBox.id = 'codePanel';
+        codeBox.className = "codePanel";
+        codeBox.textContent = "PseudoCode:";
+    
+        document.body.appendChild(codeBox);
+    } else {
+        codeBox.style.visibility = "visible";
+    }
+
     //Calls a function to fill the box with the pseudocode of the current function.
     fillCodeBox();
     highlightLine(currHigh);
@@ -65,9 +64,9 @@ function showCodeBox() {
 
 function hideCodeBox() {
     //Removes the box from the scene.
-    var codeElement = document.getElementById('codePanel');
-    codeElement.remove();
-    codeBox = null;
+
+    emptyBox();
+    codeBox.style.visibility = "hidden";
 }
 
 function fillCodeBox() {
@@ -105,9 +104,41 @@ function highlightLine(x) {
 }
 
 function unHighlightAll() {
-    //UNhighlights all lines of code.
+    //Unhighlights all lines of code.
     for (line in currProcess) {
         var codeLine = document.getElementById(line);
         codeLine.style.backgroundColor = "lightcyan";
     }
 }
+
+//#region dragging
+
+let isDragging = false;
+let offsetX = null;
+let offsetY = null;
+
+
+
+codeBox.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    draggable.style.cursor = "grabbing";
+
+    offsetX = e.clientX - draggable.offsetLeft;
+    offsetY = e.clientY - draggable.offsetTop;
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+        draggable.style.left = e.clientX - offsetX + "px";
+        draggable.style.top = e.clientY - offsetY + "px";
+
+    }
+});
+
+document.addEventListener("mouseup", () => {
+    alert(codeBox);
+    isDragging = false;
+    draggable.style.cursor = "grab";
+})
+
+//#endregion

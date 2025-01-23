@@ -1,6 +1,8 @@
 const newTree = new Tree();
 
 function recursiveMove(movedRoot) {
+    //Takes the previously moved node as a parameter.
+    //Gets the html elements for the moved node and the container they are stored in.
     const movedNode = document.getElementById(movedRoot.getId);
     const movedNodePos = movedNode.getBoundingClientRect();
     const cont = document.getElementById('treeBox');
@@ -9,9 +11,11 @@ function recursiveMove(movedRoot) {
     let rightAnim = null;
     let leftAnim = null;
 
+    //Checks to see if the moved node has a right child.
     if (movedRoot.getRight != null) {
 
-
+        //Moves the node to the correct position relative to its parent - the previously moved node.
+        //Uses the same method as initialMove()
         const toMove = document.getElementById(movedRoot.getRight.getId);
         const toMovePos = toMove.getBoundingClientRect();        
 
@@ -41,6 +45,8 @@ function recursiveMove(movedRoot) {
                 if (xPos >= destX) {
                     clearInterval(rightAnim);
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
                     recursiveMove(movedRoot.getRight);
                 } else {
                     xPos+=xIncrement;
@@ -52,6 +58,8 @@ function recursiveMove(movedRoot) {
                 if (xPos <= destX) {
                     clearInterval(rightAnim);
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
                     recursiveMove(movedRoot.getRight);
                 } else {
                     xPos-=xIncrement;
@@ -61,11 +69,11 @@ function recursiveMove(movedRoot) {
                 }
             }
         }
-
-        //move(movedRoot.getRight.getId, toMovePos.left - contPos.left + (toMovePos.width/2), toMovePos.top - contPos.top, (movedNodePos.left - contPos.left + movedNodePos.width + 100), (movedNodePos.top - contPos.top + movedNodePos.height + 50));
-        //setTimeout(() => recursiveMove(movedRoot.getRight), 2000);
     } 
+    //Checks to see if the moved node has a left child.
     if (movedRoot.getLeft != null) {
+        //Moves the node to the correct position relative to its parent - the previously moved node.
+        //Uses the same method as initialMove()
         const toMoveL = document.getElementById(movedRoot.getLeft.getId);
         const toMovePosL = toMoveL.getBoundingClientRect();        
 
@@ -73,9 +81,6 @@ function recursiveMove(movedRoot) {
         var initPosYL = toMovePosL.top - contPos.top;
         var destXL = (movedNodePos.left - contPos.left - movedNodePos.width - 100);
         var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
-
-        // const xx = (refPos.left - containerPos.left - refPos.width - ((10-depth)* 10));
-        // const yy = (refPos.top - containerPos.top + refPos.height + ((5-depth)* 10));
 
         var xDistanceL = destXL-initPosXL;
         var yDistanceL = destYL-initPosYL;
@@ -98,6 +103,8 @@ function recursiveMove(movedRoot) {
                 if (xPosL >= destXL) {
                     clearInterval(leftAnim);
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
                     recursiveMove(movedRoot.getLeft);
                 } else {
                     xPosL+=xIncrementL;
@@ -109,6 +116,8 @@ function recursiveMove(movedRoot) {
                 if (xPosL <= destXL) {
                     clearInterval(leftAnim);
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
                     recursiveMove(movedRoot.getLeft);
                 } else {
                     xPosL-=xIncrementL;
@@ -119,13 +128,12 @@ function recursiveMove(movedRoot) {
             }
         }
 
-        //move(movedRoot.getRight.getId, toMovePos.left - contPos.left + (toMovePos.width/2), toMovePos.top - contPos.top, (movedNodePos.left - contPos.left + movedNodePos.width + 100), (movedNodePos.top - contPos.top + movedNodePos.height + 50));
-        //setTimeout(() => recursiveMove(movedRoot.getRight), 2000);
     } 
 
 }
 
 function initialMove(movingNode, destinationNode) {
+    //Gets the html elements for the canvas and the nodes being moves.
     const cont = document.getElementById('treeBox');
     const contPos = cont.getBoundingClientRect();
     const childNode = document.getElementById(movingNode.getId);
@@ -135,14 +143,17 @@ function initialMove(movingNode, destinationNode) {
 
     var id = null;
 
+    //Calculates the start and end positions of the movement.
     var initPosX = childNodePos.left - contPos.left + (childNodePos.width/2)
     var initPosY = childNodePos.top - contPos.top
     var destX = remNodePos.left - contPos.left
     var destY = remNodePos.top - contPos.top
 
+    //Calculates the distance that will be travelled.
     var xDistance = destX-initPosX;
     var yDistance = destY-initPosY;
 
+    //Calculates how much the node should move for each axis for a smooth movement.
     var xIncrement = 1*getAnimSpeed();
     var yIncrement = (yDistance/xDistance) * getAnimSpeed();
 
@@ -155,25 +166,37 @@ function initialMove(movingNode, destinationNode) {
     }
 
     clearInterval(id);
+    //Calls frame very frequently to create an animation.
     id = setInterval(frame, 10);
     function frame() {
+        //Checks the x directyion fo travel for the node.
         if (xDirection == 'r') {
+            //Once the position of the node reaches the destination movement can stop.
             if (xPos >= destX) {
+                //Stops running the movement function.
                 clearInterval(id);
+                //Calls a function to move any nodes connected to the moved node.
                 recursiveMove(movingNode);
+                //Creates a new branch between the moved node and its parent.
                 drawLine(movingNode.getParent.getId, movingNode.getId);
             } else {
+                //Moves the node html element by a small amount
                 xPos+=xIncrement;
                 childNode.style.left = xPos + "px";
                 yPos += yIncrement;
                 childNode.style.top = yPos + "px";
             }
         } else {
+            //Once the position of the node reaches the destination movement can stop.
             if (xPos <= destX) {
+                //Stops running the movement function.
                 clearInterval(id);
+                //Calls a function to move any nodes connected to the moved node.
                 recursiveMove(movingNode);
+                //Creates a new branch between the moved node and its parent.
                 drawLine(movingNode.getParent.getId, movingNode.getId);
             } else {
+                //Moves the node html element by a small amount
                 xPos-=xIncrement;
                 childNode.style.left = xPos + "px";
                 yPos -= yIncrement;
@@ -183,18 +206,24 @@ function initialMove(movingNode, destinationNode) {
 
     }
 
-    //move(movingNode, childNodePos.left - contPos.left + (childNodePos.width/2), childNodePos.top - contPos.top, remNodePos.left - contPos.left, remNodePos.top - contPos.top)
 }
 
 function userInputNode() {
+    //Reads the value of the input field.
     var inVal = document.getElementById("nodeInsert").value;
+    //Checks for an empty input.
     if (inVal == '') {
         alert("No value entered!");
     } else {
+        //Checks to see if the user has entered multiple values
+        //Denoted by the use of commas
         if (inVal.includes(",")) {
+            //Sets the current process.
             setCurrProcess("insert");
+            //Splits the input into diferent values.
             var nodeArr = inVal.split(",").map(item => item.trim());
 
+            //Checks that all values are numbers.
             var allNumbers = true;
             for (let i = 0; i < nodeArr.length; i++) {
                 if (isNaN(nodeArr[i])) {
@@ -203,6 +232,8 @@ function userInputNode() {
             }
 
             if (allNumbers) {
+                //Inserts the first number
+                //Also passes the array of other numbers to insert.
                 var intInput = parseInt(nodeArr[0], 10); 
                 newTree.insert(intInput, nodeArr); 
             } else {
@@ -211,37 +242,44 @@ function userInputNode() {
 
 
         } else { 
+            //Checks that the single input is a number.
             if (isNaN(inVal))
             {
                 alert("Must input numbers!");
             } else { 
+                //Sets the current process.
                 setCurrProcess("insert");
+                //Inserts the single value.
+                //Passes an array with only the single value in it.
                 var intInput = parseInt(inVal, 10);                 
                 newTree.insert(intInput, [intInput]);          
             }
         }
     }
+    //Empties the input field.
     document.getElementById("nodeInsert").value = '';
 }
 
-function insertMultiple(nodeArr) {
-
-}
-
 function userRemoveNode() {
+    //Reads the input field.
     var inVal = document.getElementById("nodeRemove").value;
+    //Checks for an empty input.
     if (inVal == '') {
         alert("No value entered!");
     } else {
+        //Checks that the entered value is a number.
         if (isNaN(inVal))
         {
             alert("Must input numbers!");
         } else {
+            //Sets the current process.
             var intInput = parseInt(inVal, 10);  
-            setCurrProcess("remove");   
+            setCurrProcess("remove");  
+            //Calls the removal function. 
             newTree.searchAndRemove(newTree.getRoot, intInput);     
         }
     }
+    //Empties the input field.
     document.getElementById("nodeRemove").value = '';
 }
 
@@ -261,28 +299,36 @@ function myFunction() {
 }
 
 function userSearchNode() {
+    //Reads the input field.
     var inVal = document.getElementById("nodeSearch").value;
+    //Checks for an empty input.
     if (inVal == '') {
         alert("No value entered!");
     } else {
+        //Checks that the input is a number.
         if (isNaN(inVal))
         {
             alert("Must input numbers!");
         } else {
+            //Sets the current process and calls the search function.
             setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
             newTree.nodeSearch(newTree.getRoot, intInput);
             
         }
     }
+    //Empties the input field.
     document.getElementById("nodeSearch").value = '';
 }
 
+//Highlights a secified node in a specified colour.
 function highlightNode(nodeId, nodeColour) {
     var nodeToHighlight = document.getElementById(nodeId);  
     nodeToHighlight.style.backgroundColor = nodeColour;
 }
 
+//Draws the branches between nodes from the specified node.
+//Stops drawing when it reaches the searchNode
 function redrawTree(curNode, searchNode) {
     if (curNode.getId != searchNode) {
         if (curNode.getParent != null) {
@@ -297,6 +343,7 @@ function redrawTree(curNode, searchNode) {
     }
 }
 
+//Swaps the position of two nodes.
 function swap(n1, n2) {
     var inNode1 = document.getElementById(n1).value;
     var inNode2 = document.getElementById(n2).value;
@@ -360,7 +407,7 @@ function myFun(test) {
 }
 
 function createRoot(newID, value) {
-
+    //Creates an html element for the root node.
     const elem = document.createElement('div');
     elem.id = newID;
     elem.className = 'node';
@@ -369,39 +416,46 @@ function createRoot(newID, value) {
     const parentDiv = document.getElementById('treeBox');
     const pos = parentDiv.getBoundingClientRect();
 
-    const xx = (parentDiv.offsetWidth /2) - 10;
+    //Places the root in the center of the canvas.
+    const xx = (parentDiv.offsetWidth /2) - 20;
     elem.style.left = xx+ 'px';
     elem.style.top = '0px';
     parentDiv.appendChild(elem);
 }
 
+//Creates a new html element for a node.
 function newElem(newID, value, parentNode, direction, depth) {
+    //Creates the html element for the node.
     const elem = document.createElement('div');
     elem.id = newID;
     elem.className = 'node';
     elem.textContent = value;
 
+    //Gets the elements for the parent node and the canvas.
     const parentDiv = document.getElementById('treeBox');
     const containerPos = parentDiv.getBoundingClientRect();
     const refElem = document.getElementById(parentNode)
     const refPos = refElem.getBoundingClientRect();
-    
 
+    //Places the new node in the location corresponding to its parent.
     if (direction == 'r') {
-        const xx = (refPos.left - containerPos.left + refPos.width + ((10-depth)* 10));
-        const yy = (refPos.top - containerPos.top + refPos.height + ((5-depth)* 10));
+        const xx = (refPos.left - containerPos.left + (containerPos.width /(2**(depth+1)))); // ((10-depth)* 10));
+        const yy = (refPos.top - containerPos.top + refPos.height + ((1+depth)* 10));
         elem.style.left = xx+ 'px';
         elem.style.top = yy+ 'px';
     } else {
-        const xx = (refPos.left - containerPos.left - refPos.width - ((10-depth)* 10));
-        const yy = (refPos.top - containerPos.top + refPos.height + ((5-depth)* 10));
+        const xx = (refPos.left - containerPos.left - (containerPos.width /(2**(depth+1)))); //((10-depth)* 10));
+        const yy = (refPos.top - containerPos.top + refPos.height + ((1+depth)* 10));
         elem.style.left = xx+ 'px';
         elem.style.top = yy+ 'px';
     }
     parentDiv.appendChild(elem);
+
+    //Draws a line between the parent and child node.
     drawLine(parentNode, newID);
 }
 
+//Draws a line on the canvas between two specified html elements.
 function drawLine(elem1, elem2) {
 
     const canv = document.getElementById("myCanvas");

@@ -1,6 +1,5 @@
 class Node {
-    constructor(val, id) {
-        this.nodeVal = val;
+    constructor(id) {
         this.left = null;
         this.right = null;
         this.id = id;
@@ -8,9 +7,6 @@ class Node {
     }
 
     //getters and setters for node values
-    get getVal() {
-        return this.nodeVal;
-    }
 
     get getLeft() {
         return this.left;
@@ -26,10 +22,6 @@ class Node {
 
     get getParent() {
         return this.parent;
-    }
-
-    set setVal(newVal) {
-        this.nodeVal = newVal;
     }
 
     set setLeft(newLeft) {
@@ -61,15 +53,15 @@ class Tree {
 
     insert(newNodeVal, nodeArr) {
         //Creates a new node from the value given.
-        var newNode = new Node(parseInt(newNodeVal, 10), parseInt(newNodeVal, 10));
+        var newNode = new Node(parseInt(newNodeVal, 10));
         //Checks to see if the tree currently has a root.
         if (this.getRoot == null) {
             highlightLine("L1");
             //Sets the root of the tree to be the inserted node.
             this.setRoot = newNode;
-            createRoot(newNode.getVal, newNode.getVal);
-            highlightNode(newNode.getVal, "lightblue");
-            setTimeout(() => highlightNode(newNode.getVal, "white"), 2000/getAnimSpeed());
+            createRoot(newNode.getId, newNode.getId);
+            highlightNode(newNode.getId, "lightblue");
+            setTimeout(() => highlightNode(newNode.getId, "white"), 2000/getAnimSpeed());
 
             //Checks to see if the node was inserted as a single value
             //Or if it was inserted as part of a list of values to be inserted.
@@ -84,7 +76,7 @@ class Tree {
             }
         } else {
             //Calls a recursive function to insert the node if a root exists.
-            this.recursiveInsert(newNode, this.getRoot, 0, nodeArr);
+            this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
         }
     }
 
@@ -98,7 +90,7 @@ class Tree {
         highlightLine("L2");
 
         //Checks to see if the new node is greater than the node currently being checked.
-        if (newNode.getVal > curNode.getVal) {
+        if (newNode.getId > curNode.getId) {
             //Checks to see if the current node has a right child.
             if (curNode.getRight == null) {
                 //If no right child exists, sets the new node as the right child.
@@ -106,7 +98,7 @@ class Tree {
                 curNode.setRight = newNode;
 
                 //Calls a function to create the visual representation of the node.
-                setTimeout(() => newElem(newNode.getVal, newNode.getVal, curNode.getId, 'r', depth), 2000/getAnimSpeed());
+                setTimeout(() => newElem(newNode.getId, newNode.getId, curNode.getId, 'r', depth), 2000/getAnimSpeed());
                 setTimeout(() => highlightNode(newNode.getId, "lightblue"), 2000/getAnimSpeed());       
 
                 highlightLine("L7");
@@ -129,7 +121,7 @@ class Tree {
                 highlightLine("L5");
                 setTimeout(() => this.recursiveInsert(newNode, curNode.getRight, depth, nodeArr), 2000/getAnimSpeed());
             }
-        } else if (newNode.getVal < curNode.getVal) {
+        } else if (newNode.getId < curNode.getId) {
             //Checks to see if the new node is less than the current node.
             //If the current node has no left child, set the new node as the left child.
             if (curNode.getLeft == null) {
@@ -137,7 +129,7 @@ class Tree {
                 curNode.setLeft = newNode;
 
                 //Calls a function to create the visual representation of the node.
-                setTimeout(() => newElem(newNode.getVal, newNode.getVal, curNode.getId, 'l', depth), 2000/getAnimSpeed());
+                setTimeout(() => newElem(newNode.getId, newNode.getId, curNode.getId, 'l', depth), 2000/getAnimSpeed());
                 setTimeout(() => highlightNode(newNode.getId, "lightblue"), 2000/getAnimSpeed());    
 
                 highlightLine("L12");
@@ -161,7 +153,7 @@ class Tree {
                 setTimeout(() => this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr), 2000/getAnimSpeed());
             }
             //If the new node is equal to the current node it already exists and cannot be enetered.
-        } else if (newNode.getVal == curNode.getVal) {
+        } else if (newNode.getId == curNode.getId) {
             alert("Node already exists!");
             highlightNode(curNode.getId, "red");
             highlightLine("L14");
@@ -184,7 +176,7 @@ class Tree {
         //Checks if the node has 0 children.
         if (nodeToRem.getLeft == null && nodeToRem.getRight == null) {
             //Sets the parent of the node to not have it as a child.
-            if (nodeToRem.getVal > nodeToRem.getParent.getVal) {
+            if (nodeToRem.getId > nodeToRem.getParent.getId) {
                 nodeToRem.getParent.setRight = null;
             } else {
                 nodeToRem.getParent.setLeft = null;
@@ -206,7 +198,7 @@ class Tree {
             //Checks to see if the node has only a right child.
             if (nodeToRem.getLeft == null && nodeToRem.getRight != null) {
                 //Sets the parent of the node to have the removed node's right child as it's own child..
-                if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                if(nodeToRem.getId > nodeToRem.getParent.getId) {
                     nodeToRem.getParent.setRight = nodeToRem.getRight;
                 } else {
                     nodeToRem.getParent.setLeft = nodeToRem.getRight;
@@ -232,7 +224,7 @@ class Tree {
             //Checks to see if the node has only a left child.
             } else if (nodeToRem.getLeft != null && nodeToRem.getRight == null) {
                 //Sets the parent of the remove node to have its child be the left child of the removed node.
-                if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                if(nodeToRem.getId > nodeToRem.getParent.getId) {
                     nodeToRem.getParent.setRight = nodeToRem.getLeft;
                 } else {
                     nodeToRem.getParent.setLeft = nodeToRem.getLeft;
@@ -278,7 +270,7 @@ class Tree {
                 //         nodeToRem.getRight.setParent = minNode;
                 //     }
 
-                //     if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                //     if(nodeToRem.getId > nodeToRem.getParent.getId) {
                 //         nodeToRem.getParent.setRight = minNode;
                 //     } else {
                 //         nodeToRem.getParent.setLeft = minNode;
@@ -325,7 +317,7 @@ class Tree {
                 }
 
                 //Sets the children of the parent of the removed node to be the Precessor.
-                if(nodeToRem.getVal > nodeToRem.getParent.getVal) {
+                if(nodeToRem.getId > nodeToRem.getParent.getId) {
                     nodeToRem.getParent.setRight = maxNode;
                 } else {
                     nodeToRem.getParent.setLeft = maxNode;
@@ -387,7 +379,7 @@ class Tree {
         highlightLine('L2');
         
         //Compares the current node to the value being searched for.
-        if (curNode.getVal == searchNode) {
+        if (curNode.getId == searchNode) {
             highlightLine('L3');            
             setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
 
@@ -397,7 +389,7 @@ class Tree {
             setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
             return curNode;
         } else {
-            if (searchNode > curNode.getVal) {
+            if (searchNode > curNode.getId) {
                 
                 if (curNode.getRight != null) {
                     //If the current node has a right child
@@ -444,7 +436,7 @@ class Tree {
         }
 
         //Compares the current node against the value being searched for.
-        if (curNode.getVal == searchNode) {
+        if (curNode.getId == searchNode) {
 
             //If the current node is equal to the value being searched for
             //Then the value has been found and the node can be removed.
@@ -456,7 +448,7 @@ class Tree {
             return curNode;
         } else {
             //Searches for the value in the same way as nodeSearch.
-            if (searchNode > curNode.getVal) {
+            if (searchNode > curNode.getId) {
                 if (curNode.getRight != null) {
                     return setTimeout(() => this.searchAndRemove(curNode.getRight, searchNode), 2000/getAnimSpeed());
                 } else {
