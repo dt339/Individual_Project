@@ -2,22 +2,20 @@
 {% load static %}
 
 {% block title %}
-  Tree
+  Binary Search Tree
 {% endblock %}
 
 {% block content %}
     <script src="{% static 'PseudocodeHandler.js' %}"></script>
     <script src="{% static 'BSTClass.js' %}"></script>
-    <script src="{% static 'displayTree.js' %}"></script>
+    <script src="{% static 'AVLClass.js' %}"></script>
+    <script src="{% static 'animationHandler.js' %}"></script>
+    <script src="{% static 'treeHandler.js' %}"></script>
     <script src="{% static 'windowLogic.js' %}"></script>
-    
-    <h1 id="David">Binary Search Tree</h1>    
 
+    <h1>Binary Search Tree</h1>    
    
-    <!-- <button onclick="highlightLine('1')">highlight</button>
-    <button onclick="emptyBox()">empty</button>
-    <button onclick="sussyBox()">sus</button> -->
-
+    <button onclick="sussyBox()">sus</button>
 
     <div class="tree-canvas" id="treeBox">
         <canvas id="myCanvas" style="border:1px solid #000000;">
@@ -47,7 +45,6 @@
             <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
         </label>
     </div>
-
 
 
 

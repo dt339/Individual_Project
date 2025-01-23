@@ -16,7 +16,6 @@ function updateAnimSpeed() {
     sliderLabel.innerText = "x" + animationSpeed;
 }
 
-
 function updateShowCode() {
     //Hides the pseudocode box if it was visible.
     if (showCode == true) {

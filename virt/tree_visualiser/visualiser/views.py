@@ -3,7 +3,6 @@ from django.template import loader
 from .models import Member
 from django.shortcuts import render 
 
-from .tree_logic.binary_tree import TreeNode
 
 def members(request):
   mymembers = Member.objects.all().values()
@@ -19,22 +18,11 @@ def home(request):
 def bst(request):
   return render(request, "BST.html")
 
+def avl(request):
+  return render(request, "AVL.html")
+
 def tree_view(request):
-  root = TreeNode(10)
-  root.insert(20)
-  root.insert(5)
-  root.insert(17)
-  # root.insert(1)
-  # root.insert(5)
-
-
-
-  # root.insert(5)
-  # root.insert(15)
-  #root.insert(5)
-
-  data = root.preorder_traversal()
-  return render(request, "tree.html", {'tree_data': data})
+  return render(request, "tree.html")
 
 # def tree_view(request):
 #   allNodes = Node.objects.all()

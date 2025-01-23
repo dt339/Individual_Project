@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  AVL Tree
+{% endblock %}
+
+{% block content %}
+  <script src="{% static 'PseudocodeHandler.js' %}"></script>
+  <script src="{% static 'BSTClass.js' %}"></script>
+  <script src="{% static 'AVLClass.js' %}"></script>
+  <script src="{% static 'animationHandler.js' %}"></script>
+  <script src="{% static 'treeHandler.js' %}"></script>
+  <script src="{% static 'windowLogic.js' %}"></script>
+
+    <h1>She A on my V 'till i L</h1>
+
+    <button onclick="sussyBox()">sus</button>
+
+    <div class="tree-canvas" id="treeBox">
+      <canvas id="myCanvas" style="border:1px solid #000000;">
+      </canvas>  
+    </div>
+
+  <p>Footer</p>
+
+
+
+{% endblock %}

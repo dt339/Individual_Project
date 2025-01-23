@@ -37,7 +37,7 @@ class Node {
     }
 }
 
-class Tree {
+class BSTTree {
     //Getters and setters for Tree variables
     constructor() {
         this.rootNode = null;
@@ -49,6 +49,10 @@ class Tree {
 
     set setRoot(r) {
         this.rootNode = r;
+    }
+
+    getTreeName() {
+        alert("I'm a BST");
     }
 
     insert(newNodeVal, nodeArr) {
