@@ -3,7 +3,6 @@ let newTree = null;
 const path = window.location.pathname;
 const currentPage = path.split('/').filter(Boolean).pop();
 
-
 if (currentPage == "BST") {
     newTree = new BSTTree();
 } else if (currentPage == "AVL") {
@@ -12,9 +11,19 @@ if (currentPage == "BST") {
     alert("An error has occured.");
 }
 
-
 function getName() {
     newTree.getTreeName();
+}
+
+function displayTree() {
+    alert("Please");
+    let bill = newTree.traverse(newTree.getRoot);
+    alert(bill);
+}
+
+function qwert() {
+    alert("qwert");
+    newTree.asdf();
 }
 
 function userInputNode() {

@@ -1,8 +1,17 @@
-
 class AVLTree {
     //Getters and setters for Tree variables
     constructor() {
         this.rootNode = null;
+        this.lowestImbalance = null;
+        this.lowestImbalanceFactor = null;
+    }
+
+    get getLowestImbalance() {
+        return this.lowestImbalance;
+    }
+
+    get getLowestImbalanceFactor() {
+        return this.lowestImbalanceFactor;
     }
 
     get getRoot() {
@@ -13,8 +22,39 @@ class AVLTree {
         this.rootNode = r;
     }
 
+    set setLowestImbalance(l) {
+        this.lowestImbalance = l;
+    }
+
+    set setLowestImbalanceFactor(l) {
+        this.lowestImbalanceFactor = l;
+    }
+
     getTreeName() {
         alert("I'm a AVL");
+    }
+
+    preOrder(cur) {
+        if (cur != null) {
+            alert(cur.getId);
+            this.inOrder(cur.getLeft);
+            this.inOrder(cur.getRight);
+        }
+
+    }
+
+    traverse(node) {
+        if (node != null) {
+            return [node.getId, this.traverse(node.getLeft), this.traverse(node.getRight)];
+        } else {
+            return 'x';
+        }
+    }
+    
+
+    asdf() {
+        alert("root: " + this.getRoot.getId + " - left: - " + this.getRoot.getLeft.getId + " - right: " + this.getRoot.getRight.getId);
+        alert("root parent - " + this.getRoot.getParent + " - ")
     }
 
     insert(nodeVal, nodeArr) {
@@ -41,9 +81,10 @@ class AVLTree {
             if (curNode.getRight == null) {
 
                 curNode.setRight = newNode;
-                newNode.setParent = curNode;
+                newNode.setParent = curNode;                
                 
-                
+                this.checkBalance(this.getRoot);
+
             } else {
                 depth++;
                 this.recursiveInsert(newNode, curNode.getRight, depth, nodeArr);
@@ -54,6 +95,8 @@ class AVLTree {
 
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
+
+                this.checkBalance(this.getRoot);
                 
             } else {
                 depth++;
@@ -68,6 +111,9 @@ class AVLTree {
     }
 
     rebalance(targetNode, balanceFactor) {
+        this.setLowestImbalance = null;
+        this.setLowestImbalanceFactor = null;
+        alert("Rebalance! - " + targetNode.getId);
         if (balanceFactor > 1) {
             //anticlockwise rotation
             var midNode = targetNode.getRight;
@@ -139,9 +185,13 @@ class AVLTree {
 
         //Set right child of A to be X
         //Set parent of X to be A
-        topNode.setRight = midNode.getLeft;
-        midNode.getLeft.setParent = topNode;
-
+        if (midNode.getLeft != null) {
+            topNode.setRight = midNode.getLeft;
+            midNode.getLeft.setParent = topNode;
+        } else {
+            topNode.setRight= null;
+        }
+        
         //Set parent of B to be parent of A
         //Set child of parent of A to be B
         if (this.getRoot.getId == topNode.getId) {
@@ -160,17 +210,17 @@ class AVLTree {
         //Set parent of A to be B
         midNode.setLeft = topNode;
         topNode.setParent = midNode;
-        
     }
 
     clockwiseRotation(topNode, midNode) {
-        //B becomes parent of A
-        //A becomes parent of X
-        //B can become root
 
         //Creates the connection between the top node and the right child of the mid node.
-        topNode.setLeft = midNode.getRight;
-        midNode.getRight.setParent = topNode;
+        if (midNode.getRight != null) {
+            topNode.setLeft = midNode.getRight;
+            midNode.getRight.setParent = topNode;
+        } else {
+            topNode.setLeft = null;
+        }
 
         //If the top node is the root then it changes the root to be the middle node.
         if (this.getRoot.getId == topNode.getId) {
@@ -192,15 +242,42 @@ class AVLTree {
     }
 
     checkBalance(curNode) {
+
+        //NOW NOT DETECTING ANYTHING PAST ROOT?       
+
+        this.findImbalance(this.getRoot);
+
+        if (this.getLowestImbalance != null) {
+            alert("unbalanced - " + this.getLowestImbalance.getId);
+            this.rebalance(this.getLowestImbalance, this.getLowestImbalanceFactor);
+        }
+
+        // //FINDS THE HIGHEST INBALANCE - SHOULD FIND LOWEST
+        // if (curNode != null) {
+        //     var curBalance = this.calculateBalance(curNode);
+        //     if (curBalance > 1 || curBalance <-1) {
+        //         //UNBALANCED
+        //         alert("unbalanced - " + curNode.getId);
+        //         this.rebalance(curNode, curBalance);
+        //     } else {
+        //         this.checkBalance(curNode.getLeft);
+        //         this.checkBalance(curNode.getRight);
+        //     }
+        // }
+    }
+
+    findImbalance(curNode) {
+        //FINDS THE HIGHEST INBALANCE - SHOULD FIND LOWEST
         if (curNode != null) {
             var curBalance = this.calculateBalance(curNode);
             if (curBalance > 1 || curBalance <-1) {
                 //UNBALANCED
-                this.rebalance(curNode, curBalance);
-            } else {
-                this.checkBalance(curNode.getLeft);
-                this.checkBalance(curNode.getRight);
-            }
+                alert("unbalanced - " + curNode.getId);
+                this.setLowestImbalance = curNode;
+                this.setLowestImbalanceFactor = curBalance;
+            } 
+            this.findImbalance(curNode.getLeft);
+            this.findImbalance(curNode.getRight);
         }
     }
 
