@@ -1,18 +1,19 @@
-const newTree = new BSTTree();
+let newTree = null;
 
-function setTree(currentPage) {
-    if (currentPage == "BST") {
-        newTree = new BSTTree();
-        alert("BST");
-    } else if (currentPage == "AVL") {
-        newTree = new AVLTree();
-        alert("AVL");
-    } else {
-        alert("An error has occured.");
-    }
+const path = window.location.pathname;
+const currentPage = path.split('/').filter(Boolean).pop();
+
+
+if (currentPage == "BST") {
+    newTree = new BSTTree();
+} else if (currentPage == "AVL") {
+    newTree = new AVLTree();
+} else {
+    alert("An error has occured.");
 }
 
-function sussyBox() {
+
+function getName() {
     newTree.getTreeName();
 }
 

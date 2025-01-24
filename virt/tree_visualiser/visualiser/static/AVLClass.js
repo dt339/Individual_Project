@@ -1,41 +1,3 @@
-class Node {
-    constructor(id) {
-        this.left = null;
-        this.right = null;
-        this.id = id;
-        this.parent = null;
-    }
-
-    //getters and setters for node values
-
-    get getLeft() {
-        return this.left;
-    }
-
-    get getRight() {
-        return this.right;
-    }
-
-    get getId() {
-        return this.id;
-    }
-
-    get getParent() {
-        return this.parent;
-    }
-
-    set setLeft(newLeft) {
-        this.left = newLeft;
-    }
-
-    set setRight(newRight) {
-        this.right = newRight;
-    }
-
-    set setParent(parentId) {
-        this.parent = parentId;
-    }
-}
 
 class AVLTree {
     //Getters and setters for Tree variables
@@ -54,4 +16,212 @@ class AVLTree {
     getTreeName() {
         alert("I'm a AVL");
     }
+
+    insert(nodeVal, nodeArr) {
+        var newNode = new Node(parseInt(nodeVal, 10));
+        if (this.getRoot == null) {
+            //If the tree is empty, sets the root of the tree to be the new value.
+            this.setRoot = newNode;
+
+            if (nodeArr.length > 1) {
+                nodeArr.shift();
+                this.insert(nodeArr[0], nodeArr);
+            } else {
+                //Set process to none.
+            }
+
+        } else {
+            this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
+        }
+    }
+
+    recursiveInsert(newNode, curNode, depth, nodeArr) {
+        if (newNode.getId > curNode.getId) {
+
+            if (curNode.getRight == null) {
+
+                curNode.setRight = newNode;
+                newNode.setParent = curNode;
+                
+                
+            } else {
+                depth++;
+                this.recursiveInsert(newNode, curNode.getRight, depth, nodeArr);
+            }
+        } else if (newNode.getId < curNode.getId) {
+
+            if (curNode.getLeft == null) {
+
+                curNode.setLeft = newNode;
+                newNode.setParent = curNode;
+                
+            } else {
+                depth++;
+                this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr);
+            }
+        } else if (newNode.getId == curNode.getId) {
+            //Show node already exists.
+
+        } else {
+            alert("Something has gone wrong.");
+        }
+    }
+
+    rebalance(targetNode, balanceFactor) {
+        if (balanceFactor > 1) {
+            //anticlockwise rotation
+            var midNode = targetNode.getRight;
+
+            if(this.calculateHeight(midNode.getLeft) < this.calculateHeight(midNode.getRight)) {
+                //Regular rotation
+
+                this.antiClockwiseRotation(targetNode, midNode);
+            } else {
+                //Special rotation
+
+                var bottomNode = midNode.getLeft;
+
+                //Set right child of A to be C
+                //Set parent of C to be A
+                targetNode.setRight = bottomNode;
+                bottomNode.setParent = targetNode;
+                
+                //Set left child of B to be Y
+                //Set parent of Y to be B
+                midNode.setLeft = bottomNode.getRight;
+                bottomNode.getRight.setParent = midNode;
+
+                //Set right child of C to be B
+                //Set parent of B to be C
+                bottomNode.setRight = midNode;
+                midNode.setParent = bottomNode;
+
+                this.antiClockwiseRotation(targetNode, midNode);
+            }
+
+
+        } else {
+            //clockwise rotation
+            var midNode = targetNode.getLeft;
+            
+            if (this.calculateHeight(midNode.getLeft) > this.calculateHeight(midNode.getRight)) {
+                //Regular rotation
+
+                this.clockwiseRotation(targetNode, midNode);
+
+            } else {
+                //Special rotation
+                
+                var bottomNode = midNode.getRight;
+
+                //Set left child of A to be C
+                //Set parent of C to be A
+                targetNode.setLeft = bottomNode;
+                bottomNode.setParent = targetNode;
+
+                //Set right child of B to be Z
+                //Set parent of Z to be B 
+                midNode.setRight = bottomNode.getLeft;
+                bottomNode.getLeft.setParent = midNode;
+
+                //Set parent of B to be C
+                //Set left child of C to be B
+                midNode.setParent = bottomNode;
+                bottomNode.setLeft = midNode;
+
+                this.clockwiseRotation(targetNode, bottomNode);
+
+            }
+        }
+    }
+
+    antiClockwiseRotation(topNode, midNode) {
+
+        //Set right child of A to be X
+        //Set parent of X to be A
+        topNode.setRight = midNode.getLeft;
+        midNode.getLeft.setParent = topNode;
+
+        //Set parent of B to be parent of A
+        //Set child of parent of A to be B
+        if (this.getRoot.getId == topNode.getId) {
+            this.setRoot = midNode;
+            midNode.setParent = null;
+        } else {
+            if(topNode.getId < topNode.getParent.getId) {
+                topNode.getParent.setLeft = midNode;
+            } else {
+                topNode.getParent.setRight = midNode;
+            }
+            midNode.setParent = topNode.getParent;
+        }
+
+        //Set left child of B to be A
+        //Set parent of A to be B
+        midNode.setLeft = topNode;
+        topNode.setParent = midNode;
+        
+    }
+
+    clockwiseRotation(topNode, midNode) {
+        //B becomes parent of A
+        //A becomes parent of X
+        //B can become root
+
+        //Creates the connection between the top node and the right child of the mid node.
+        topNode.setLeft = midNode.getRight;
+        midNode.getRight.setParent = topNode;
+
+        //If the top node is the root then it changes the root to be the middle node.
+        if (this.getRoot.getId == topNode.getId) {
+            this.setRoot = midNode;
+            midNode.setParent = null;
+        } else {
+            //Sets the child of the parent of the top node to be the middle node.
+            if(topNode.getId < topNode.getParent.getId) {
+                topNode.getParent.setLeft = midNode;
+            } else {
+                topNode.getParent.setRight = midNode;
+            }
+            midNode.setParent = topNode.getParent;
+        }
+        
+        //Creates the new connection between the top and mid nodes.
+        midNode.setRight = topNode;
+        topNode.setParent = midNode;
+    }
+
+    checkBalance(curNode) {
+        if (curNode != null) {
+            var curBalance = this.calculateBalance(curNode);
+            if (curBalance > 1 || curBalance <-1) {
+                //UNBALANCED
+                this.rebalance(curNode, curBalance);
+            } else {
+                this.checkBalance(curNode.getLeft);
+                this.checkBalance(curNode.getRight);
+            }
+        }
+    }
+
+    calculateBalance(checkNode) {
+        var balanceFactor = this.calculateHeight(checkNode.getRight) - this.calculateHeight(checkNode.getLeft);
+        return balanceFactor;
+    }
+
+    calculateHeight(checkNode) {
+        if(checkNode == null) {
+            return -1;
+        } else {
+            var rightHeight = this.calculateHeight(checkNode.getRight);
+            var leftHeight = this.calculateHeight(checkNode.getLeft);
+            if (rightHeight > leftHeight) {
+                return (1+rightHeight);
+            } else {
+                return (1+leftHeight);
+            }
+
+        }
+    }
+
 }
