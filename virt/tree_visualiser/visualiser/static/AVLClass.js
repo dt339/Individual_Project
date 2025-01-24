@@ -2,16 +2,6 @@ class AVLTree {
     //Getters and setters for Tree variables
     constructor() {
         this.rootNode = null;
-        this.lowestImbalance = null;
-        this.lowestImbalanceFactor = null;
-    }
-
-    get getLowestImbalance() {
-        return this.lowestImbalance;
-    }
-
-    get getLowestImbalanceFactor() {
-        return this.lowestImbalanceFactor;
     }
 
     get getRoot() {
@@ -20,14 +10,6 @@ class AVLTree {
 
     set setRoot(r) {
         this.rootNode = r;
-    }
-
-    set setLowestImbalance(l) {
-        this.lowestImbalance = l;
-    }
-
-    set setLowestImbalanceFactor(l) {
-        this.lowestImbalanceFactor = l;
     }
 
     getTreeName() {
@@ -45,7 +27,7 @@ class AVLTree {
 
     traverse(node) {
         if (node != null) {
-            return [node.getId, this.traverse(node.getLeft), this.traverse(node.getRight)];
+            return ["(",node.getId, this.traverse(node.getLeft), this.traverse(node.getRight),")"];
         } else {
             return 'x';
         }
@@ -83,7 +65,7 @@ class AVLTree {
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;                
                 
-                this.checkBalance(this.getRoot);
+                this.checkBalance(newNode);
 
             } else {
                 depth++;
@@ -96,7 +78,7 @@ class AVLTree {
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
 
-                this.checkBalance(this.getRoot);
+                this.checkBalance(newNode);
                 
             } else {
                 depth++;
@@ -242,42 +224,17 @@ class AVLTree {
     }
 
     checkBalance(curNode) {
-
-        //NOW NOT DETECTING ANYTHING PAST ROOT?       
-
-        this.findImbalance(this.getRoot);
-
-        if (this.getLowestImbalance != null) {
-            alert("unbalanced - " + this.getLowestImbalance.getId);
-            this.rebalance(this.getLowestImbalance, this.getLowestImbalanceFactor);
-        }
-
-        // //FINDS THE HIGHEST INBALANCE - SHOULD FIND LOWEST
-        // if (curNode != null) {
-        //     var curBalance = this.calculateBalance(curNode);
-        //     if (curBalance > 1 || curBalance <-1) {
-        //         //UNBALANCED
-        //         alert("unbalanced - " + curNode.getId);
-        //         this.rebalance(curNode, curBalance);
-        //     } else {
-        //         this.checkBalance(curNode.getLeft);
-        //         this.checkBalance(curNode.getRight);
-        //     }
-        // }
-    }
-
-    findImbalance(curNode) {
-        //FINDS THE HIGHEST INBALANCE - SHOULD FIND LOWEST
-        if (curNode != null) {
+        if (curNode == null) {
+            //No imbalance
+        } else {
             var curBalance = this.calculateBalance(curNode);
             if (curBalance > 1 || curBalance <-1) {
                 //UNBALANCED
                 alert("unbalanced - " + curNode.getId);
-                this.setLowestImbalance = curNode;
-                this.setLowestImbalanceFactor = curBalance;
-            } 
-            this.findImbalance(curNode.getLeft);
-            this.findImbalance(curNode.getRight);
+                this.rebalance(curNode, curBalance);
+            } else {
+                this.checkBalance(curNode.getParent);
+            }
         }
     }
 
