@@ -94,7 +94,7 @@ function userRemoveNode() {
             var intInput = parseInt(inVal, 10);  
             setCurrProcess("remove");  
             //Calls the removal function. 
-            newTree.searchAndRemove(newTree.getRoot, intInput);     
+            newTree.remove(newTree.getRoot, intInput);     
         }
     }
     //Empties the input field.
@@ -131,7 +131,7 @@ function userSearchNode() {
             //Sets the current process and calls the search function.
             setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
-            newTree.nodeSearch(newTree.getRoot, intInput);
+            newTree.search(newTree.getRoot, intInput);
             
         }
     }

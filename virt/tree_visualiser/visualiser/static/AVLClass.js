@@ -35,8 +35,134 @@ class AVLTree {
     
 
     asdf() {
-        alert("root: " + this.getRoot.getId + " - left: - " + this.getRoot.getLeft.getId + " - right: " + this.getRoot.getRight.getId);
-        alert("root parent - " + this.getRoot.getParent + " - ")
+        var searchedNode = this.search(this.getRoot, 5);
+        alert("Searched - " + searchedNode);
+    }
+
+    remove(theRoot, nodeVal) {
+        var toRemove = this.search(this.getRoot, nodeVal);
+        var balanceStart = null;
+
+        //If the removed node has no children.
+        if (toRemove.getLeft == null && toRemove.getRight == null) {
+            if (this.getRoot.getId == toRemove.getId) {
+                this.setRoot = null;
+            } else {
+                if (toRemove.getId > toRemove.getParent.getId) {
+                    toRemove.getParent.setRight = null;
+                } else {
+                    toRemove.getParent.setLeft = null;
+                }
+                balanceStart = toRemove.getParent;
+                
+            }
+
+        //If the removed node has only a right child.
+        } else if (toRemove.getLeft == null && toRemove.getRight != null) {
+            //Sets the successor and parent nodes for easier use.
+            var successor = this.getSuccessor(toRemove.getRight);
+
+
+
+            //Will be null if removed node is root.
+            var parentOfRemoved = toRemove.getParent;
+
+            //If the successor is not the right child of the removed node.
+            if (successor.getParent.getId != toRemove.getId) {
+
+                //If the successor has a right subtree.
+                if (successor.getRight != null) {
+                    //Creates the relationship between the child of the successor and the parent of the successor.
+                    successor.getParent.setLeft = successor.getRight;
+                    successor.getRight.setParent = successor.getParent;
+                    balanceStart = successor.getRight;
+                } else {
+                    balanceStart = successor.getParent;
+                }
+
+                //Creates the connection between the successor and the right child of the removed node.
+                successor.setRight = toRemove.getRight;
+                toRemove.getRight.setParent = successor;
+
+            }
+
+            if (parentOfRemoved == null) {
+                this.setRoot = successor;
+            } else {
+                //Sets the child of the parent of the removed node to be the successor.
+                if (parentOfRemoved.getId > toRemove.getId) {
+                    parentOfRemoved.setLeft = successor;
+                } else {
+                    parentOfRemoved.setRight = successor;
+                }
+            }
+
+            successor.setParent = parentOfRemoved;
+
+        //If the removed node has only a left child or 2 children.
+        //The tree will always replace the removed node with the Precessor when it can.
+        } else {
+            var precessor = this.getPrecessor(toRemove.getLeft);
+
+            //Will be null is removed node is root.
+            var parentOfRemoved = toRemove.getParent;
+
+            if (precessor.getParent.getId != toRemove.getId) {
+                if (precessor.getLeft != null) {
+                    //Creates the relationship between the child of the precessor and the parent of the precessor.
+                    precessor.getParent.setRight = precessor.getLeft;
+                    precessor.getLeft.setParent = precessor.getParent;
+                    balanceStart = precessor.getLeft;
+                } else {
+                    balanceStart = precessor.getParent;
+                }
+
+                precessor.setLeft = toRemove.getLeft;
+                toRemove.getLeft.setParent = precessor;
+            } else {
+                balanceStart = precessor;
+            }
+
+            if (parentOfRemoved == null) {
+                this.setRoot = precessor;
+            } else {
+                //Creates the connnection between the precessor and the parent of the removed node.
+                if (parentOfRemoved.getId > toRemove.getId) {
+                    parentOfRemoved.setLeft = precessor;  
+                } else {
+                    parentOfRemoved.setRight = precessor;
+                }
+            }
+
+            precessor.setParent = parentOfRemoved;       
+            
+            if (toRemove.getRight != null) {
+                toRemove.getRight.setParent = precessor;
+                precessor.setRight = toRemove.getRight;
+            }
+        }
+
+        //Checks the tree for any imbalances caused by the removal.
+        //The node it starts from is the lowest node included in the removal operation.
+        this.checkBalance(balanceStart);
+    }
+
+    getPrecessor(initialNode) {
+        //Finds the largest node in the left subtree of initialNode;
+        if (initialNode.getRight == null) {
+            return initialNode;
+        } else {
+            return initialNode.getRight;
+        }
+    }   
+
+    getSuccessor(initialNode) {
+        //Finds the smallest node in the right subtree of initialNode;
+        if (initialNode.getLeft == null) {
+            return initialNode;
+        } else {
+            return initialNode.getLeft;
+        }
     }
 
     insert(nodeVal, nodeArr) {
@@ -57,11 +183,12 @@ class AVLTree {
         }
     }
 
+    
     recursiveInsert(newNode, curNode, depth, nodeArr) {
         if (newNode.getId > curNode.getId) {
 
             if (curNode.getRight == null) {
-
+                //inserts the node as the right child 
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;                
                 
@@ -90,6 +217,26 @@ class AVLTree {
         } else {
             alert("Something has gone wrong.");
         }
+    }
+
+    search(currentNode, targetNode) {
+        if (currentNode == null) {
+            //Value does not exist.
+            alert("Value does not exist");
+            return null;
+        } else {
+            if (targetNode == currentNode.getId) {
+                alert("Found - " + currentNode.getId);
+                return currentNode;
+            } else {
+                if (targetNode > currentNode.getId) {
+                    return this.search(currentNode.getRight, targetNode);
+                } else if (targetNode < currentNode.getId) {
+                    return this.search(currentNode.getLeft, targetNode);
+                }
+            }    
+        }     
+
     }
 
     rebalance(targetNode, balanceFactor) {
@@ -158,9 +305,10 @@ class AVLTree {
                 bottomNode.setLeft = midNode;
 
                 this.clockwiseRotation(targetNode, bottomNode);
-
+                
             }
         }
+        this.checkBalance(targetNode);
     }
 
     antiClockwiseRotation(topNode, midNode) {

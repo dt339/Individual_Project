@@ -214,44 +214,6 @@ class BSTTree {
 
             //Checks to see if the removed node has two children.
             } else if (nodeToRem.getLeft != null && nodeToRem.getRight != null) {
-                
-                // if (getSuccessorMode()) {
-                //     var minNode = this.searchMin(nodeToRem.getRight);
-
-                //     nodeToRem.getLeft.setParent = minNode;
-                //     minNode.setLeft = nodeToRem.getLeft;
-
-                //     if (minNode.getRight != null) {
-                //         minNode.getParent.setLeft = minNode.getRight;
-                //         minNode.getRight.setParent = minNode.getParent;
-                //     } else {
-                //         minNode.getParent.setLeft = null;
-                //     }
-
-                //     minNode.setParent = nodeToRem.getParent;
-
-                //     if (minNode.getId != nodeToRem.getRight.getId) {
-                //         minNode.setRight = nodeToRem.getRight;
-                //         nodeToRem.getRight.setParent = minNode;
-                //     }
-
-                //     if(nodeToRem.getId > nodeToRem.getParent.getId) {
-                //         nodeToRem.getParent.setRight = minNode;
-                //     } else {
-                //         nodeToRem.getParent.setLeft = minNode;
-                //     }          
-
-                //     initialMove(minNode, nodeToRem.getId);
-    
-                //     const remNode = document.getElementById(nodeToRem.getId);
-                //     remNode.remove();
-    
-                //     const canv = document.getElementById("myCanvas");
-                //     const ctx = canv.getContext("2d");
-                //     ctx.clearRect(0,0, canv.width, canv.height);
-                    
-                //     redrawTree(this.getRoot, minNode.getId);
-                // } else {
 
                 //Finds the largest node in the left subtree of the node to be removed.
                 //The Precessor.
@@ -334,7 +296,7 @@ class BSTTree {
     }
 
     //Recursively searches for the specified node.
-    nodeSearch(curNode, searchNode) {
+    search(curNode, searchNode) {
 
         //Highlights the current node being checked.
         highlightNode(curNode.getId, "lightblue");
@@ -360,7 +322,7 @@ class BSTTree {
                     //If the current node has a right child
                     //Then calls this function and compares against the right child of the current node.
                     highlightLine('L6');
-                    return setTimeout(() => this.nodeSearch(curNode.getRight, searchNode), 2000/getAnimSpeed());
+                    return setTimeout(() => this.search(curNode.getRight, searchNode), 2000/getAnimSpeed());
                 } else {
                     //If the current node has no right child
                     //The specified value does not exist in the tree
@@ -376,7 +338,7 @@ class BSTTree {
                     //If the current node has a left child
                     //Then calls this function and compares against the left child of the current node.
                     highlightLine('L11');
-                    return setTimeout(() => this.nodeSearch(curNode.getLeft, searchNode), 2000/getAnimSpeed());
+                    return setTimeout(() => this.search(curNode.getLeft, searchNode), 2000/getAnimSpeed());
                 } else {
                     //If the current node has no left child
                     //The specified value does not exist in the tree
@@ -393,7 +355,7 @@ class BSTTree {
     }
 
     //Recursively searches for a node so it can be removed.
-    searchAndRemove(curNode, searchNode) {
+    remove(curNode, searchNode) {
         highlightLine("L0");
         highlightNode(curNode.getId, "lightblue");
         if (curNode.getParent) {
@@ -415,7 +377,7 @@ class BSTTree {
             //Searches for the value in the same way as nodeSearch.
             if (searchNode > curNode.getId) {
                 if (curNode.getRight != null) {
-                    return setTimeout(() => this.searchAndRemove(curNode.getRight, searchNode), 2000/getAnimSpeed());
+                    return setTimeout(() => this.remove(curNode.getRight, searchNode), 2000/getAnimSpeed());
                 } else {
                     highlightNode(curNode.getId, "red");
                     alert("Value does not exist!");
@@ -424,7 +386,7 @@ class BSTTree {
                 }                
             } else {
                 if (curNode.getLeft != null) {
-                    return setTimeout(() => this.searchAndRemove(curNode.getLeft, searchNode), 2000/getAnimSpeed());
+                    return setTimeout(() => this.remove(curNode.getLeft, searchNode), 2000/getAnimSpeed());
                 } else {
                     highlightNode(curNode.getId, "red");
                     alert("Value does not exist!");
