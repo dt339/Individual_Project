@@ -139,65 +139,6 @@ function userSearchNode() {
     document.getElementById("nodeSearch").value = '';
 }
 
-//Swaps the position of two nodes.
-function swap(n1, n2) {
-    var inNode1 = document.getElementById(n1).value;
-    var inNode2 = document.getElementById(n2).value;
-
-    alert("node1 - " + inNode1);
-
-    const cont = document.getElementById('treeBox');
-    const contPos = cont.getBoundingClientRect();
-    const node1 = document.getElementById(inNode1);
-    const pos1 = node1.getBoundingClientRect();
-    const node2 = document.getElementById(inNode2);
-    const pos2 = node2.getBoundingClientRect();
-
-    move(inNode1,pos1.left - contPos.left + (pos1.width/2), pos1.top - contPos.top, pos2.left - contPos.left, pos2.top - contPos.top);
-    move(inNode2,pos2.left - contPos.left + (pos2.width/2), pos2.top - contPos.top, pos1.left - contPos.left, pos1.top - contPos.top);
-}
-
-function move(toMove, initPosX, initPosY, destX, destY) {
-    var id = null;
-    var elem = document.getElementById(toMove);
-    var xPos = initPosX;
-    var yPos = initPosY;    
-    
-    var xDistance = destX-initPosX;
-    var yDistance = destY-initPosY;
-    var yincrement = yDistance/xDistance;
-    
-    var xDirection = 'r';
-    if (initPosX > destX) {
-        xDirection = 'l';
-    }
-    
-    clearInterval(id);
-    id = setInterval(frame, 10);
-    function frame() {
-        if (xDirection == 'r') {
-            if (xPos >= destX) {
-                clearInterval(id);
-            } else {
-                xPos+=1;
-                elem.style.left = xPos + "px";
-                yPos += yincrement;
-                elem.style.top = yPos + "px";
-            }
-        } else {
-            if (xPos <= destX) {
-                clearInterval(id);
-            } else {
-                xPos-=1;
-                elem.style.left = xPos + "px";
-                yPos -= yincrement;
-                elem.style.top = yPos + "px";
-            }
-        }
-
-    }
-}
-
 function myFun(test) {
     document.getElementById("bill").innerHTML = test;
 }

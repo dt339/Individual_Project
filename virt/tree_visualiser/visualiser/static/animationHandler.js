@@ -296,6 +296,78 @@ function drawLine(elem1, elem2) {
     ctx.stroke();
 }
 
+function clearCanvas() {
+    const canv = document.getElementById("myCanvas");
+    const ctx = canv.getContext("2d");
+    ctx.clearRect(0,0, canv.width, canv.height);
+}
+
+function removeElem(elemId) {
+    const nodeElem = document.getElementById(elemId);
+    nodeElem.remove();
+}
+
+//Swaps the position of two nodes.
+function swap(n1, n2) {
+    // var inNode1 = document.getElementById(n1).value;
+    // var inNode2 = document.getElementById(n2).value;
+
+    //alert("node1 - " + n1);
+
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+    const node1 = document.getElementById(n1);
+    const pos1 = node1.getBoundingClientRect();
+    const node2 = document.getElementById(n2);
+    const pos2 = node2.getBoundingClientRect();
+
+    move(n1,pos1.left - contPos.left + (pos1.width/2), pos1.top - contPos.top, pos2.left - contPos.left, pos2.top - contPos.top);
+    move(n2,pos2.left - contPos.left + (pos2.width/2), pos2.top - contPos.top, pos1.left - contPos.left, pos1.top - contPos.top);
+}
+
+function move(toMove, initPosX, initPosY, destX, destY) {
+    var id = null;
+    var elem = document.getElementById(toMove);
+    var xPos = initPosX;
+    var yPos = initPosY;    
+    
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance)*getAnimSpeed();
+    
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+    
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    function frame() {
+        if (xDirection == 'r') {
+            if (xPos >= destX) {
+                clearInterval(id);
+            } else {
+                xPos+=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos += yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        } else {
+            if (xPos <= destX) {
+                clearInterval(id);
+            } else {
+                xPos-=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos -= yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        }
+
+    }
+}
+
 function baseMove() {
     var id = null;
     var elem = document.getElementById("moving");
