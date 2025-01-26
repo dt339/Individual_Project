@@ -35,8 +35,7 @@ class AVLTree {
     
 
     asdf() {
-        var searchedNode = this.search(this.getRoot, 5);
-        alert("Searched - " + searchedNode);
+        alert("root: " + this.getRoot.getId + " - left: " + this.getRoot.getLeft.getId + " - right: " + this.getRoot.getRight.getId);
     }
 
     remove(theRoot, nodeVal) {
@@ -61,8 +60,6 @@ class AVLTree {
         } else if (toRemove.getLeft == null && toRemove.getRight != null) {
             //Sets the successor and parent nodes for easier use.
             var successor = this.getSuccessor(toRemove.getRight);
-
-
 
             //Will be null if removed node is root.
             var parentOfRemoved = toRemove.getParent;
@@ -109,14 +106,14 @@ class AVLTree {
 
             if (precessor.getParent.getId != toRemove.getId) {
                 if (precessor.getLeft != null) {
-                    //Creates the relationship between the child of the precessor and the parent of the precessor.
-                    precessor.getParent.setRight = precessor.getLeft;
+                    //Creates the relationship between the child of the precessor and the parent of the precessor.                    
                     precessor.getLeft.setParent = precessor.getParent;
                     balanceStart = precessor.getLeft;
                 } else {
                     balanceStart = precessor.getParent;
                 }
 
+                precessor.getParent.setRight = precessor.getLeft;
                 precessor.setLeft = toRemove.getLeft;
                 toRemove.getLeft.setParent = precessor;
             } else {
@@ -150,18 +147,20 @@ class AVLTree {
     getPrecessor(initialNode) {
         //Finds the largest node in the left subtree of initialNode;
         if (initialNode.getRight == null) {
+            alert("precessor - " + initialNode.getId);
             return initialNode;
         } else {
-            return initialNode.getRight;
+            return this.getPrecessor(initialNode.getRight);
         }
     }   
 
     getSuccessor(initialNode) {
         //Finds the smallest node in the right subtree of initialNode;
         if (initialNode.getLeft == null) {
+            alert("precessor - " + initialNode.getId);
             return initialNode;
         } else {
-            return initialNode.getLeft;
+            return this.getSuccessor(initialNode.getLeft);
         }
     }
 

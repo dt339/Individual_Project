@@ -54,6 +54,18 @@ class BSTTree {
         }
         highlightLine("L2");
 
+        // alert("cur: " + curNode.getId);
+        // if (curNode.getLeft != null) {
+        //     alert("left: " + curNode.getLeft.getId);
+        // } else {
+        //     alert("left: null");
+        // }
+        // if (curNode.getRight != null) {
+        //     alert("right: " + curNode.getRight.getId);
+        // } else {
+        //     alert("right: null");
+        // }
+
         //Checks to see if the new node is greater than the node currently being checked.
         if (newNode.getId > curNode.getId) {
             //Checks to see if the current node has a right child.
@@ -140,12 +152,19 @@ class BSTTree {
     removeNode(nodeToRem) {
         //Checks if the node has 0 children.
         if (nodeToRem.getLeft == null && nodeToRem.getRight == null) {
-            //Sets the parent of the node to not have it as a child.
-            if (nodeToRem.getId > nodeToRem.getParent.getId) {
-                nodeToRem.getParent.setRight = null;
+
+            //If the removed node is removed then sets the root of the tree to be null / empty
+            if (this.getRoot.getId == nodeToRem.getId) {
+                this.setRoot = null;
             } else {
-                nodeToRem.getParent.setLeft = null;
+                //Sets the parent of the node to not have it as a child.
+                if (nodeToRem.getId > nodeToRem.getParent.getId) {
+                    nodeToRem.getParent.setRight = null;
+                } else {
+                    nodeToRem.getParent.setLeft = null;
+                }
             }
+
             //Deletes the node from the user's view.
             const nodeElem = document.getElementById(nodeToRem.getId);
             nodeElem.remove();
@@ -162,11 +181,17 @@ class BSTTree {
         } else {
             //Checks to see if the node has only a right child.
             if (nodeToRem.getLeft == null && nodeToRem.getRight != null) {
-                //Sets the parent of the node to have the removed node's right child as it's own child..
-                if(nodeToRem.getId > nodeToRem.getParent.getId) {
-                    nodeToRem.getParent.setRight = nodeToRem.getRight;
+
+                //If the removed node is removed then sets the root of the tree to be null / empty
+                if (this.getRoot.getId == nodeToRem.getId) {
+                    this.setRoot = nodeToRem.getRight;
                 } else {
-                    nodeToRem.getParent.setLeft = nodeToRem.getRight;
+                    //Sets the parent of the node to have the removed node's right child as it's own child..
+                    if(nodeToRem.getId > nodeToRem.getParent.getId) {
+                        nodeToRem.getParent.setRight = nodeToRem.getRight;
+                    } else {
+                        nodeToRem.getParent.setLeft = nodeToRem.getRight;
+                    }
                 }
                 nodeToRem.getRight.setParent = nodeToRem.getParent;
 
@@ -188,12 +213,19 @@ class BSTTree {
 
             //Checks to see if the node has only a left child.
             } else if (nodeToRem.getLeft != null && nodeToRem.getRight == null) {
-                //Sets the parent of the remove node to have its child be the left child of the removed node.
-                if(nodeToRem.getId > nodeToRem.getParent.getId) {
-                    nodeToRem.getParent.setRight = nodeToRem.getLeft;
+
+                //If the removed node is removed then sets the root of the tree to be null / empty
+                if (this.getRoot.getId == nodeToRem.getId) {
+                    this.setRoot = nodeToRem.getLeft;
                 } else {
-                    nodeToRem.getParent.setLeft = nodeToRem.getLeft;
-                }
+                    //Sets the parent of the remove node to have its child be the left child of the removed node.
+                    if(nodeToRem.getId > nodeToRem.getParent.getId) {
+                        nodeToRem.getParent.setRight = nodeToRem.getLeft;
+                    } else {
+                        nodeToRem.getParent.setLeft = nodeToRem.getLeft;
+                    }
+                }              
+                
                 nodeToRem.getLeft.setParent = nodeToRem.getParent;
 
                 //Calls a function to visually move nodes into place.
@@ -243,12 +275,16 @@ class BSTTree {
                     nodeToRem.getLeft.setParent = maxNode;
                 }
 
-                //Sets the children of the parent of the removed node to be the Precessor.
-                if(nodeToRem.getId > nodeToRem.getParent.getId) {
-                    nodeToRem.getParent.setRight = maxNode;
+                if (nodeToRem.getId == this.getRoot.getId) {
+                    this.setRoot = maxNode;
                 } else {
-                    nodeToRem.getParent.setLeft = maxNode;
-                }          
+                    //Sets the children of the parent of the removed node to be the Precessor.
+                    if(nodeToRem.getId > nodeToRem.getParent.getId) {
+                        nodeToRem.getParent.setRight = maxNode;
+                    } else {
+                        nodeToRem.getParent.setLeft = maxNode;
+                    }        
+                }
                 
                 //Calls a function to visualy move all necessary nodes.
                 initialMove(maxNode, nodeToRem.getId);
