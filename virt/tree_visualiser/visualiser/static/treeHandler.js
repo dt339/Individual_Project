@@ -131,8 +131,7 @@ function userSearchNode() {
             //Sets the current process and calls the search function.
             setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
-            newTree.search(newTree.getRoot, intInput);
-            
+            newTree.search(newTree.getRoot, intInput);            
         }
     }
     //Empties the input field.

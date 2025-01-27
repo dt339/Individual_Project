@@ -53,20 +53,31 @@ class AnimQueue {
         let newCom = new Command(type, params);
         this.setBack = this.getBack + 1;
         this.getQueue.push(newCom);
-        alert("added - " + type);
+        //alert("added - " + type);
     }
 
     runCommands() {
-        if (this.getBack != 0) {
-            var currentCommand = this.getQueue.shift();
-            //alert("curr - " + currentCommand.getType);
-            this.exeCommand(currentCommand);
-            this.setBack = this.getBack - 1;
-            setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
+        var currentCommand = this.getQueue.shift();
+        //alert("curr - " + currentCommand.getType);
+        this.exeCommand(currentCommand);
+        this.setBack = this.getBack - 1;        
 
+        if (this.getBack != 0) {
+            setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
         } else {
-            alert("Queue is empty");
-        }        
+            //alert("Queue is empty");
+        }    
+
+        // if (this.getBack != 0) {
+        //     var currentCommand = this.getQueue.shift();
+        //     //alert("curr - " + currentCommand.getType);
+        //     this.exeCommand(currentCommand);
+        //     this.setBack = this.getBack - 1;
+        //     setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
+
+        // } else {
+        //     alert("Queue is empty");
+        // }        
 
     }
 
@@ -90,6 +101,10 @@ class AnimQueue {
             recursiveMove(paramArray[0]);
         } else if (com.getType == "removeNode") {
             removeElem(paramArray[0]);
+        } else if (com.getType == "highlightNode") {
+            highlightNode(paramArray[0], paramArray[1]);
+        } else if (com.getType == "highlightLine") {
+            highlightLine(paramArray[0]);
         }
 
         

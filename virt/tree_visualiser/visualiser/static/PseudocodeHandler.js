@@ -4,6 +4,22 @@ const noneProcess = ["No current process!"];
 const searchProcess = ["Start search at root", "Compare current node N with value being searched for S", "If S = N then", "  S has been found!", "If S > N then", "  If N has a right child then", "     Make the right child of N the Current Node", "  If N has no right child then", "     S does not exist in the tree", "If S < N then", "  If N has a left child then", "     Make the left child of N the Current Node", "  If N has no left child then", "     S does not exist in the tree"];
 const insertProcess = ["Start search for location at root", "If there is no root, insert new node N at root", "Compare current node C to N", "If N > C then", "  If C has a right child then", "     Repeat with the right child of C being the new current node", "  If C has no right child then", "     Insert N as the right child of C", "If N < C then", "  If C has a left child then ", "      Repeat with the left child of C being the new current node", "  If C has no left child then ", "      Insert N as the left child of C", "If N = C then", "  N already exists and cannot be inserted"];
 const removeProcess = ["Search for node to be removed R", "If R is found then", "  Remove R", "  If R had no children then", "     Take no further action", "  Else If R had only 1 child then", "     Replace R with the only child", "  Else If R had 2 children then", "     Replace R with the largest value in the left subtree of R", "Else", "  R does not exist so cannot be removed"];
+const aVLInsertProcess = [
+    "Start search for position at root",
+    "Compare current node C against new value to insert N",
+    "If N = C Then",
+    "  N already exists in the tree and cannot be inserted",
+    "If N > C Then",
+    "  If C has a right child then",
+    "     Compare N to the right child of C",
+    "  Else If C does not have a right child then",
+    "     Insert N as the right child of C",
+    "Else If N < C Then",
+    "  If C has a left child then",
+    "     Compare N to the left child of C",
+    "  Else If C does not have a left child then",
+    "     Insert N as the left child of C",]
+
 
 // const fr = new FileReader();
 // const filePath = new F

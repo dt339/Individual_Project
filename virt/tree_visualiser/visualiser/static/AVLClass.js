@@ -65,6 +65,7 @@ class AVLTree {
             } else if (toRemove.getLeft == null && toRemove.getRight != null) {
                 //Sets the successor and parent nodes for easier use.
                 var successor = this.getSuccessor(toRemove.getRight);
+                
 
                 //Will be null if removed node is root.
                 var parentOfRemoved = toRemove.getParent;
@@ -161,21 +162,29 @@ class AVLTree {
     }
 
     getPrecessor(initialNode) {
+        this.queue.addCommand("highlightNode", [initialNode.getId, "lightblue"]);
         //Finds the largest node in the left subtree of initialNode;
         if (initialNode.getRight == null) {
+            this.queue.addCommand("highlightNode", [initialNode.getId, "lightgreen"]);
+            this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
             alert("precessor - " + initialNode.getId);
             return initialNode;
         } else {
+            this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
             return this.getPrecessor(initialNode.getRight);
         }
     }   
 
-    getSuccessor(initialNode) {
+    getSuccessor(initialNode) {        
+        this.queue.addCommand("highlightNode", [initialNode.getId, "lightblue"]);
         //Finds the smallest node in the right subtree of initialNode;
         if (initialNode.getLeft == null) {
             alert("precessor - " + initialNode.getId);
+            this.queue.addCommand("highlightNode", [initialNode.getId, "lightgreen"]);
+            this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
             return initialNode;
         } else {
+            this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
             return this.getSuccessor(initialNode.getLeft);
         }
     }
@@ -186,6 +195,8 @@ class AVLTree {
             //If the tree is empty, sets the root of the tree to be the new value.
             this.setRoot = newNode;
             this.queue.addCommand("createRoot", [nodeVal]);
+            this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
+            this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
             if (nodeArr.length > 1) {
                 nodeArr.shift();
@@ -202,6 +213,11 @@ class AVLTree {
 
     
     recursiveInsert(newNode, curNode, depth, nodeArr) {
+        this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
+        if (curNode.getParent) {
+            this.queue.addCommand("highlightNode", [curNode.getParent.getId, "white"]);
+        }
+
         if (newNode.getId > curNode.getId) {
 
             if (curNode.getRight == null) {
@@ -210,7 +226,10 @@ class AVLTree {
                 newNode.setParent = curNode;      
                           
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
-                
+                this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
+                this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+                this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
+
                 this.checkBalance(newNode);  
 
             } else {
@@ -225,6 +244,9 @@ class AVLTree {
                 newNode.setParent = curNode;
 
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
+                this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
+                this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+                this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
                 this.checkBalance(newNode);               
                 
@@ -235,7 +257,7 @@ class AVLTree {
             }
         } else if (newNode.getId == curNode.getId) {
             //Show node already exists.
-
+            alert("Value already exists in the tree");
 
         } else {
             alert("Something has gone wrong.");
@@ -246,17 +268,23 @@ class AVLTree {
         if (currentNode == null) {
             //Value does not exist.
             alert("Value does not exist");
+            this.queue.runCommands();
             return null;
         } else {
+            this.queue.addCommand("highlightNode", [currentNode.getId, "lightblue"]);
             if (targetNode == currentNode.getId) {
+                this.queue.addCommand("highlightNode", [currentNode.getId, "lightgreen"]);
+                this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+                this.queue.runCommands();
                 alert("Found - " + currentNode.getId);
                 return currentNode;
             } else {
+                this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
                 if (targetNode > currentNode.getId) {
                     return this.search(currentNode.getRight, targetNode);
                 } else if (targetNode < currentNode.getId) {
                     return this.search(currentNode.getLeft, targetNode);
-                }
+                }                
             }    
         }     
 
@@ -287,14 +315,16 @@ class AVLTree {
                 //Set left child of B to be Y
                 //Set parent of Y to be B
                 midNode.setLeft = bottomNode.getRight;
-                bottomNode.getRight.setParent = midNode;
+                if (bottomNode.getRight != null) {
+                    bottomNode.getRight.setParent = midNode;
+                }
 
                 //Set right child of C to be B
                 //Set parent of B to be C
                 bottomNode.setRight = midNode;
                 midNode.setParent = bottomNode;
 
-                this.antiClockwiseRotation(targetNode, midNode);
+                this.antiClockwiseRotation(targetNode, bottomNode);
             }
 
 
@@ -320,7 +350,9 @@ class AVLTree {
                 //Set right child of B to be Z
                 //Set parent of Z to be B 
                 midNode.setRight = bottomNode.getLeft;
-                bottomNode.getLeft.setParent = midNode;
+                if (bottomNode.getLeft != null) {
+                    bottomNode.getLeft.setParent = midNode;
+                }
 
                 //Set parent of B to be C
                 //Set left child of C to be B
