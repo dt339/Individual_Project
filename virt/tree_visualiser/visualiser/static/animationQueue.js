@@ -105,6 +105,8 @@ class AnimQueue {
             highlightNode(paramArray[0], paramArray[1]);
         } else if (com.getType == "highlightLine") {
             highlightLine(paramArray[0]);
+        } else if (com.getType == "setProcess") {
+            setCurrProcess(paramArray[0]);
         }
 
         

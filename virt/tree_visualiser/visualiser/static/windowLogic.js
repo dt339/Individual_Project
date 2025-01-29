@@ -2,10 +2,14 @@
 window.onresize = resizeCanvas;
 window.onload = function(){resizeCanvas()};
 
+const path = window.location.pathname;
+var currentPage = path.split('/').filter(Boolean).pop();
+
 //Stores information used for UI elements.
 var animationSpeed = 10;
 var successorMode = false;
 var showCode = false;
+var treeType = currentPage;
 
 //Gets the value of the speed slider and sets the animation speed to that value.
 function updateAnimSpeed() {    
@@ -39,6 +43,10 @@ function getSuccessorMode() {
 
 function getShowCode() {
     return showCode;
+}
+
+function getTreeType() {
+    return treeType;
 }
 
 //Changes the size of the area where the tree is visualized to fit the current window.

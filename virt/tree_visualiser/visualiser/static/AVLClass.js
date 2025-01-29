@@ -40,10 +40,15 @@ class AVLTree {
     }
 
     remove(theRoot, nodeVal) {
+        this.queue.addCommand("highlightLine", ["L0"]);
+        this.queue.addCommand("setProcess", ["search"]);
         var toRemove = this.search(this.getRoot, nodeVal);
+        this.queue.addCommand("setProcess", ["remove"]);
         var balanceStart = null;
 
         if (toRemove != null) {
+            this.queue.addCommand("highlightLine", ["L1"]);
+            this.queue.addCommand("highlightLine", ["L2"]);
             //If the removed node has no children.
             if (toRemove.getLeft == null && toRemove.getRight == null) {
                 if (this.getRoot.getId == toRemove.getId) {
@@ -57,15 +62,16 @@ class AVLTree {
                     balanceStart = toRemove.getParent;
                     
                 }
-
+                
                 this.queue.addCommand("removeNode", [toRemove.getId]);
                 this.queue.addCommand("redrawTree", [this.getRoot, null]);
+                this.queue.addCommand("highlightLine", ["L3"]);
+                this.queue.addCommand("highlightLine", ["L4"]);
 
             //If the removed node has only a right child.
             } else if (toRemove.getLeft == null && toRemove.getRight != null) {
                 //Sets the successor and parent nodes for easier use.
-                var successor = this.getSuccessor(toRemove.getRight);
-                
+                var successor = this.getSuccessor(toRemove.getRight);                
 
                 //Will be null if removed node is root.
                 var parentOfRemoved = toRemove.getParent;
@@ -101,7 +107,14 @@ class AVLTree {
                 }
 
                 successor.setParent = parentOfRemoved;
+
+                this.queue.addCommand("highlightLine", ["L2"]);
+                this.queue.addCommand("highlightLine", ["L5"]);
+                this.queue.addCommand("highlightLine", ["L6"]);
+                this.queue.addCommand("highlightNode", [successor.getId, "lightgreen"]);
                 this.queue.addCommand("initMove", [successor, toRemove.getId]);
+                this.queue.addCommand("highlightNode", [successor.getId, "white"]);
+                
 
             //If the removed node has only a left child or 2 children.
             //The tree will always replace the removed node with the Precessor when it can.
@@ -145,16 +158,28 @@ class AVLTree {
                     precessor.setRight = toRemove.getRight;
                 }
 
+                this.queue.addCommand("highlightLine", ["L2"]);
+                this.queue.addCommand("highlightLine", ["L7"]);
+                this.queue.addCommand("highlightLine", ["L8"]);
+                this.queue.addCommand("highlightNode", [precessor.getId, "lightgreen"]);
                 this.queue.addCommand("initMove", [precessor, toRemove.getId]);
+                this.queue.addCommand("highlightNode", [precessor.getId, "white"]);
             }
 
             //Checks the tree for any imbalances caused by the removal.
             //The node it starts from is the lowest node included in the removal operation.
-            this.checkBalance(balanceStart);
+            
             this.queue.addCommand("removeNode", [toRemove.getId]);
+            this.queue.addCommand("highlightLine", ["L9"]);
+            this.queue.addCommand("setProcess", ["balance"]);
+            this.checkBalance(balanceStart);
             this.queue.addCommand("redrawTree", [this.getRoot, null]);
             this.queue.runCommands();
         } else {
+            this.queue.addCommand("highlightLine", ["L10"]);
+            this.queue.addCommand("highlightLine", ["L11"]);
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
             alert("Value does not exist so cannot be rmeoved");
         }
 
@@ -191,7 +216,10 @@ class AVLTree {
 
     insert(nodeVal, nodeArr) {
         var newNode = new Node(parseInt(nodeVal, 10));
+        this.queue.addCommand("highlightLine", ["L0"]);
         if (this.getRoot == null) {
+            this.queue.addCommand("highlightLine", ["L1"]);
+            this.queue.addCommand("highlightLine", ["L2"]);
             //If the tree is empty, sets the root of the tree to be the new value.
             this.setRoot = newNode;
             this.queue.addCommand("createRoot", [nodeVal]);
@@ -206,52 +234,70 @@ class AVLTree {
             }
 
         } else {
+            this.queue.addCommand("highlightLine", ["L3"]);
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
-        }        
+        }    
+        this.queue.addCommand("setProcess", ["none"]);  
         this.queue.runCommands();
     }
 
     
     recursiveInsert(newNode, curNode, depth, nodeArr) {
+        this.queue.addCommand("highlightLine", ["L4"]);
         this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
         if (curNode.getParent) {
             this.queue.addCommand("highlightNode", [curNode.getParent.getId, "white"]);
         }
 
         if (newNode.getId > curNode.getId) {
-
+            this.queue.addCommand("highlightLine", ["L7"]);
             if (curNode.getRight == null) {
                 //inserts the node as the right child 
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;      
                           
+                this.queue.addCommand("highlightLine", ["L10"]);
+                this.queue.addCommand("highlightLine", ["L11"]);
+
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
                 this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
                 this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
                 this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
+                
+                this.queue.addCommand("setProcess", ["balance"]);
                 this.checkBalance(newNode);  
 
-            } else {
+            } else {                
+                this.queue.addCommand("highlightLine", ["L8"]);
+                this.queue.addCommand("highlightLine", ["L9"]);
+
                 depth++;
                 this.recursiveInsert(newNode, curNode.getRight, depth, nodeArr);
             }
         } else if (newNode.getId < curNode.getId) {
-
+            this.queue.addCommand("highlightLine", ["L12"]);
             if (curNode.getLeft == null) {
 
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
+
+                this.queue.addCommand("highlightLine", ["L15"]);
+                this.queue.addCommand("highlightLine", ["L16"]); 
 
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
                 this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
                 this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
                 this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
+                this.queue.addCommand("setProcess", ["balance"]);
                 this.checkBalance(newNode);               
                 
                 
             } else {
+                this.queue.addCommand("highlightLine", ["L13"]);
+                this.queue.addCommand("highlightLine", ["L14"]);
+
                 depth++;
                 this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr);
             }
@@ -259,48 +305,98 @@ class AVLTree {
             //Show node already exists.
             alert("Value already exists in the tree");
 
+            this.queue.addCommand("highlightLine", ["L5"]);
+            this.queue.addCommand("highlightLine", ["L6"]);
+            this.queue.addCommand("setProcess", ["none"]);
+
         } else {
             alert("Something has gone wrong.");
         }
     }
 
     search(currentNode, targetNode) {
-        if (currentNode == null) {
-            //Value does not exist.
-            alert("Value does not exist");
+        this.queue.addCommand("highlightLine", ["L1"]);
+
+        this.queue.addCommand("highlightNode", [currentNode.getId, "lightblue"]);
+        if (targetNode == currentNode.getId) {
+            this.queue.addCommand("highlightLine", ["L2"]);
+            this.queue.addCommand("highlightLine", ["L3"]);
+            this.queue.addCommand("highlightNode", [currentNode.getId, "lightgreen"]);
+            this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+            this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
-            return null;
-        } else {
-            this.queue.addCommand("highlightNode", [currentNode.getId, "lightblue"]);
-            if (targetNode == currentNode.getId) {
-                this.queue.addCommand("highlightNode", [currentNode.getId, "lightgreen"]);
+            return currentNode;
+        } else if (targetNode > currentNode.getId) {
+            this.queue.addCommand("highlightLine", ["L4"]);
+            if (currentNode.getRight != null) {
+                this.queue.addCommand("highlightLine", ["L5"]);
+                this.queue.addCommand("highlightLine", ["L6"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
-                this.queue.runCommands();
-                alert("Found - " + currentNode.getId);
-                return currentNode;
+                return this.search(currentNode.getRight, targetNode);
             } else {
+                this.queue.addCommand("highlightLine", ["L7"]);
+                this.queue.addCommand("highlightLine", ["L8"]);
+                this.queue.addCommand("highlightNode", [currentNode.getId, "red"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
-                if (targetNode > currentNode.getId) {
-                    return this.search(currentNode.getRight, targetNode);
-                } else if (targetNode < currentNode.getId) {
-                    return this.search(currentNode.getLeft, targetNode);
-                }                
-            }    
-        }     
+                this.queue.addCommand("setProcess", ["none"]);
+                this.queue.runCommands();
+                return null;
+            }
+        } else if (targetNode < currentNode.getId) {
+            this.queue.addCommand("highlightLine", ["L9"]);
+            if (currentNode.getLeft != null) {
+                this.queue.addCommand("highlightLine", ["L10"]);
+                this.queue.addCommand("highlightLine", ["L11"]);
+                this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+                return this.search(currentNode.getLeft, targetNode);
+            } else {
+                this.queue.addCommand("highlightLine", ["L12"]);
+                this.queue.addCommand("highlightLine", ["L13"]);
+                this.queue.addCommand("highlightNode", [currentNode.getId, "red"]);
+                this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+                this.queue.addCommand("SetProcess", ["none"]);
+                this.queue.runCommands();
+                return null;
+            }
+        }
+
+
+        // if (currentNode == null) {
+        //     //Value does not exist.
+        //     alert("Value does not exist");
+
+        //     this.queue.runCommands();
+        //     return null;
+        // } else {
+        //     this.queue.addCommand("highlightNode", [currentNode.getId, "lightblue"]);
+        //     if (targetNode == currentNode.getId) {
+        //         this.queue.addCommand("highlightNode", [currentNode.getId, "lightgreen"]);
+        //         this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+        //         this.queue.runCommands();
+        //         alert("Found - " + currentNode.getId);
+        //         return currentNode;
+        //     } else {
+        //         this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+        //         if (targetNode > currentNode.getId) {
+        //             return this.search(currentNode.getRight, targetNode);
+        //         } else if (targetNode < currentNode.getId) {
+        //             return this.search(currentNode.getLeft, targetNode);
+        //         }                
+        //     }    
+        // }     
 
     }
 
     rebalance(targetNode, balanceFactor) {
-        this.setLowestImbalance = null;
-        this.setLowestImbalanceFactor = null;
         alert("Rebalance! - " + targetNode.getId);
         if (balanceFactor > 1) {
+            this.queue.addCommand("highlightLine", ["L2"]);
             //anticlockwise rotation
             var midNode = targetNode.getRight;
 
             if(this.calculateHeight(midNode.getLeft) < this.calculateHeight(midNode.getRight)) {
                 //Regular rotation
-
+                this.queue.addCommand("highlightLine", ["L5"]);
                 this.antiClockwiseRotation(targetNode, midNode);
             } else {
                 //Special rotation
@@ -324,6 +420,9 @@ class AVLTree {
                 bottomNode.setRight = midNode;
                 midNode.setParent = bottomNode;
 
+                this.queue.addCommand("highlightLine", ["L3"]);
+                this.queue.addCommand("highlightLine", ["L4"]);
+                this.queue.addCommand("highlightLine", ["L5"]);
                 this.antiClockwiseRotation(targetNode, bottomNode);
             }
 
@@ -331,10 +430,10 @@ class AVLTree {
         } else {
             //clockwise rotation
             var midNode = targetNode.getLeft;
-            
+            this.queue.addCommand("highlightLine", ["L6"]);
             if (this.calculateHeight(midNode.getLeft) > this.calculateHeight(midNode.getRight)) {
                 //Regular rotation
-
+                this.queue.addCommand("highlightLine", ["L9"]);
                 this.clockwiseRotation(targetNode, midNode);
 
             } else {
@@ -359,6 +458,9 @@ class AVLTree {
                 midNode.setParent = bottomNode;
                 bottomNode.setLeft = midNode;
 
+                this.queue.addCommand("highlightLine", ["L7"]);
+                this.queue.addCommand("highlightLine", ["L8"]);
+                this.queue.addCommand("highlightLine", ["L9"]);
                 this.clockwiseRotation(targetNode, bottomNode);
                 
             }
@@ -435,18 +537,54 @@ class AVLTree {
     }
 
     checkBalance(curNode) {
-        if (curNode == null) {
-            //No imbalance
+        var curBalance = this.calculateBalance(curNode);
+        this.queue.addCommand("highlightLine", ["L0"]);
+        this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
+        if (curBalance > 1 || curBalance <-1) {
+            //UNBALANCED
+            alert("unbalanced - " + curNode.getId);
+            this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+            this.rebalance(curNode, curBalance);
         } else {
-            var curBalance = this.calculateBalance(curNode);
-            if (curBalance > 1 || curBalance <-1) {
-                //UNBALANCED
-                alert("unbalanced - " + curNode.getId);
-                this.rebalance(curNode, curBalance);
-            } else {
+            this.queue.addCommand("highlightLine", ["L10"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "lightgreen"]);
+            this.queue.addCommand("highlightLine", ["L11"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+            if (curNode.getParent != null) {
+                this.queue.addCommand("highlightLine", ["L14"]);
+                this.queue.addCommand("highlightLine", ["L15"]);
                 this.checkBalance(curNode.getParent);
+            } else {
+                this.queue.addCommand("highlightLine", ["L12"]);
+                this.queue.addCommand("highlightLine", ["L13"]);
             }
+            
         }
+
+
+
+        // if (curNode == null) {
+        //     //No imbalance
+        //     alert("5");
+        // } else {
+        //     var curBalance = this.calculateBalance(curNode);
+        //     //this.queue.addCommand("highlightLine", ["L0"]);
+        //     this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
+        //     if (curBalance > 1 || curBalance <-1) {
+        //         //UNBALANCED
+        //         alert("unbalanced - " + curNode.getId);
+        //         this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
+        //         this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+        //         this.rebalance(curNode, curBalance);
+        //     } else {
+        //         this.queue.addCommand("highlightLine", ["L10"]);
+        //         this.queue.addCommand("highlightNode", [curNode.getId, "lightgreen"]);
+        //         this.queue.addCommand("highlightLine", ["L11"]);
+        //         this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+        //         this.checkBalance(curNode.getParent);
+        //     }
+        // }
     }
 
     calculateBalance(checkNode) {

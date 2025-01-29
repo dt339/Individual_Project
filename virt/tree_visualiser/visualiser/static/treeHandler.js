@@ -1,11 +1,13 @@
 let newTree = null;
 
-const path = window.location.pathname;
-const currentPage = path.split('/').filter(Boolean).pop();
+// const path = window.location.pathname;
+// const currentPage = path.split('/').filter(Boolean).pop();
 
-if (currentPage == "BST") {
+var thisPage = getTreeType();
+//alert(thisPage);
+if (thisPage == "BST") {
     newTree = new BSTTree();
-} else if (currentPage == "AVL") {
+} else if (thisPage == "AVL") {
     newTree = new AVLTree();
 } else {
     alert("An error has occured.");
