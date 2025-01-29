@@ -56,6 +56,44 @@ const aVLRemoveProcess = [
     "Else", 
     "  R does not exist so cannot be removed"];
 
+var binaryHeapInsert = [
+    "Insert node at next availlable position",
+    "Next availlable position is the next empty space on the lwest depth going left to right",
+    "Then check heap order priority"];
+    
+var binaryHeapRemoveMin = [
+    "Swap the mininum node with the rightmost node on the lowest depth",
+    "Remove Minimum Node",
+    "Perform heap order priority check on heap"
+    ];
+    
+//Use if removing root and replacing it with lower node
+var minHeapifyDown = [
+    "If current node C has one child Then",
+    "  If C > the only child of C Then",
+    "     Swap C and its child",
+    "     Check the heap order of C again",
+    "  Else If C < the only child of C Then",
+    "     Take no further action",
+    "Else If C has two children L and R Then",
+    "  If C > L OR C > R Then",
+    "     If L < R Then",
+    "        Swap C and L",
+    "        Check the heap order priority of C again",
+    "     Else",
+    "        Swap C and R",
+    "        Check the heap order priority of C again",
+    "  Else",
+    "     Take no further action"]
+    
+var minHeapifyUp = [
+    "Compare current node N against its parent P",
+    "If N < P Then",
+    "  Swap N and P",
+    "  Check the heap order priority of N",
+    "Else",
+    "  Take no further action"];
+
 // const fr = new FileReader();
 // const filePath = new F
 
@@ -76,6 +114,10 @@ if (curPage == "BST") {
     removeProcess = bSTRemoveProcess;
     
 } else if (curPage == "AVL") {
+    searchProcess = bSTSearchProcess;
+    insertProcess = aVLInsertProcess;
+    removeProcess = aVLRemoveProcess;
+} else if (curPage == "BH") {
     searchProcess = bSTSearchProcess;
     insertProcess = aVLInsertProcess;
     removeProcess = aVLRemoveProcess;

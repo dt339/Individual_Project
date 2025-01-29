@@ -174,6 +174,7 @@ class AVLTree {
             this.queue.addCommand("setProcess", ["balance"]);
             this.checkBalance(balanceStart);
             this.queue.addCommand("redrawTree", [this.getRoot, null]);
+            this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
         } else {
             this.queue.addCommand("highlightLine", ["L10"]);

@@ -9,12 +9,18 @@ if (thisPage == "BST") {
     newTree = new BSTTree();
 } else if (thisPage == "AVL") {
     newTree = new AVLTree();
+} else if (thisPage == "BH") {
+    newTree = new BinaryHeap();
 } else {
     alert("An error has occured.");
 }
 
 function getName() {
-    newTree.getTreeName();
+    //newTree.getTreeName();
+    var num =  2;
+    var bin = num.toString(2);
+    alert(bin);
+
 }
 
 function displayTree() {

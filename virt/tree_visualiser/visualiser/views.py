@@ -21,6 +21,9 @@ def bst(request):
 def avl(request):
   return render(request, "AVL.html")
 
+def binHeap(request):
+  return render(request, "BH.html")
+
 def tree_view(request):
   return render(request, "tree.html")
 
