@@ -37,21 +37,23 @@ class BinaryHeap {
             //If the tree is empty, sets the root of the tree to be the new value.
             this.setRoot = newNode;
             this.setNextPos = 2;
+            this.queue.addCommand("createRoot", [newNode.getId, newNode.getId]);
         } else {
             var path = this.calculatePath();            
             //Increases the next position.
             this.setNextPos = this.getNextPos+1;
-            alert(path);
+            //alert(path);
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr, path);
         }    
-        // this.queue.addCommand("setProcess", ["none"]);  
-        // this.queue.runCommands();
+        //this.queue.addCommand("setProcess", ["none"]);  
+        this.queue.runCommands();
     }
 
     recursiveInsert(newNode, curNode, depth, nodeArr, path) {
         //alert("path - " + path);
         if (path.length > 1) {
             //alert("recurse again")
+            depth++;
             if (path.shift() == "1") {
                 this.recursiveInsert(newNode, curNode.getRight, depth++, nodeArr, path);
             } else {
@@ -63,11 +65,13 @@ class BinaryHeap {
                 //alert("right")
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;
+                this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
                 this.heapifyUp(newNode);
             } else {
                 //alert("left")
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
+                this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
                 this.heapifyUp(newNode);
             }
         }
@@ -87,6 +91,9 @@ class BinaryHeap {
         var rootNode = this.getRoot;
         //Swap root and node
 
+        this.queue.addCommand("swap", [this.getRoot.getId, replacementNode.getId]);
+        this.queue.addCommand("removeNode", [this.getRoot.getId]);
+
         replacementNode.setLeft = rootNode.getLeft;
         replacementNode.setRight = rootNode.getRight;
 
@@ -101,7 +108,11 @@ class BinaryHeap {
         replacementNode.setParent = null;
 
         this.setRoot = replacementNode;
+
+        
         this.heapifyDown(this.getRoot);
+        this.queue.runCommands();
+        this.queue.addCommand("redrawTree", [this.getRoot, null]);
     }
 
     findNode(curNode, path) {
@@ -179,7 +190,7 @@ class BinaryHeap {
         //Swap current and parent node.
         var parent = child.getParent;
         var grandParent = parent.getParent;
-        alert("cur - " + child.getId + " parent - " + parent.getId);
+        //alert("cur - " + child.getId + " parent - " + parent.getId);
 
         child.setParent = grandParent;
         if (grandParent != null) {
@@ -228,6 +239,7 @@ class BinaryHeap {
         }
 
         parent.setParent = child;
+        this.queue.addCommand("swap", [parent.getId, child.getId]);
 
 
         // //Check to see if the parent is the root of the tree.
@@ -264,7 +276,7 @@ class BinaryHeap {
     }
 
     heapifyUp(curNode) {
-        alert("traversal - " + this.traverse(this.getRoot));
+        //alert("traversal - " + this.traverse(this.getRoot));
         if (curNode.getParent != null) {
 
             if (curNode.getId < curNode.getParent.getId) {
