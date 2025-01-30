@@ -38,6 +38,8 @@ class BinaryHeap {
             this.setRoot = newNode;
             this.setNextPos = 2;
             this.queue.addCommand("createRoot", [newNode.getId, newNode.getId]);
+            this.queue.addCommand("highlightNode", [newNode.getId, 'lightblue']);
+            this.queue.addCommand("highlightNode", [newNode.getId, 'white']);
         } else {
             var path = this.calculatePath();            
             //Increases the next position.
@@ -50,6 +52,10 @@ class BinaryHeap {
     }
 
     recursiveInsert(newNode, curNode, depth, nodeArr, path) {
+        this.queue.addCommand("highlightNode", [curNode.getId, 'lightblue']);
+        if (curNode.getParent!=null) {
+            this.queue.addCommand("highlightNode", [curNode.getParent.getId, 'white']);
+        }
         //alert("path - " + path);
         if (path.length > 1) {
             //alert("recurse again")
@@ -66,12 +72,14 @@ class BinaryHeap {
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
+                this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 this.heapifyUp(newNode);
             } else {
                 //alert("left")
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
+                this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 this.heapifyUp(newNode);
             }
         }
@@ -91,7 +99,9 @@ class BinaryHeap {
         var rootNode = this.getRoot;
         //Swap root and node
 
+        this.queue.addCommand("highlightNode", [replacementNode.getId, 'lightgreen']);
         this.queue.addCommand("swap", [this.getRoot.getId, replacementNode.getId]);
+        this.queue.addCommand("highlightNode", [replacementNode.getId, 'white']);
         this.queue.addCommand("removeNode", [this.getRoot.getId]);
 
         replacementNode.setLeft = rootNode.getLeft;
@@ -158,6 +168,8 @@ class BinaryHeap {
             if (leftChild.getId < curNode.getId) {
                 //If the left child is smaller, swap the two nodes around.
                 //swap
+                this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
+                this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 this.swapNodes(curNode, leftChild);
                 this.heapifyDown(curNode);
             } else {
@@ -169,6 +181,8 @@ class BinaryHeap {
             //Swap with the smallest node if it is smaller than the current node.
             if (leftChild.getId < rightChild.getId) {
                 if (leftChild.getId < curNode.getId) {
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                     this.swapNodes(curNode, leftChild);
                     this.heapifyDown(curNode);
                 } else {
@@ -177,6 +191,8 @@ class BinaryHeap {
             } else {
                 if (rightChild.getId < curNode.getId) {
                     //swap
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                     this.swapNodes(curNode, rightChild);
                     this.heapifyDown(curNode);
                 } else {
