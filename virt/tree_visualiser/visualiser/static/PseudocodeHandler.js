@@ -56,19 +56,18 @@ const aVLRemoveProcess = [
     "Else", 
     "  R does not exist so cannot be removed"];
 
-var binaryHeapInsert = [
+const binaryHeapInsert = [
     "Insert node at next availlable position",
-    "Next availlable position is the next empty space on the lwest depth going left to right",
-    "Then check heap order priority"];
+    "Next availlable position is the next empty space on the lowest depth going left to right",
+    "Then check heap order priority upwards from the new node"];
     
-var binaryHeapRemoveMin = [
-    "Swap the mininum node with the rightmost node on the lowest depth",
+const binaryHeapRemove = [
+    "Swap the mininum node with the node in the most recently inserted position",
     "Remove Minimum Node",
-    "Perform heap order priority check on heap"
-    ];
+    "Perform heap order priority check downwards on the heap"];
     
 //Use if removing root and replacing it with lower node
-var minHeapifyDown = [
+const minHeapifyDown = [
     "If current node C has one child Then",
     "  If C > the only child of C Then",
     "     Swap C and its child",
@@ -84,15 +83,20 @@ var minHeapifyDown = [
     "        Swap C and R",
     "        Check the heap order priority of C again",
     "  Else",
-    "     Take no further action"]
-    
-var minHeapifyUp = [
-    "Compare current node N against its parent P",
-    "If N < P Then",
-    "  Swap N and P",
-    "  Check the heap order priority of N",
-    "Else",
+    "     Take no further action",
+    "Else If C has no children Then",
     "  Take no further action"];
+    
+const minHeapifyUp = [
+    "If current node N has no parent Then",
+    "  N is now the root and heap order priority is restored",
+    "Else",
+    "  Compare current node N against its parent P",
+    "  If N < P Then",
+    "     Swap N and P",
+    "     Check the heap order priority of N",
+    "  Else",
+    "     Take no further action"];
 
 // const fr = new FileReader();
 // const filePath = new F
@@ -119,8 +123,8 @@ if (curPage == "BST") {
     removeProcess = aVLRemoveProcess;
 } else if (curPage == "BH") {
     searchProcess = bSTSearchProcess;
-    insertProcess = aVLInsertProcess;
-    removeProcess = aVLRemoveProcess;
+    insertProcess = binaryHeapInsert;
+    removeProcess = binaryHeapRemove;
 } else {
     alert("An error has occured.");
 }
@@ -145,6 +149,10 @@ function setCurrProcess(p) {
         currProcess = removeProcess;
     } else if (p == "balance") {
         currProcess = aVLBalanceProcess;
+    } else if (p == "upHeap") {
+        currProcess = minHeapifyUp;
+    } else if (p == "downHeap") {
+        currProcess = minHeapifyDown;
     } else {
         alert("what")
     }

@@ -31,6 +31,7 @@ class BinaryHeap {
     }  
 
     insert(nodeVal, nodeArr) {
+        this.queue.addCommand("highlightLine", ["L0"]);
         //Creates a new node from the entered data
         var newNode = new Node(parseInt(nodeVal, 10));
         if (this.getRoot == null) {
@@ -47,7 +48,7 @@ class BinaryHeap {
             //alert(path);
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr, path);
         }    
-        //this.queue.addCommand("setProcess", ["none"]);  
+        this.queue.addCommand("setProcess", ["none"]);  
         this.queue.runCommands();
     }
 
@@ -73,14 +74,20 @@ class BinaryHeap {
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
+                this.queue.addCommand("highlightLine", ["L2"]);
+                this.queue.addCommand("setProcess", ["upHeap"]);
                 this.heapifyUp(newNode);
+                this.queue.addCommand("setProcess", ["none"]);
             } else {
                 //alert("left")
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
+                this.queue.addCommand("highlightLine", ["L2"]);
+                this.queue.addCommand("setProcess", ["upHeap"]);
                 this.heapifyUp(newNode);
+                this.queue.addCommand("setProcess", ["none"]);
             }
         }
     }
@@ -90,7 +97,7 @@ class BinaryHeap {
         //Swap root and that node
         //Remove root
         //heap sort down tree
-
+        
         this.setNextPos = this.getNextPos - 1;
         var pathToNode = this.calculatePath();
         alert("path - " + pathToNode);
@@ -98,11 +105,14 @@ class BinaryHeap {
         alert("rep - " + replacementNode.getId);
         var rootNode = this.getRoot;
         //Swap root and node
-
+        this.queue.addCommand("highlightLine", ["L0"]);
+        this.queue.addCommand("highlightNode", [this.getRoot.getId, 'red']);
         this.queue.addCommand("highlightNode", [replacementNode.getId, 'lightgreen']);
         this.queue.addCommand("swap", [this.getRoot.getId, replacementNode.getId]);
         this.queue.addCommand("highlightNode", [replacementNode.getId, 'white']);
+        this.queue.addCommand("highlightLine", ["L1"]);
         this.queue.addCommand("removeNode", [this.getRoot.getId]);
+        this.queue.addCommand("highlightLine", ["L2"]);
 
         replacementNode.setLeft = rootNode.getLeft;
         replacementNode.setRight = rootNode.getRight;
@@ -119,8 +129,9 @@ class BinaryHeap {
 
         this.setRoot = replacementNode;
 
-        
+        this.queue.addCommand("setProcess", ["downHeap"])
         this.heapifyDown(this.getRoot);
+        this.queue.addCommand("setProcess", ["none"])
         this.queue.runCommands();
         this.queue.addCommand("redrawTree", [this.getRoot, null]);
     }
@@ -162,41 +173,65 @@ class BinaryHeap {
         //Checks to see if the node has any children.
         if (leftChild == null && rightChild == null) {
             //Heap order maintained because node now a leaf.
+            this.queue.addCommand("highlightLine", ["L16"]);
+            this.queue.addCommand("highlightLine", ["L17"]);
         } else if (leftChild != null && rightChild == null) {
             //If the node has only a left child
             //Compares it against the only child.
+            this.queue.addCommand("highlightLine", ["L0"]);
             if (leftChild.getId < curNode.getId) {
                 //If the left child is smaller, swap the two nodes around.
                 //swap
+                this.queue.addCommand("highlightLine", ["L1"]);
+                this.queue.addCommand("highlightLine", ["L2"]);
+                this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 this.swapNodes(curNode, leftChild);
                 this.heapifyDown(curNode);
             } else {
                 //ordered
+                this.queue.addCommand("highlightLine", ["L4"]);
+                this.queue.addCommand("highlightLine", ["L5"]);
             }
         } else if (leftChild != null && rightChild != null) {
             //If the node has 2 children
             //Check to find the smaller of the two
             //Swap with the smallest node if it is smaller than the current node.
+            this.queue.addCommand("highlightLine", ["L6"]);
             if (leftChild.getId < rightChild.getId) {
                 if (leftChild.getId < curNode.getId) {
+                    this.queue.addCommand("highlightLine", ["L7"]);
+                    this.queue.addCommand("highlightLine", ["L8"]);
+                    this.queue.addCommand("highlightLine", ["L9"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
+                    this.swapNodes(curNode, leftChild);                    
                     this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
-                    this.swapNodes(curNode, leftChild);
+                    this.queue.addCommand("highlightLine", ["L10"]);
                     this.heapifyDown(curNode);
                 } else {
-
+                    this.queue.addCommand("highlightLine", ["L14"]);
+                    this.queue.addCommand("highlightLine", ["L15"]);
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'lightgreen']);
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 }
             } else {
                 if (rightChild.getId < curNode.getId) {
                     //swap
+                    this.queue.addCommand("highlightLine", ["L7"]);
+                    this.queue.addCommand("highlightLine", ["L11"]);
+                    this.queue.addCommand("highlightLine", ["L12"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
+                    this.swapNodes(curNode, rightChild);                    
                     this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
-                    this.swapNodes(curNode, rightChild);
+                    this.queue.addCommand("highlightLine", ["L13"]);
                     this.heapifyDown(curNode);
                 } else {
                     //ordered
+                    this.queue.addCommand("highlightLine", ["L14"]);
+                    this.queue.addCommand("highlightLine", ["L15"]);
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'lightgreen']);
+                    this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 } 
             }
         }
@@ -292,14 +327,29 @@ class BinaryHeap {
     }
 
     heapifyUp(curNode) {
+        this.queue.addCommand("highlightNode", [curNode.getId, 'lightblue']);
+        
         //alert("traversal - " + this.traverse(this.getRoot));
         if (curNode.getParent != null) {
-
+            this.queue.addCommand("highlightLine", ["L3"]);
             if (curNode.getId < curNode.getParent.getId) {
+                this.queue.addCommand("highlightLine", ["L4"]);
+                this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
+                this.queue.addCommand("highlightLine", ["L5"]);
                 this.swapNodes(curNode.getParent, curNode);
+                this.queue.addCommand("highlightLine", ["L6"]);
                 this.heapifyUp(curNode);
+            } else {
+                this.queue.addCommand("highlightLine", ["L7"]);
+                this.queue.addCommand("highlightNode", [curNode.getId, 'lightgreen']);
+                this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
+                this.queue.addCommand("highlightLine", ["L8"]);
             }
-        } 
+        } else {
+            this.queue.addCommand("highlightLine", ["L0"]);
+            this.queue.addCommand("highlightLine", ["L1"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
+        }
     }
 
     
