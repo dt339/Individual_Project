@@ -228,12 +228,13 @@ function redrawTree(curNode, searchNode) {
     }
 }
 
-function createRoot(newID, value) {
+function createRoot(newID, value, fillColour="white") {
     //Creates an html element for the root node.
     const elem = document.createElement('div');
     elem.id = newID;
     elem.className = 'node';
     elem.textContent = value;
+    elem.style.backgroundColor = fillColour;
 
     const parentDiv = document.getElementById('treeBox');
     const pos = parentDiv.getBoundingClientRect();
@@ -246,12 +247,13 @@ function createRoot(newID, value) {
 }
 
 //Creates a new html element for a node.
-function newElem(newID, value, parentNode, direction, depth) {
+function newElem(newID, value, parentNode, direction, depth, fillColour="white") {
     //Creates the html element for the node.
     const elem = document.createElement('div');
     elem.id = newID;
     elem.className = 'node';
     elem.textContent = value;
+    elem.style.backgroundColor = fillColour;
 
     //Gets the elements for the parent node and the canvas.
     const parentDiv = document.getElementById('treeBox');

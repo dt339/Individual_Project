@@ -41,6 +41,7 @@ class BinaryHeap {
             this.queue.addCommand("createRoot", [newNode.getId, newNode.getId]);
             this.queue.addCommand("highlightNode", [newNode.getId, 'lightblue']);
             this.queue.addCommand("highlightNode", [newNode.getId, 'white']);
+            
         } else {
             var path = this.calculatePath();            
             //Increases the next position.
@@ -48,8 +49,11 @@ class BinaryHeap {
             //alert(path);
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr, path);
         }    
+        
         this.queue.addCommand("setProcess", ["none"]);  
+        
         this.queue.runCommands();
+        
     }
 
     recursiveInsert(newNode, curNode, depth, nodeArr, path) {

@@ -24,6 +24,9 @@ def avl(request):
 def binHeap(request):
   return render(request, "BH.html")
 
+def redBlack(request):
+  return render(request, "RB.html")
+
 def tree_view(request):
   return render(request, "tree.html")
 

@@ -59,6 +59,7 @@ class AnimQueue {
     runCommands() {
         var currentCommand = this.getQueue.shift();
         //alert("curr - " + currentCommand.getType);
+        
         this.exeCommand(currentCommand);
         this.setBack = this.getBack - 1;        
 
@@ -84,7 +85,6 @@ class AnimQueue {
     exeCommand(com) {
         var paramArray = com.getParams;
         if (com.getType == "createRoot") {
-            //alert("createRoot - " + paramArray[0]);
             createRoot(paramArray[0], paramArray[0]);
         } else if (com.getType == "createNode") {   
             //alert("createNode - " + paramArray[0] + " - " + paramArray[1] + " - " + paramArray[2] + " - " + paramArray[3] + " - " + paramArray[4]);         
@@ -107,6 +107,10 @@ class AnimQueue {
             highlightLine(paramArray[0]);
         } else if (com.getType == "setProcess") {
             setCurrProcess(paramArray[0]);
+        } else if (com.getType == "createColouredRoot") {
+            createRoot(paramArray[0], paramArray[0], paramArray[1]);
+        } else if (com.getType == "createColouredNode") {         
+            newElem(paramArray[0],paramArray[1],paramArray[2],paramArray[3],paramArray[4], paramArray[5]);
         }
 
         

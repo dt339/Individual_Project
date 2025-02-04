@@ -193,7 +193,7 @@ class AVLTree {
         if (initialNode.getRight == null) {
             this.queue.addCommand("highlightNode", [initialNode.getId, "lightgreen"]);
             this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
-            alert("precessor - " + initialNode.getId);
+            //alert("precessor - " + initialNode.getId);
             return initialNode;
         } else {
             this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
@@ -205,7 +205,7 @@ class AVLTree {
         this.queue.addCommand("highlightNode", [initialNode.getId, "lightblue"]);
         //Finds the smallest node in the right subtree of initialNode;
         if (initialNode.getLeft == null) {
-            alert("precessor - " + initialNode.getId);
+            //alert("precessor - " + initialNode.getId);
             this.queue.addCommand("highlightNode", [initialNode.getId, "lightgreen"]);
             this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
             return initialNode;
@@ -389,7 +389,7 @@ class AVLTree {
     }
 
     rebalance(targetNode, balanceFactor) {
-        alert("Rebalance! - " + targetNode.getId);
+        //alert("Rebalance! - " + targetNode.getId);
         if (balanceFactor > 1) {
             this.queue.addCommand("highlightLine", ["L2"]);
             //anticlockwise rotation
@@ -543,7 +543,7 @@ class AVLTree {
         this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
         if (curBalance > 1 || curBalance <-1) {
             //UNBALANCED
-            alert("unbalanced - " + curNode.getId);
+            //alert("unbalanced - " + curNode.getId);
             this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
             this.rebalance(curNode, curBalance);

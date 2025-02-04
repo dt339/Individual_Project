@@ -2,13 +2,12 @@
 {% load static %}
 
 {% block title %}
-  Binary Search Tree
+  Red-Black Tree
 {% endblock %}
 
 {% block content %}
 
-    <h1>Binary Search Tree</h1>    
-
+    <h1>Red-Black Tree</h1>    
 
     <div class="tree-canvas" id="treeBox">
         <canvas id="myCanvas" style="border:1px solid #000000;">
@@ -29,7 +28,7 @@
         <button onclick="userSearchNode()">Search!</button>
 
         <div class="sliderContainer">
-            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="10" value="10" step="0.25" class="slider" id="speedSlider">
+            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">
             <label id="speedLabel" for="speedSlider">x10</label>
         </div>
 

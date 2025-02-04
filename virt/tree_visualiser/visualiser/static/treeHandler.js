@@ -11,6 +11,8 @@ if (thisPage == "BST") {
     newTree = new AVLTree();
 } else if (thisPage == "BH") {
     newTree = new BinaryHeap();
+} else if (thisPage == "RB") {
+    newTree = new RedBlackTree();
 } else {
     alert("An error has occured.");
 }
