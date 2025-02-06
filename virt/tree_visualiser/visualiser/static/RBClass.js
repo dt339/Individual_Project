@@ -176,7 +176,7 @@ class RedBlackTree {
         if (child != null) {
             childIsBlack = child.getIsRed;
         }
-        while (this.getRoot.getId != )
+        //while (this.getRoot.getId != )
     }
 
     remove(theRoot, nodeVal) {
