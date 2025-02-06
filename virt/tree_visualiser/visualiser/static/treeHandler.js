@@ -33,7 +33,7 @@ function displayTree() {
 
 function qwert() {
     alert("qwert");
-    newTree.asdf();
+    newTree.lmaolmao();
 }
 
 function userInputNode() {
