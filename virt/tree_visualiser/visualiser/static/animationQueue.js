@@ -109,8 +109,11 @@ class AnimQueue {
             setCurrProcess(paramArray[0]);
         } else if (com.getType == "createColouredRoot") {
             createRoot(paramArray[0], paramArray[0], paramArray[1]);
-        } else if (com.getType == "createColouredNode") {         
+        } else if (com.getType == "createColouredNode") {      
             newElem(paramArray[0],paramArray[1],paramArray[2],paramArray[3],paramArray[4], paramArray[5]);
+        } else if (com.getType == "RBredrawTree") {      
+            clearCanvas();
+            redBlackRedrawTree(paramArray[0],paramArray[1]);
         }
 
         

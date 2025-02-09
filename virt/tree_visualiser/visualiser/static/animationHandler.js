@@ -225,16 +225,29 @@ function highlightNode(nodeId, nodeColour) {
 function redrawTree(curNode, searchNode) {
     if (curNode.getId != searchNode) {
         if (curNode.getParent != null) {
-            alert("cur - " + curNode.getId +"parent - " + curNode.getParent.getId);
             drawLine(curNode.getParent.getId, curNode.getId);
         }
         if (curNode.getLeft != null) {
-            alert("cur - " + curNode.getId +"left - " + curNode.getLeft.getId);
             redrawTree(curNode.getLeft, searchNode);
         } 
         if (curNode.getRight != null) {
-            alert("cur - " + curNode.getId+"right  - " + curNode.getRight.getId);
             redrawTree(curNode.getRight, searchNode);
+        } 
+    }
+}
+
+//Draws the branches between nodes from the specified node.
+//Stops drawing when it reaches the searchNode
+function redBlackRedrawTree(curNode, searchNode) {
+    if (curNode.getId != searchNode) {
+        if (curNode.getParent != null) {
+            drawLine(curNode.getParent.getId, curNode.getId);
+        }
+        if (curNode.getLeft.getIsNull==false) {
+            redBlackRedrawTree(curNode.getLeft, searchNode);
+        } 
+        if (curNode.getRight.getIsNull==false) {
+            redBlackRedrawTree(curNode.getRight, searchNode);
         } 
     }
 }

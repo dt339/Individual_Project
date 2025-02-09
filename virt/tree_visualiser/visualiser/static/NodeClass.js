@@ -36,3 +36,28 @@ class Node {
         this.parent = parentId;
     }
 }
+
+class RedBlackNode extends Node {
+    constructor(id, red, isNull) {
+        super(id);        
+        this.isRed = red;        
+        this.isNull = isNull;
+    }
+
+    get getIsRed() {
+        return this.isRed;
+    }
+
+    set setIsRed(r) {
+        this.isRed = r;
+    }
+
+    get getIsNull() {
+        return this.isNull;
+    }
+
+    set setIsNull(n) {
+        this.isNull = n;
+    }
+
+}
