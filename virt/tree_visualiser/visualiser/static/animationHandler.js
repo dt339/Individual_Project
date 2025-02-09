@@ -1,4 +1,12 @@
 function recursiveMove(movedRoot) {
+    // alert("start - " + movedRoot.getId);
+    // if (movedRoot.getLeft.getIsNull!=true) {
+    //     alert("left - " + movedRoot.getLeft.getId);
+    // }
+    // if (movedRoot.getRight.getIsNull!=true) {
+    //     alert("right - " + movedRoot.getRight.getId);
+    // }
+    
     //Takes the previously moved node as a parameter.
     //Gets the html elements for the moved node and the container they are stored in.
     const movedNode = document.getElementById(movedRoot.getId);
@@ -217,12 +225,15 @@ function highlightNode(nodeId, nodeColour) {
 function redrawTree(curNode, searchNode) {
     if (curNode.getId != searchNode) {
         if (curNode.getParent != null) {
+            alert("cur - " + curNode.getId +"parent - " + curNode.getParent.getId);
             drawLine(curNode.getParent.getId, curNode.getId);
         }
         if (curNode.getLeft != null) {
+            alert("cur - " + curNode.getId +"left - " + curNode.getLeft.getId);
             redrawTree(curNode.getLeft, searchNode);
         } 
         if (curNode.getRight != null) {
+            alert("cur - " + curNode.getId+"right  - " + curNode.getRight.getId);
             redrawTree(curNode.getRight, searchNode);
         } 
     }

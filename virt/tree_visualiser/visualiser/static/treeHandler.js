@@ -32,8 +32,9 @@ function displayTree() {
 }
 
 function qwert() {
-    alert("qwert");
-    newTree.lmaolmao();
+    alert("Please");
+    let bill = newTree.traverse(newTree.getRoot);
+    alert(bill);
 }
 
 function userInputNode() {
@@ -152,4 +153,9 @@ function myFun(test) {
     document.getElementById("bill").innerHTML = test;
 }
 
+function callRedraw() {
+    // recursiveMove(newTree.getRoot);
+    // clearCanvas();
+    redrawTree(newTree.getRoot, null);
 
+}
