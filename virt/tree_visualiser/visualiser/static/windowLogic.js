@@ -62,3 +62,29 @@ function resizeCanvas() {
 
     callRedraw();
 }
+
+function setInputFields(toEnable) {
+    if (toEnable) {
+        var insertButton = document.getElementById("nodeInsertButton");
+        insertButton.disabled = false;
+        
+        var removeButton = document.getElementById("nodeRemoveButton");
+        removeButton.disabled = false;
+
+        if (treeType != "BH") {
+            var searchButton = document.getElementById("nodeSearchButton");
+            searchButton.disabled = false;
+        }
+    } else {
+        var insertButton = document.getElementById("nodeInsertButton");
+        insertButton.disabled = true;
+        
+        var removeButton = document.getElementById("nodeRemoveButton");
+        removeButton.disabled = true;
+
+        if (treeType != "BH") {
+            var searchButton = document.getElementById("nodeSearchButton");
+            searchButton.disabled = true;
+        }
+    }
+}

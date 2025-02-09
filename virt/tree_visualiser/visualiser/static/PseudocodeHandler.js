@@ -143,24 +143,28 @@ function setCurrProcess(p) {
     }
     
     //Stores the new current process.
+    //Stores the new current process.
     if (p == "none") {
         currProcess = noneProcess;
-    } else if (p == "search") {
-        currProcess = searchProcess;
-    } else if (p == "insert") {
-        currProcess = insertProcess;
-    } else if (p == "remove") {
-        currProcess = removeProcess;
-    } else if (p == "balance") {
-        currProcess = aVLBalanceProcess;
-    } else if (p == "upHeap") {
-        currProcess = minHeapifyUp;
-    } else if (p == "downHeap") {
-        currProcess = minHeapifyDown;
+        setInputFields(true);
     } else {
-        alert("what")
+        if (p == "search") {
+            currProcess = searchProcess;
+        } else if (p == "insert") {
+            currProcess = insertProcess;
+        } else if (p == "remove") {
+            currProcess = removeProcess;
+        } else if (p == "balance") {
+            currProcess = aVLBalanceProcess;
+        } else if (p == "upHeap") {
+            currProcess = minHeapifyUp;
+        } else if (p == "downHeap") {
+            currProcess = minHeapifyDown;
+        } else {
+            alert("what")
+        }
+        setInputFields(false);
     }
-
     //Fills the box with the new lines of pseudocode.
     if (codeBox != null) {
         fillCodeBox();
