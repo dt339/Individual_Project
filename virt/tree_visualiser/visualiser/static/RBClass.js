@@ -97,6 +97,7 @@ class RedBlackTree {
         //This relies on javascript evaluating the first condition before the second.
         //If the current node has no parent, it will not check if the parent is red.
         //This way of calculating it prevents an error from occuring.
+        var changeOccured = false;
         while (curNode.getParent!=null) {
             if (curNode.getIsRed && curNode.getParent.getIsRed) {
                 if (curNode.getParent.getParent!= null) {
@@ -141,40 +142,39 @@ class RedBlackTree {
                             this.leftRotation(curNode.getParent.getParent);
                         }
                     }
-                    this.queue.addCommand("recMove", [this.getRoot]); 
+                    changeOccured=true;
+       
                 }
             }
             curNode = curNode.getParent;
+
             
         }
-        
+        if (changeOccured) {
+            this.queue.addCommand("RBRecMove", [this.getRoot]); 
+            this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+        }
         //this.queue.addCommand("RBredrawTree", [this.getRoot, this.getRoot]);
         this.setNodeColour(this.getRoot, false);
     }
 
     remove(theRoot, removeVal) {
-        alert("the fuck?")
         var toRemove = this.search(this.getRoot, removeVal);
-        alert("to remove? = " + toRemove);
+        //alert("to remove? = " + toRemove);
         if (toRemove != null) {
-            alert("to remove? = " + toRemove.getId);
-            alert("to remove left? = " + toRemove.getLeft);
-            alert("to remove left id? = " + toRemove.getLeft.getId);
             var x = null;
             var y = toRemove;
             var yOrigIsRed = y.getIsRed;
 
             if (toRemove.getLeft.getIsNull) {
-                alert("NO LEFT CHILD!!!");
                 x = toRemove.getRight;
-                alert("x.getId - " + x.getId + x.getIsNull);
                 this.transplant(toRemove, toRemove.getRight);
-                alert("after");
             } else if (toRemove.getRight.getIsNull) {
                 x = toRemove.getLeft;
                 this.transplant(toRemove, toRemove.getLeft);
             } else {
                 y = this.getSuccessor(toRemove.getRight);
+                
                 yOrigIsRed = y.getIsRed;
                 x = y.getRight;
                 if (y.getParent==toRemove) {
@@ -187,71 +187,106 @@ class RedBlackTree {
                 this.transplant(toRemove, y);
                 y.setLeft = toRemove.getLeft;
                 y.getLeft.setParent = y;
-                y.setIsRed = toRemove.getIsRed;
+                //y.setIsRed = toRemove.getIsRed;
+                this.setNodeColour(y, toRemove.getIsRed);
             }
 
+            
             if (yOrigIsRed==false) {
                 this.deleteFixup(x);
-            }
+            }                
+            
+            this.queue.addCommand("removeNode", [toRemove.getId]);
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
+
+        } else {
+            alert("Value does not exist");
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
         }
     }
 
     deleteFixup(curNode) {
-        alert("curNode - " + curNode.getId);
+        var changeOccured = false;
         while (curNode.getParent!=null&&curNode.getIsRed==false) {
             //if (curNode.getIsRed==false) {
                 if (curNode==curNode.getParent.getLeft) {
                     var sibling = curNode.getParent.getRight;
                     if (sibling.getIsRed) {
-                        sibling.setIsRed=false;
-                        curNode.getParent.setIsRed = true;
+                        // sibling.setIsRed=false;
+                        // curNode.getParent.setIsRed = true;
+                        this.setNodeColour(sibling, false);
+                        this.setNodeColour(curNode.getParent.setIsRed, false);
                         this.leftRotation(curNode.getParent);
                         sibling = curNode.getParent;
                     }
                     if (sibling.getLeft.getIsRed==false&&sibling.getRight.getIsRed==false) {
-                        sibling.setIsRed = true;
+                        // sibling.setIsRed = true;
+                        this.setNodeColour(sibling, true);
                         curNode=curNode.getParent;
                     } else {
                         if (sibling.getRight.getIsRed==false) {
-                            sibling.getLeft.setIsRed = false;
-                            sibling.setIsRed = true;
+                            // sibling.getLeft.setIsRed = false;
+                            // sibling.setIsRed = true;
+                            this.setNodeColour(sibling.getLeft, false);
+                            this.setNodeColour(sibling, true);
                             this.rightRotation(sibling);
                             sibling = curNode.getParent.getRight;
                         }
-                        sibling.setIsRed=curNode.getParent.getIsRed;
-                        curNode.getParent.setIsRed = false;
-                        sibling.getRight.setIsRed = false;
+                        // sibling.setIsRed=curNode.getParent.getIsRed;
+                        // curNode.getParent.setIsRed = false;
+                        // sibling.getRight.setIsRed = false;
+                        this.setNodeColour(sibling, curNode.getParent.getIsRed);
+                        this.setNodeColour(curNode.getParent, false);
+                        this.setNodeColour(sibling.getRight, false);
                         this.leftRotation(curNode.getParent);
                         curNode = this.getRoot;
                     }
                 } else {
                     var sibling = curNode.getParent.getLeft;
                     if (sibling.getIsRed) {
-                        sibling.setIsRed=false;
-                        curNode.getParent.setIsRed = true;
+                        // sibling.setIsRed=false;
+                        // curNode.getParent.setIsRed = true;
+                        this.setNodeColour(sibling, false);
+                        this.setNodeColour(curNode.getParent, true);
                         this.rightRotation(curNode.getParent);
                         sibling = curNode.getParent;
                     }
                     if (sibling.getLeft.getIsRed==false&&sibling.getRight.getIsRed==false) {
-                        sibling.setIsRed = true;
+                        // sibling.setIsRed = true;
+                        this.setNodeColour(sibling, true);
                         curNode=curNode.getParent;
                     } else {
                         if (sibling.getLeft.getIsRed==false) {
-                            sibling.getRight.setIsRed = false;
-                            sibling.setIsRed = true;
+                            // sibling.getRight.setIsRed = false;
+                            // sibling.setIsRed = true;
+                            this.setNodeColour(sibling.getRight, false);
+                            this.setNodeColour(sibling, true);
                             this.leftRotation(sibling);
                             sibling = curNode.getParent.getLeft;
                         }
-                        sibling.setIsRed=curNode.getParent.getIsRed;
-                        curNode.getParent.setIsRed = false;
-                        sibling.getLeft.setIsRed = false;
+                        // sibling.setIsRed=curNode.getParent.getIsRed;
+                        // curNode.getParent.setIsRed = false;
+                        // sibling.getLeft.setIsRed = false;
+                        this.setNodeColour(sibling, curNode.getParent.getIsRed);
+                        this.setNodeColour(curNode.getParent, false);
+                        this.setNodeColour(sibling.getLeft, false);
                         this.rightRotation(curNode.getParent);
                         curNode = this.getRoot;
                     }
                 }
+                
+                changeOccured = true;
             //}
         }
-        curNode.setIsRed = false;
+        
+        // curNode.setIsRed = false;
+        if (this.getRoot.getIsNull==false) {
+            this.setNodeColour(curNode, false);
+            this.queue.addCommand("RBRecMove", [this.getRoot]); 
+            this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+        }
     }
 
     transplant(parent, child) {
@@ -325,11 +360,14 @@ class RedBlackTree {
 
     setNodeColour(node, isRed) {
         node.setIsRed = isRed;
-        if (isRed) {
-            this.queue.addCommand("highlightNode", [node.getId, 'red']);
-        } else {
-            this.queue.addCommand("highlightNode", [node.getId, 'gray']);
+        if (node.getIsNull==false) {
+            if (isRed) {
+                this.queue.addCommand("highlightNode", [node.getId, 'red']);
+            } else {
+                this.queue.addCommand("highlightNode", [node.getId, 'gray']);
+            }
         }
+
     }
 
 }

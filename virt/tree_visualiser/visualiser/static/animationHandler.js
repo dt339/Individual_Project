@@ -138,6 +138,146 @@ function recursiveMove(movedRoot) {
 
 }
 
+function RBRecursiveMove(movedRoot) {
+    // alert("start - " + movedRoot.getId);
+    // if (movedRoot.getLeft.getIsNull!=true) {
+    //     alert("left - " + movedRoot.getLeft.getId);
+    // }
+    // if (movedRoot.getRight.getIsNull!=true) {
+    //     alert("right - " + movedRoot.getRight.getId);
+    // }
+    
+    //Takes the previously moved node as a parameter.
+    //Gets the html elements for the moved node and the container they are stored in.
+    const movedNode = document.getElementById(movedRoot.getId);
+    const movedNodePos = movedNode.getBoundingClientRect();
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+
+    let rightAnim = null;
+    let leftAnim = null;
+
+    //Checks to see if the moved node has a right child.
+    if (movedRoot.getRight.getIsNull==false) {
+
+        //Moves the node to the correct position relative to its parent - the previously moved node.
+        //Uses the same method as initialMove()
+        const toMove = document.getElementById(movedRoot.getRight.getId);
+        const toMovePos = toMove.getBoundingClientRect();        
+
+        var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
+        var initPosY = toMovePos.top - contPos.top;
+        var destX = (movedNodePos.left - contPos.left + movedNodePos.width + 100);
+        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+
+        var xDistance = destX-initPosX;
+        var yDistance = destY-initPosY;
+
+        var xIncrement = 1*getAnimSpeed();
+        var yIncrement = (yDistance/xDistance) * getAnimSpeed();
+
+        var xPos = initPosX;
+        var yPos = initPosY;   
+
+        var xDirection = 'r';
+        if (initPosX > destX) {
+            xDirection = 'l';
+        }
+
+        clearInterval(rightAnim);
+        rightAnim = setInterval(rightFrame, 10);
+        function rightFrame() {
+            if (xDirection == 'r') {
+                if (xPos >= destX) {
+                    clearInterval(rightAnim);
+                    drawLine(movedRoot.getId, movedRoot.getRight.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    RBRecursiveMove(movedRoot.getRight);
+                } else {
+                    xPos+=xIncrement;
+                    toMove.style.left = xPos + "px";
+                    yPos += yIncrement;
+                    toMove.style.top = yPos + "px";
+                }
+            } else {
+                if (xPos <= destX) {
+                    clearInterval(rightAnim);
+                    drawLine(movedRoot.getId, movedRoot.getRight.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    RBRecursiveMove(movedRoot.getRight);
+                } else {
+                    xPos-=xIncrement;
+                    toMove.style.left = xPos + "px";
+                    yPos -= yIncrement;
+                    toMove.style.top = yPos + "px";
+                }
+            }
+        }
+    } 
+    //Checks to see if the moved node has a left child.
+    if (movedRoot.getLeft.getIsNull==false) {
+        //Moves the node to the correct position relative to its parent - the previously moved node.
+        //Uses the same method as initialMove()
+        const toMoveL = document.getElementById(movedRoot.getLeft.getId);
+        const toMovePosL = toMoveL.getBoundingClientRect();        
+
+        var initPosXL = toMovePosL.left - contPos.left + (toMovePosL.width/2);
+        var initPosYL = toMovePosL.top - contPos.top;
+        var destXL = (movedNodePos.left - contPos.left - movedNodePos.width - 100);
+        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+
+        var xDistanceL = destXL-initPosXL;
+        var yDistanceL = destYL-initPosYL;
+
+        var xIncrementL = 1*getAnimSpeed();
+        var yIncrementL = (yDistanceL/xDistanceL) * getAnimSpeed();
+
+        var xPosL = initPosXL;
+        var yPosL = initPosYL;   
+
+        var xDirectionL = 'r';
+        if (initPosXL > destXL) {
+            xDirectionL = 'l';
+        }
+
+        clearInterval(leftAnim);
+        leftAnim = setInterval(leftFrame, 10);
+        function leftFrame() {
+            if (xDirectionL == 'r') {
+                if (xPosL >= destXL) {
+                    clearInterval(leftAnim);
+                    drawLine(movedRoot.getId, movedRoot.getLeft.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    RBRecursiveMove(movedRoot.getLeft);
+                } else {
+                    xPosL+=xIncrementL;
+                    toMoveL.style.left = xPosL + "px";
+                    yPosL += yIncrementL;
+                    toMoveL.style.top = yPosL + "px";
+                }
+            } else {
+                if (xPosL <= destXL) {
+                    clearInterval(leftAnim);
+                    drawLine(movedRoot.getId, movedRoot.getLeft.getId);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    RBRecursiveMove(movedRoot.getLeft);
+                } else {
+                    xPosL-=xIncrementL;
+                    toMoveL.style.left = xPosL + "px";
+                    yPosL -= yIncrementL;
+                    toMoveL.style.top = yPosL + "px";
+                }
+            }
+        }
+
+    } 
+
+}
+
 function initialMove(movingNode, destinationNode) {
     //Gets the html elements for the canvas and the nodes being moves.
     const cont = document.getElementById('treeBox');

@@ -114,6 +114,8 @@ class AnimQueue {
         } else if (com.getType == "RBredrawTree") {      
             clearCanvas();
             redBlackRedrawTree(paramArray[0],paramArray[1]);
+        } else if (com.getType== "RBRecMove") {
+            RBRecursiveMove(paramArray[0]);
         }
 
         
