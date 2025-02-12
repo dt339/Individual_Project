@@ -50,6 +50,7 @@ function recursiveMove(movedRoot) {
             if (xDirection == 'r') {
                 if (xPos >= destX) {
                     clearInterval(rightAnim);
+                    fixPosition(movedRoot.getRight.getId, destX, destY);
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -63,6 +64,7 @@ function recursiveMove(movedRoot) {
             } else {
                 if (xPos <= destX) {
                     clearInterval(rightAnim);
+                    fixPosition(movedRoot.getRight.getId, destX, destY);
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -108,6 +110,7 @@ function recursiveMove(movedRoot) {
             if (xDirectionL == 'r') {
                 if (xPosL >= destXL) {
                     clearInterval(leftAnim);
+                    fixPosition(movedRoot.getLeft.getId, destXL, destYL);
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -121,6 +124,7 @@ function recursiveMove(movedRoot) {
             } else {
                 if (xPosL <= destXL) {
                     clearInterval(leftAnim);
+                    fixPosition(movedRoot.getLeft.getId, destXL, destYL);
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -190,6 +194,7 @@ function RBRecursiveMove(movedRoot) {
             if (xDirection == 'r') {
                 if (xPos >= destX) {
                     clearInterval(rightAnim);
+                    fixPosition(movedRoot.getRight.getId, destX, destY);
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -203,6 +208,7 @@ function RBRecursiveMove(movedRoot) {
             } else {
                 if (xPos <= destX) {
                     clearInterval(rightAnim);
+                    fixPosition(movedRoot.getRight.getId, destX, destY);
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -248,6 +254,7 @@ function RBRecursiveMove(movedRoot) {
             if (xDirectionL == 'r') {
                 if (xPosL >= destXL) {
                     clearInterval(leftAnim);
+                    fixPosition(movedRoot.getLeft.getId, destXL, destYL);
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -261,6 +268,7 @@ function RBRecursiveMove(movedRoot) {
             } else {
                 if (xPosL <= destXL) {
                     clearInterval(leftAnim);
+                    fixPosition(movedRoot.getLeft.getId, destXL, destYL);
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
@@ -321,6 +329,10 @@ function initialMove(movingNode, destinationNode) {
             if (xPos >= destX) {
                 //Stops running the movement function.
                 clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(movingNode, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
                 recursiveMove(movingNode);
                 //Creates a new branch between the moved node and its parent.
@@ -337,6 +349,10 @@ function initialMove(movingNode, destinationNode) {
             if (xPos <= destX) {
                 //Stops running the movement function.
                 clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(movingNode, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
                 recursiveMove(movingNode);
                 //Creates a new branch between the moved node and its parent.
@@ -514,6 +530,7 @@ function move(toMove, initPosX, initPosY, destX, destY) {
         if (xDirection == 'r') {
             if (xPos >= destX) {
                 clearInterval(id);
+                fixPosition(toMove, destX, destY);
             } else {
                 xPos+=xIncrement;
                 elem.style.left = xPos + "px";
@@ -523,6 +540,7 @@ function move(toMove, initPosX, initPosY, destX, destY) {
         } else {
             if (xPos <= destX) {
                 clearInterval(id);
+                fixPosition(toMove, destX, destY);
             } else {
                 xPos-=xIncrement;
                 elem.style.left = xPos + "px";
@@ -532,6 +550,16 @@ function move(toMove, initPosX, initPosY, destX, destY) {
         }
 
     }
+    
+}
+
+function fixPosition(node, destX, destY) {
+    var elem = document.getElementById(node);
+    // alert("destination - " + destX + " - " + destY)
+    // alert("elem pos before! - " + elem.style.left + " - " + elem.style.top);
+    elem.style.left = destX + "px";
+    elem.style.top = destY + "px";
+    // alert("elem pos after! - " + elem.style.left + " - " + elem.style.top);
 }
 
 function baseMove() {
