@@ -2,6 +2,7 @@ class BSTTree {
     //Getters and setters for Tree variables
     constructor() {
         this.rootNode = null;
+        this.queue = new AnimQueue();
     }
 
     get getRoot() {
@@ -21,12 +22,12 @@ class BSTTree {
         var newNode = new Node(parseInt(newNodeVal, 10));
         //Checks to see if the tree currently has a root.
         if (this.getRoot == null) {
-            highlightLine("L1");
+            this.queue.addCommand("highlightLine", ["L1"]);
             //Sets the root of the tree to be the inserted node.
             this.setRoot = newNode;
-            createRoot(newNode.getId, newNode.getId);
-            highlightNode(newNode.getId, "lightblue");
-            setTimeout(() => highlightNode(newNode.getId, "white"), 2000/getAnimSpeed());
+            this.queue.addCommand("createRoot", [newNode.getId, newNode.getId]);
+            this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
+            this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
             //Checks to see if the node was inserted as a single value
             //Or if it was inserted as part of a list of values to be inserted.
@@ -34,37 +35,27 @@ class BSTTree {
                 //Removes the first value in the list of values.
                 nodeArr.shift();
                 //Inserts the next node in the list.
-                setTimeout(() => this.insert(nodeArr[0], nodeArr), 4000/getAnimSpeed());
+                this.insert(nodeArr[0], nodeArr);
             } else {
                 //If no other nodes exist in the list then insertion is over.
-                setTimeout(() => setCurrProcess("none"), 4000/getAnimSpeed());
             }
         } else {
             //Calls a recursive function to insert the node if a root exists.
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
+
         }
+        this.queue.addCommand("setProcess", ["none"]);
+        this.queue.runCommands();
     }
 
     recursiveInsert(newNode, curNode, depth, nodeArr) {
 
         //Highlights the current node and un-highlights the previous node
-        highlightNode(curNode.getId, "lightblue");
+        this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
         if (curNode.getParent) {
-            highlightNode(curNode.getParent.getId, "white");
+            this.queue.addCommand("highlightNode", [curNode.getParent.getId, "white"]);
         }
-        highlightLine("L2");
-
-        // alert("cur: " + curNode.getId);
-        // if (curNode.getLeft != null) {
-        //     alert("left: " + curNode.getLeft.getId);
-        // } else {
-        //     alert("left: null");
-        // }
-        // if (curNode.getRight != null) {
-        //     alert("right: " + curNode.getRight.getId);
-        // } else {
-        //     alert("right: null");
-        // }
+        this.queue.addCommand("highlightLine", ["L2"]);
 
         //Checks to see if the new node is greater than the node currently being checked.
         if (newNode.getId > curNode.getId) {
@@ -75,28 +66,28 @@ class BSTTree {
                 curNode.setRight = newNode;
 
                 //Calls a function to create the visual representation of the node.
-                setTimeout(() => newElem(newNode.getId, newNode.getId, curNode.getId, 'r', depth), 2000/getAnimSpeed());
-                setTimeout(() => highlightNode(newNode.getId, "lightblue"), 2000/getAnimSpeed());       
 
-                highlightLine("L7");
-                setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-                setTimeout(() => highlightNode(newNode.getId, "white"), 4000/getAnimSpeed());
+                this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
+                this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);     
+
+                this.queue.addCommand("highlightLine", ["L7"]);
+                this.queue.addCommand("highlightNode", [curNode.getId, "white"]);   
+                this.queue.addCommand("highlightNode", [newNode.getId, "white"]);   
 
                 if(nodeArr.length > 1) {
                     //Removes the first node in the list of nodes
                     nodeArr.shift();
                     //Inserts the next node in the list.
-                    setTimeout(() => this.insert(nodeArr[0], nodeArr), 4000/getAnimSpeed());
+                    this.insert(nodeArr[0], nodeArr)
                 } else {
                     //If no other nodes exist in the list then insertion is over.
-                    setTimeout(() => setCurrProcess("none"), 4000/getAnimSpeed());
                 }
             } else {
                 //If a right child exists, compare the new node to the right child.
                 //(Recursion)                
                 depth++;
-                highlightLine("L5");
-                setTimeout(() => this.recursiveInsert(newNode, curNode.getRight, depth, nodeArr), 2000/getAnimSpeed());
+                this.queue.addCommand("highlightLine", ["L5"]);
+                this.recursiveInsert(newNode, curNode.getRight, depth, nodeArr)
             }
         } else if (newNode.getId < curNode.getId) {
             //Checks to see if the new node is less than the current node.
@@ -106,81 +97,149 @@ class BSTTree {
                 curNode.setLeft = newNode;
 
                 //Calls a function to create the visual representation of the node.
-                setTimeout(() => newElem(newNode.getId, newNode.getId, curNode.getId, 'l', depth), 2000/getAnimSpeed());
-                setTimeout(() => highlightNode(newNode.getId, "lightblue"), 2000/getAnimSpeed());    
+                this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
+                this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
 
-                highlightLine("L12");
-                setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-                setTimeout(() => highlightNode(newNode.getId, "white"), 4000/getAnimSpeed());
+                this.queue.addCommand("highlightLine", ["L12"]);
+                this.queue.addCommand("highlightNode", [curNode.getId, "white"]);   
+                this.queue.addCommand("highlightNode", [newNode.getId, "white"]);   
                 
                 if(nodeArr.length > 1) {
                     //Removes the first node in the list of nodes
                     nodeArr.shift();
                     //Inserts the next node in the list.
-                    setTimeout(() => this.insert(nodeArr[0], nodeArr), 4000/getAnimSpeed());
+                    this.insert(nodeArr[0], nodeArr)
                 } else {
                     //If no other nodes exist in the list then insertion is over.
-                    setTimeout(() => setCurrProcess("none"), 4000/getAnimSpeed());
                 }
             } else {
                 //If a left child exists, compare the new node and the left child.
                 depth++;
                 //this.recursiveInsert(newNode, curNode.getLeft, depth);
-                highlightLine("L10");
-                setTimeout(() => this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr), 2000/getAnimSpeed());
+                this.queue.addCommand("highlightLine", ["L10"]);
+                this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr)
             }
             //If the new node is equal to the current node it already exists and cannot be enetered.
         } else if (newNode.getId == curNode.getId) {
             alert("Node already exists!");
-            highlightNode(curNode.getId, "red");
-            highlightLine("L14");
-            setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
+            this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
+            this.queue.addCommand("highlightLine", ["L14"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
             
             if(nodeArr.length > 1) {
                 //Removes the first node in the list of nodes
                 nodeArr.shift();
                 //Inserts the next node in the list.
-                setTimeout(() => this.insert(nodeArr[0], nodeArr), 4000/getAnimSpeed());
+                this.insert(nodeArr[0], nodeArr)
             } else {
                 //If no other nodes exist in the list then insertion is over.
-                setTimeout(() => setCurrProcess("none"), 4000/getAnimSpeed());
             }
         }
     }
 
-    //Removes the node logically and visually.
-    removeNode(nodeToRem) {
-        //Checks if the node has 0 children.
-        if (nodeToRem.getLeft == null && nodeToRem.getRight == null) {
+    searchMax(curNode) {
+        //Searches for the node with the highest value.
+        //This node will be the node with no right child.
+        if (curNode.getRight == null) {
+            return curNode;
+        } else {
+            return this.searchMax(curNode.getRight);
+        }
+    }
 
-            //If the removed node is removed then sets the root of the tree to be null / empty
-            if (this.getRoot.getId == nodeToRem.getId) {
-                this.setRoot = null;
-            } else {
-                //Sets the parent of the node to not have it as a child.
-                if (nodeToRem.getId > nodeToRem.getParent.getId) {
-                    nodeToRem.getParent.setRight = null;
+    searchMin(curNode) {
+        //Searches for the node with the lowest value.
+        //This node will be the node with no left child.
+        if (curNode.getLeft == null) {
+            return curNode;
+        } else {
+            return this.searchMin(curNode.getLeft);
+        }
+    }
+
+    search(curNode, searchNode) {
+        this.queue.addCommand("highlightLine", ["L1"]);
+        this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
+        if (curNode.getParent) {
+            this.queue.addCommand("highlightNode", [curNode.getParent.getId, "white"]);
+        }
+
+        if (curNode.getId==searchNode) {
+            this.queue.addCommand("highlightLine", ["L2"]);
+            this.queue.addCommand("highlightLine", ["L3"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "lime"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
+            return curNode;
+        } else {
+            if (searchNode>curNode.getId) {
+                this.queue.addCommand("highlightLine", ["L4"]);
+                if (curNode.getRight==null) {
+                    this.queue.addCommand("highlightLine", ["L7"]);
+                    this.queue.addCommand("highlightLine", ["L8"]);
+                    this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
+                    this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+                    this.queue.addCommand("setProcess", ["none"]);
+                    this.queue.runCommands();
+                    return null;
                 } else {
-                    nodeToRem.getParent.setLeft = null;
+                    this.queue.addCommand("highlightLine", ["L5"]);
+                    this.queue.addCommand("highlightLine", ["L6"]);
+                    return this.search(curNode.getRight, searchNode);
+                }
+            } else {
+                this.queue.addCommand("highlightLine", ["L9"]);
+                if (curNode.getLeft==null) {
+                    this.queue.addCommand("highlightLine", ["L12"]);
+                    this.queue.addCommand("highlightLine", ["L13"]);
+                    this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
+                    this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+                    this.queue.addCommand("setProcess", ["none"]);
+                    this.queue.runCommands();
+                    return null;
+                } else {
+                    this.queue.addCommand("highlightLine", ["L10"]);
+                    this.queue.addCommand("highlightLine", ["L11"]);
+                    return this.search(curNode.getLeft, searchNode);
                 }
             }
+        }
+    }
 
-            //Deletes the node from the user's view.
-            const nodeElem = document.getElementById(nodeToRem.getId);
-            nodeElem.remove();
+    remove(removeVal) {
+        this.queue.addCommand("highlightLine", ["L0"]);        
+        this.queue.addCommand("setProcess", ["search"]);
+        var nodeToRem = this.search(this.getRoot, removeVal);
+        this.queue.addCommand("setProcess", ["remove"]);
 
-            //Redraws the tree so that there are no unecessary branches.
-            const canv = document.getElementById("myCanvas");
-            const ctx = canv.getContext("2d");
-            ctx.clearRect(0,0, canv.width, canv.height);
-            redrawTree(this.getRoot, null);
+        if (nodeToRem!=null) {
+            this.queue.addCommand("highlightLine", ["L1"]);
+            this.queue.addCommand("highlightLine", ["L2"]);
+            this.queue.addCommand("highlightNode", [removeVal, "red"]);
 
-            highlightLine("L4");
-            setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
+            if (nodeToRem.getLeft == null && nodeToRem.getRight == null) {
+                //If the removed node is removed then sets the root of the tree to be null / empty
+                if (this.getRoot.getId == nodeToRem.getId) {
+                    this.setRoot = null;
+                } else {
+                    //Sets the parent of the node to not have it as a child.
+                    if (nodeToRem.getId > nodeToRem.getParent.getId) {
+                        nodeToRem.getParent.setRight = null;
+                    } else {
+                        nodeToRem.getParent.setLeft = null;
+                    }
+                }
+                
+                //Deletes the node from the user's view.
+                this.queue.addCommand("removeNode", [removeVal]);                
 
-        } else {
-            //Checks to see if the node has only a right child.
-            if (nodeToRem.getLeft == null && nodeToRem.getRight != null) {
+                //Redraws the tree so that there are no unecessary branches.
+                this.queue.addCommand("redrawTree", [this.getRoot, null]);
+
+                this.queue.addCommand("highlightLine", ["L3"]);
+                this.queue.addCommand("highlightLine", ["L4"]);
+            } else if (nodeToRem.getLeft == null && nodeToRem.getRight != null) {
 
                 //If the removed node is removed then sets the root of the tree to be null / empty
                 if (this.getRoot.getId == nodeToRem.getId) {
@@ -196,24 +255,18 @@ class BSTTree {
                 nodeToRem.getRight.setParent = nodeToRem.getParent;
 
                 //Calls a function to visually move nodes to be in the correct position.
-                initialMove(nodeToRem.getRight, nodeToRem.getId);
+                this.queue.addCommand("initMove", [nodeToRem.getRight, nodeToRem.getId]);
 
                 //Deletes the node from the user's view.
-                const remNode = document.getElementById(nodeToRem.getId);
-                remNode.remove();
-
+                this.queue.addCommand("removeNode", [removeVal]);                         
+                
                 //Redraws the tree so there are no unecessary branches.
-                const canv = document.getElementById("myCanvas");
-                const ctx = canv.getContext("2d");
-                ctx.clearRect(0,0, canv.width, canv.height);
-                redrawTree(this.getRoot, nodeToRem.getRight.getId);
+                this.queue.addCommand("redrawTree", [this.getRoot, nodeToRem.getRight]);
 
-                highlightLine("L6");
-                setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
+                this.queue.addCommand("highlightLine", ["L5"]);
+                this.queue.addCommand("highlightLine", ["L6"]);
 
-            //Checks to see if the node has only a left child.
             } else if (nodeToRem.getLeft != null && nodeToRem.getRight == null) {
-
                 //If the removed node is removed then sets the root of the tree to be null / empty
                 if (this.getRoot.getId == nodeToRem.getId) {
                     this.setRoot = nodeToRem.getLeft;
@@ -228,25 +281,18 @@ class BSTTree {
                 
                 nodeToRem.getLeft.setParent = nodeToRem.getParent;
 
-                //Calls a function to visually move nodes into place.
-                initialMove(nodeToRem.getLeft, nodeToRem.getId);
+                //Calls a function to visually move nodes to be in the correct position.
+                this.queue.addCommand("initMove", [nodeToRem.getLeft, nodeToRem.getId]);
 
-                //Removes the visual representation of the node.
-                const remNode = document.getElementById(nodeToRem.getId);
-                remNode.remove();
+                //Deletes the node from the user's view.
+                this.queue.addCommand("removeNode", [removeVal]);                  
+                
+                //Redraws the tree so there are no unecessary branches.
+                this.queue.addCommand("redrawTree", [this.getRoot, null]);
 
-                //Redraws the tree to remove any unecessary branches.
-                const canv = document.getElementById("myCanvas");
-                const ctx = canv.getContext("2d");
-                ctx.clearRect(0,0, canv.width, canv.height);
-                redrawTree(this.getRoot, nodeToRem.getLeft.getId);
-
-                highlightLine("L6");
-                setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
-
-            //Checks to see if the removed node has two children.
+                this.queue.addCommand("highlightLine", ["L5"]);
+                this.queue.addCommand("highlightLine", ["L6"]);
             } else if (nodeToRem.getLeft != null && nodeToRem.getRight != null) {
-
                 //Finds the largest node in the left subtree of the node to be removed.
                 //The Precessor.
                 var maxNode = this.searchMax(nodeToRem.getLeft);
@@ -285,155 +331,31 @@ class BSTTree {
                         nodeToRem.getParent.setLeft = maxNode;
                     }        
                 }
-                
+
                 //Calls a function to visualy move all necessary nodes.
-                initialMove(maxNode, nodeToRem.getId);
+                this.queue.addCommand("initMove", [maxNode, nodeToRem.getId]);
 
                 //Removes the visual representation of the removed node.
-                const remNode = document.getElementById(nodeToRem.getId);
-                remNode.remove();
-
+                this.queue.addCommand("removeNode", [removeVal]);  
+                
                 //Redraws the tree to remove any unecessary brances.
-                const canv = document.getElementById("myCanvas");
-                const ctx = canv.getContext("2d");
-                ctx.clearRect(0,0, canv.width, canv.height);                
-                redrawTree(this.getRoot, maxNode.getId);
+                this.queue.addCommand("redrawTree", [this.getRoot, maxNode]);
 
-                highlightLine("L8");
-                setTimeout(() => setCurrProcess("none"), 4000/getAnimSpeed());
-
-                //}
-                
-            } else{
-                alert("Something went wrong");
+                this.queue.addCommand("highlightLine", ["L7"]);
+                this.queue.addCommand("highlightLine", ["L8"]);
             }
-        }
-        
-    }
 
-    searchMax(curNode) {
-        //Searches for the node with the highest value.
-        //This node will be the node with no right child.
-        if (curNode.getRight == null) {
-            return curNode;
         } else {
-            return this.searchMax(curNode.getRight);
+            this.queue.addCommand("highlightLine", ["L9"]);
+            this.queue.addCommand("highlightLine", ["L10"]);
+
         }
+        this.queue.addCommand("setProcess", ["none"]);
+        this.queue.runCommands();
+
     }
 
-    searchMin(curNode) {
-        //Searches for the node with the lowest value.
-        //This node will be the node with no left child.
-        if (curNode.getLeft == null) {
-            return curNode;
-        } else {
-            return this.searchMin(curNode.getLeft);
-        }
-    }
-
-    //Recursively searches for the specified node.
-    search(curNode, searchNode) {
-
-        //Highlights the current node being checked.
-        highlightNode(curNode.getId, "lightblue");
-        if (curNode.getParent) {
-            highlightNode(curNode.getParent.getId, "white");
-        }
-        highlightLine('L2');
-        
-        //Compares the current node to the value being searched for.
-        if (curNode.getId == searchNode) {
-            highlightLine('L3');            
-            setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
-
-            //Highlights the node in green.
-            //As the specified node has been found.
-            highlightNode(curNode.getId, "lightgreen");
-            setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-            return curNode;
-        } else {
-            if (searchNode > curNode.getId) {
-                
-                if (curNode.getRight != null) {
-                    //If the current node has a right child
-                    //Then calls this function and compares against the right child of the current node.
-                    highlightLine('L6');
-                    return setTimeout(() => this.search(curNode.getRight, searchNode), 2000/getAnimSpeed());
-                } else {
-                    //If the current node has no right child
-                    //The specified value does not exist in the tree
-                    highlightLine('L8');
-                    setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
-                    //Highlights the closest node in red to signify it does not exist.
-                    highlightNode(curNode.getId, "red");
-                    setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-                    return null;
-                }                
-            } else {
-                if (curNode.getLeft != null) {
-                    //If the current node has a left child
-                    //Then calls this function and compares against the left child of the current node.
-                    highlightLine('L11');
-                    return setTimeout(() => this.search(curNode.getLeft, searchNode), 2000/getAnimSpeed());
-                } else {
-                    //If the current node has no left child
-                    //The specified value does not exist in the tree
-                    highlightLine('L13');
-                    setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
-                    //Highlights the closest node in red to signify it does not exist.
-                    highlightNode(curNode.getId, "red");
-                    alert("Value does not exist!");
-                    setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-                    return null;
-                }      
-            }            
-        }
-    }
-
-    //Recursively searches for a node so it can be removed.
-    remove(curNode, searchNode) {
-        highlightLine("L0");
-        highlightNode(curNode.getId, "lightblue");
-        if (curNode.getParent) {
-            highlightNode(curNode.getParent.getId, "white");
-        }
-
-        //Compares the current node against the value being searched for.
-        if (curNode.getId == searchNode) {
-
-            //If the current node is equal to the value being searched for
-            //Then the value has been found and the node can be removed.
-            highlightNode(curNode.getId, "red");
-            highlightLine("L2");
-            setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-            //Calls a function to remove the node.
-            setTimeout(() => this.removeNode(curNode), 2000/getAnimSpeed());
-            return curNode;
-        } else {
-            //Searches for the value in the same way as nodeSearch.
-            if (searchNode > curNode.getId) {
-                if (curNode.getRight != null) {
-                    return setTimeout(() => this.remove(curNode.getRight, searchNode), 2000/getAnimSpeed());
-                } else {
-                    highlightNode(curNode.getId, "red");
-                    alert("Value does not exist!");
-                    setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-                    return null;
-                }                
-            } else {
-                if (curNode.getLeft != null) {
-                    return setTimeout(() => this.remove(curNode.getLeft, searchNode), 2000/getAnimSpeed());
-                } else {
-                    highlightNode(curNode.getId, "red");
-                    alert("Value does not exist!");
-                    highlightLine("L10");
-                    setTimeout(() => highlightNode(curNode.getId, "white"), 2000/getAnimSpeed());
-                    setTimeout(() => setCurrProcess("none"), 2000/getAnimSpeed());
-                    return null;
-                }      
-            }            
-        }
-    }
+    
 
 }
 

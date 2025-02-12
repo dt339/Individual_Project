@@ -108,7 +108,7 @@ function userRemoveNode() {
                 var intInput = parseInt(inVal, 10);  
                 setCurrProcess("remove");  
                 //Calls the removal function. 
-                newTree.remove(newTree.getRoot, intInput);     
+                newTree.remove(intInput);     
             }
         }
         //Empties the input field.

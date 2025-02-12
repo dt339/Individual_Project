@@ -348,7 +348,7 @@ function initialMove(movingNode, destinationNode) {
                 //Calls a function to correct the position of the node after movement
                 //If the animation speed is too high, visual errors may occur.
                 //This function prevents them.
-                fixPosition(movingNode, destX, destY);
+                fixPosition(movingNode.getId, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
                 var movedDepth = movingNode.calcDepth();
                 recursiveMove(movingNode, movedDepth);
@@ -369,7 +369,7 @@ function initialMove(movingNode, destinationNode) {
                 //Calls a function to correct the position of the node after movement
                 //If the animation speed is too high, visual errors may occur.
                 //This function prevents them.
-                fixPosition(movingNode, destX, destY);
+                fixPosition(movingNode.getId, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
                 recursiveMove(movingNode);
                 //Creates a new branch between the moved node and its parent.
