@@ -35,6 +35,17 @@ class Node {
     set setParent(parentId) {
         this.parent = parentId;
     }
+
+    calcDepth() {
+        var curNode = this;
+        var depth = 0;
+        while (curNode!=null) {
+            depth++;
+            curNode=curNode.getParent;
+        }
+        alert(this.getId + " = " + depth);
+        return depth;
+    }
 }
 
 class RedBlackNode extends Node {

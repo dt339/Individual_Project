@@ -1,4 +1,4 @@
-function recursiveMove(movedRoot) {
+function recursiveMove(movedRoot, depth=1) {
     // alert("start - " + movedRoot.getId);
     // if (movedRoot.getLeft.getIsNull!=true) {
     //     alert("left - " + movedRoot.getLeft.getId);
@@ -27,8 +27,8 @@ function recursiveMove(movedRoot) {
 
         var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
         var initPosY = toMovePos.top - contPos.top;
-        var destX = (movedNodePos.left - contPos.left + movedNodePos.width + 100);
-        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+        var destX = (movedNodePos.left - contPos.left + (contPos.width /(2**(depth+1))));//(movedNodePos.left - contPos.left + movedNodePos.width + 100);
+        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + ((1+depth)* 10));//(movedNodePos.top - contPos.top + movedNodePos.height + 50);
 
         var xDistance = destX-initPosX;
         var yDistance = destY-initPosY;
@@ -54,7 +54,9 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    recursiveMove(movedRoot.getRight);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMove(movedRoot.getRight, tempDepth);
                 } else {
                     xPos+=xIncrement;
                     toMove.style.left = xPos + "px";
@@ -68,7 +70,9 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    recursiveMove(movedRoot.getRight);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMove(movedRoot.getRight, tempDepth);
                 } else {
                     xPos-=xIncrement;
                     toMove.style.left = xPos + "px";
@@ -87,8 +91,8 @@ function recursiveMove(movedRoot) {
 
         var initPosXL = toMovePosL.left - contPos.left + (toMovePosL.width/2);
         var initPosYL = toMovePosL.top - contPos.top;
-        var destXL = (movedNodePos.left - contPos.left - movedNodePos.width - 100);
-        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+        var destXL = (movedNodePos.left - contPos.left - (contPos.width /(2**(depth+1)))); //((10-depth)* 10));//(movedNodePos.left - contPos.left - movedNodePos.width - 100);
+        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + ((1+depth)* 10));//(movedNodePos.top - contPos.top + movedNodePos.height + 50);
 
         var xDistanceL = destXL-initPosXL;
         var yDistanceL = destYL-initPosYL;
@@ -114,7 +118,9 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    recursiveMove(movedRoot.getLeft);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMove(movedRoot.getLeft, tempDepth);
                 } else {
                     xPosL+=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
@@ -128,7 +134,9 @@ function recursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    recursiveMove(movedRoot.getLeft);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMove(movedRoot.getLeft, tempDepth);
                 } else {
                     xPosL-=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
@@ -142,7 +150,7 @@ function recursiveMove(movedRoot) {
 
 }
 
-function RBRecursiveMove(movedRoot) {
+function RBRecursiveMove(movedRoot, depth=1) {
     // alert("start - " + movedRoot.getId);
     // if (movedRoot.getLeft.getIsNull!=true) {
     //     alert("left - " + movedRoot.getLeft.getId);
@@ -171,8 +179,8 @@ function RBRecursiveMove(movedRoot) {
 
         var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
         var initPosY = toMovePos.top - contPos.top;
-        var destX = (movedNodePos.left - contPos.left + movedNodePos.width + 100);
-        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+        var destX = (movedNodePos.left - contPos.left + (contPos.width /(2**(depth+1)))); // ((10-depth)* 10));//(movedNodePos.left - contPos.left + movedNodePos.width + 100);
+        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + ((1+depth)* 10));//(movedNodePos.top - contPos.top + movedNodePos.height + 50);
 
         var xDistance = destX-initPosX;
         var yDistance = destY-initPosY;
@@ -198,7 +206,9 @@ function RBRecursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    RBRecursiveMove(movedRoot.getRight);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    RBRecursiveMove(movedRoot.getRight, tempDepth);
                 } else {
                     xPos+=xIncrement;
                     toMove.style.left = xPos + "px";
@@ -212,7 +222,9 @@ function RBRecursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getRight.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    RBRecursiveMove(movedRoot.getRight);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    RBRecursiveMove(movedRoot.getRight, tempDepth);
                 } else {
                     xPos-=xIncrement;
                     toMove.style.left = xPos + "px";
@@ -231,8 +243,8 @@ function RBRecursiveMove(movedRoot) {
 
         var initPosXL = toMovePosL.left - contPos.left + (toMovePosL.width/2);
         var initPosYL = toMovePosL.top - contPos.top;
-        var destXL = (movedNodePos.left - contPos.left - movedNodePos.width - 100);
-        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + 50);
+        var destXL = (movedNodePos.left - contPos.left - (contPos.width /(2**(depth+1)))); //((10-depth)* 10));//(movedNodePos.left - contPos.left - movedNodePos.width - 100);
+        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + ((1+depth)* 10));//(movedNodePos.top - contPos.top + movedNodePos.height + 50);
 
         var xDistanceL = destXL-initPosXL;
         var yDistanceL = destYL-initPosYL;
@@ -258,7 +270,9 @@ function RBRecursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    RBRecursiveMove(movedRoot.getLeft);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    RBRecursiveMove(movedRoot.getLeft, tempDepth);
                 } else {
                     xPosL+=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
@@ -272,7 +286,9 @@ function RBRecursiveMove(movedRoot) {
                     drawLine(movedRoot.getId, movedRoot.getLeft.getId);
                     //Calls itself and uses the newly moved node as the previously moved node.
                     //To move any children of the newly moved node.
-                    RBRecursiveMove(movedRoot.getLeft);
+                    var tempDepth = depth;
+                    tempDepth++;
+                    RBRecursiveMove(movedRoot.getLeft, tempDepth);
                 } else {
                     xPosL-=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
@@ -334,7 +350,8 @@ function initialMove(movingNode, destinationNode) {
                 //This function prevents them.
                 fixPosition(movingNode, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                recursiveMove(movingNode);
+                var movedDepth = movingNode.calcDepth();
+                recursiveMove(movingNode, movedDepth);
                 //Creates a new branch between the moved node and its parent.
                 drawLine(movingNode.getParent.getId, movingNode.getId);
             } else {
@@ -560,6 +577,11 @@ function fixPosition(node, destX, destY) {
     elem.style.left = destX + "px";
     elem.style.top = destY + "px";
     // alert("elem pos after! - " + elem.style.left + " - " + elem.style.top);
+}
+
+function highlightBorder(elemId, colour) {
+    var elem = document.getElementById(elemId);
+    elem.style.borderColor = colour;
 }
 
 function baseMove() {

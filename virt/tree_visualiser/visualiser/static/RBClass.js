@@ -36,18 +36,36 @@ class RedBlackTree {
     }  
 
     search(curNode, toFind) {
+        if (curNode.getIsNull==false) {
+            this.queue.addCommand("highlightBorder", [curNode.getId, "blue"]);
+        }
+        if (curNode.getParent!=null) {
+            this.queue.addCommand("highlightBorder", [curNode.getParent.getId, "black"]);
+        }
         if (toFind == curNode.getId) {
+            this.queue.addCommand("highlightBorder", [curNode.getId, "lime"]);
+            this.queue.addCommand("highlightBorder", [curNode.getId, "black"]);
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
             return curNode;
         } else if (toFind > curNode.getId) {
             if (curNode.getRight.getIsNull==false) {
                 return this.search(curNode.getRight, toFind);
             } else {
+                this.queue.addCommand("highlightBorder", [curNode.getId, "red"]);
+                this.queue.addCommand("highlightBorder", [curNode.getId, "black"]);
+                this.queue.addCommand("setProcess", ["none"]);
+                this.queue.runCommands();
                 return null;
             }
         } else if (toFind < curNode.getId) {
             if (curNode.getLeft.getIsNull==false) {
                 return this.search(curNode.getLeft, toFind);
             } else {
+                this.queue.addCommand("highlightBorder", [curNode.getId, "red"]);
+                this.queue.addCommand("highlightBorder", [curNode.getId, "black"]);
+                this.queue.addCommand("setProcess", ["none"]);
+                this.queue.runCommands();
                 return null;
             }
         }
@@ -57,40 +75,58 @@ class RedBlackTree {
     insert(nodeVal, nodeArr) {
         var newNode = new RedBlackNode(parseInt(nodeVal, 10), true, false);
 
+        var canInsert = true;
+
         var lastNode = null;
         var currentNode = this.getRoot;
         var depth = 0;
        
-        while (currentNode.getIsNull==false) {
+        while (canInsert&&currentNode.getIsNull==false) {
+            this.queue.addCommand("highlightBorder", [currentNode.getId, "blue"]);
+            if (currentNode.getParent!=null) {
+                this.queue.addCommand("highlightBorder", [currentNode.getParent.getId, "black"]);
+            }
             depth++;
             lastNode=currentNode;
             if (newNode.getId<currentNode.getId) {
                 currentNode=currentNode.getLeft;
-            } else {
+            } else if (newNode.getId>currentNode.getId) {
                 currentNode=currentNode.getRight;
+            } else {
+                alert("Value already exists");
+                canInsert = false;
             }
         }
+                
+        if (canInsert) {
+            newNode.setParent = lastNode;
+            if (lastNode==null) {
+                this.setRoot=newNode;
+                this.queue.addCommand("createColouredRoot", [newNode.getId, 'red']);
+            } else {
+                if (newNode.getId<lastNode.getId) {
+                    lastNode.setLeft = newNode;
+                    this.queue.addCommand("createColouredNode", [newNode.getId, newNode.getId, lastNode.getId,'l', depth, 'red']);
+        
+                } else {
+                    lastNode.setRight = newNode;
+                    this.queue.addCommand("createColouredNode", [newNode.getId, newNode.getId, lastNode.getId,'r', depth, 'red']);
+                }   
+                this.queue.addCommand("highlightBorder", [newNode.getId, "blue"]);
+                this.queue.addCommand("highlightBorder", [lastNode.getId, "black"]);
+                this.queue.addCommand("highlightBorder", [newNode.getId, "black"]);
+            }
 
-        newNode.setParent = lastNode;
-        if (lastNode==null) {
-            this.setRoot=newNode;
-            this.queue.addCommand("createColouredRoot", [newNode.getId, 'red']);
-        } else if (newNode.getId<lastNode.getId) {
-            lastNode.setLeft = newNode;
-            this.queue.addCommand("createColouredNode", [newNode.getId, newNode.getId, lastNode.getId,'l', depth, 'red']);
-        } else {
-            lastNode.setRight = newNode;
-            this.queue.addCommand("createColouredNode", [newNode.getId, newNode.getId, lastNode.getId,'r', depth, 'red']);
+            
+            newNode.setLeft = new RedBlackNode(0, false, true);
+            newNode.setRight = new RedBlackNode(0, false, true);
+            newNode.setIsRed = true;
+            
+            this.insertFixup(newNode);
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
         }
         
-        
-        newNode.setLeft = new RedBlackNode(0, false, true);
-        newNode.setRight = new RedBlackNode(0, false, true);
-        newNode.setIsRed = true;
-        
-        this.insertFixup(newNode);
-        this.queue.addCommand("setProcess", ["none"]);
-        this.queue.runCommands();
     } 
 
     insertFixup(curNode) {
@@ -120,6 +156,7 @@ class RedBlackTree {
                             this.setNodeColour(curNode.getParent, false);
                             this.setNodeColour(curNode.getParent.getParent, true);
                             this.rightRotation(curNode.getParent.getParent);
+                            changeOccured=true;
                         }
                     } else {
                         let uncle = curNode.getParent.getParent.getLeft;
@@ -140,9 +177,9 @@ class RedBlackTree {
                             this.setNodeColour(curNode.getParent, false);
                             this.setNodeColour(curNode.getParent.getParent, true);
                             this.leftRotation(curNode.getParent.getParent);
+                            changeOccured=true;
                         }
                     }
-                    changeOccured=true;
        
                 }
             }
@@ -151,7 +188,7 @@ class RedBlackTree {
             
         }
         if (changeOccured) {
-            this.queue.addCommand("RBRecMove", [this.getRoot]); 
+            this.queue.addCommand("RBRecMove", [this.getRoot, 1]); 
             this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
         }
         //this.queue.addCommand("RBredrawTree", [this.getRoot, this.getRoot]);
@@ -160,6 +197,7 @@ class RedBlackTree {
 
     remove(theRoot, removeVal) {
         var toRemove = this.search(this.getRoot, removeVal);
+        this.queue.addCommand("highlightBorder", [toRemove.getId, "red"]);
         //alert("to remove? = " + toRemove);
         if (toRemove != null) {
             var x = null;
@@ -168,13 +206,17 @@ class RedBlackTree {
 
             if (toRemove.getLeft.getIsNull) {
                 x = toRemove.getRight;
+                this.queue.addCommand("highlightBorder", [toRemove.getRight.getId, "lime"]);
                 this.transplant(toRemove, toRemove.getRight);
+                this.queue.addCommand("highlightBorder", [toRemove.getRight.getId, "black"]);
             } else if (toRemove.getRight.getIsNull) {
                 x = toRemove.getLeft;
+                this.queue.addCommand("highlightBorder", [toRemove.getLeft.getId, "lime"]);
                 this.transplant(toRemove, toRemove.getLeft);
+                this.queue.addCommand("highlightBorder", [toRemove.getLeft.getId, "black"]);
             } else {
                 y = this.getSuccessor(toRemove.getRight);
-                
+                this.queue.addCommand("highlightBorder", [y.getId, "lime"]);
                 yOrigIsRed = y.getIsRed;
                 x = y.getRight;
                 if (y.getParent==toRemove) {
@@ -189,14 +231,15 @@ class RedBlackTree {
                 y.getLeft.setParent = y;
                 //y.setIsRed = toRemove.getIsRed;
                 this.setNodeColour(y, toRemove.getIsRed);
+                this.queue.addCommand("highlightBorder", [y.getId, "black"]);
             }
-
             
             if (yOrigIsRed==false) {
                 this.deleteFixup(x);
             }                
             
             this.queue.addCommand("removeNode", [toRemove.getId]);
+            this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
 
@@ -284,7 +327,7 @@ class RedBlackTree {
         // curNode.setIsRed = false;
         if (this.getRoot.getIsNull==false) {
             this.setNodeColour(curNode, false);
-            this.queue.addCommand("RBRecMove", [this.getRoot]); 
+            this.queue.addCommand("RBRecMove", [this.getRoot, 1]); 
             this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
         }
     }

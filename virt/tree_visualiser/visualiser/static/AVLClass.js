@@ -500,7 +500,7 @@ class AVLTree {
         topNode.setParent = midNode;
 
         this.queue.addCommand("swap", [topNode.getId, midNode.getId]);  
-        this.queue.addCommand("recMove", [midNode]); 
+        this.queue.addCommand("recMove", [midNode, midNode.calcDepth()]); 
         this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 
@@ -533,7 +533,7 @@ class AVLTree {
         topNode.setParent = midNode;
 
         this.queue.addCommand("swap", [topNode.getId, midNode.getId]);
-        this.queue.addCommand("recMove", [midNode]);
+        this.queue.addCommand("recMove", [midNode, midNode.calcDepth()]);
         this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 

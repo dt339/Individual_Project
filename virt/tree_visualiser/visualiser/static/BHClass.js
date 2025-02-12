@@ -96,48 +96,60 @@ class BinaryHeap {
         }
     }
 
-    remove(theRoot, curNode) {
+    remove() {
         //Find node at newest position
         //Swap root and that node
         //Remove root
-        //heap sort down tree
+        //heap sort down tree        
         
         this.setNextPos = this.getNextPos - 1;
-        var pathToNode = this.calculatePath();
-        alert("path - " + pathToNode);
-        var replacementNode = this.findNode(this.getRoot, pathToNode);
-        alert("rep - " + replacementNode.getId);
-        var rootNode = this.getRoot;
-        //Swap root and node
-        this.queue.addCommand("highlightLine", ["L0"]);
-        this.queue.addCommand("highlightNode", [this.getRoot.getId, 'red']);
-        this.queue.addCommand("highlightNode", [replacementNode.getId, 'lightgreen']);
-        this.queue.addCommand("swap", [this.getRoot.getId, replacementNode.getId]);
-        this.queue.addCommand("highlightNode", [replacementNode.getId, 'white']);
-        this.queue.addCommand("highlightLine", ["L1"]);
-        this.queue.addCommand("removeNode", [this.getRoot.getId]);
-        this.queue.addCommand("highlightLine", ["L2"]);
-
-        replacementNode.setLeft = rootNode.getLeft;
-        replacementNode.setRight = rootNode.getRight;
-
-        rootNode.getLeft.setParent = replacementNode;
-        rootNode.getRight.setParent = replacementNode;
-
-        if (replacementNode.getParent.getRight == replacementNode) {
-            replacementNode.getParent.setRight = null;
+        if (this.getRoot.getLeft==null) {
+            this.queue.addCommand("removeNode", [this.getRoot.getId]);
+            this.queue.addCommand("setProcess", ["none"])
+            this.queue.runCommands();
+            this.setRoot = null;
         } else {
-            replacementNode.getParent.setLeft = null;
+            var pathToNode = this.calculatePath();
+            alert("path - " + pathToNode);
+            var replacementNode = this.findNode(this.getRoot, pathToNode);
+            alert("rep - " + replacementNode.getId);
+            var rootNode = this.getRoot;
+            //Swap root and node
+            this.queue.addCommand("highlightLine", ["L0"]);
+            this.queue.addCommand("highlightNode", [this.getRoot.getId, 'red']);
+            this.queue.addCommand("highlightNode", [replacementNode.getId, 'lightgreen']);
+            this.queue.addCommand("swap", [this.getRoot.getId, replacementNode.getId]);
+            this.queue.addCommand("highlightNode", [replacementNode.getId, 'white']);
+            this.queue.addCommand("highlightLine", ["L1"]);
+            this.queue.addCommand("removeNode", [this.getRoot.getId]);
+            this.queue.addCommand("highlightLine", ["L2"]);    
+            
+            replacementNode.setLeft = rootNode.getLeft;
+            replacementNode.setRight = rootNode.getRight;
+            
+            if (rootNode.getLeft!=null) {
+                rootNode.getLeft.setParent = replacementNode;
+            }
+            if (rootNode.getRight!=null) {
+                rootNode.getRight.setParent = replacementNode;
+            }            
+            
+            if (replacementNode.getParent.getRight == replacementNode) {
+                replacementNode.getParent.setRight = null;
+            } else {
+                replacementNode.getParent.setLeft = null;
+            }
+            replacementNode.setParent = null;
+            
+            this.setRoot = replacementNode;    
+            
+            this.queue.addCommand("setProcess", ["downHeap"])
+            this.heapifyDown(this.getRoot);
+            this.queue.addCommand("setProcess", ["none"])
+            this.queue.runCommands();
+            this.queue.addCommand("redrawTree", [this.getRoot, null]);
         }
-        replacementNode.setParent = null;
-
-        this.setRoot = replacementNode;
-
-        this.queue.addCommand("setProcess", ["downHeap"])
-        this.heapifyDown(this.getRoot);
-        this.queue.addCommand("setProcess", ["none"])
-        this.queue.runCommands();
-        this.queue.addCommand("redrawTree", [this.getRoot, null]);
+        
     }
 
     findNode(curNode, path) {

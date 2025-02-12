@@ -98,7 +98,7 @@ class AnimQueue {
         } else if (com.getType == "initMove") {
             initialMove(paramArray[0], paramArray[1]);
         } else if (com.getType == "recMove") {
-            recursiveMove(paramArray[0]);
+            recursiveMove(paramArray[0], paramArray[1]);
         } else if (com.getType == "removeNode") {
             removeElem(paramArray[0]);
         } else if (com.getType == "highlightNode") {
@@ -115,7 +115,9 @@ class AnimQueue {
             clearCanvas();
             redBlackRedrawTree(paramArray[0],paramArray[1]);
         } else if (com.getType== "RBRecMove") {
-            RBRecursiveMove(paramArray[0]);
+            RBRecursiveMove(paramArray[0], paramArray[1]);
+        } else if (com.getType=="highlightBorder") {
+            highlightBorder(paramArray[0], paramArray[1]);
         }
 
         

@@ -90,26 +90,31 @@ function userInputNode() {
 }
 
 function userRemoveNode() {
-    //Reads the input field.
-    var inVal = document.getElementById("nodeRemove").value;
-    //Checks for an empty input.
-    if (inVal == '') {
-        alert("No value entered!");
+    if (thisPage=="BH") {
+        newTree.remove();   
     } else {
-        //Checks that the entered value is a number.
-        if (isNaN(inVal))
-        {
-            alert("Must input numbers!");
+        //Reads the input field.
+        var inVal = document.getElementById("nodeRemove").value;
+        //Checks for an empty input.
+        if (inVal == '') {
+            alert("No value entered!");
         } else {
-            //Sets the current process.
-            var intInput = parseInt(inVal, 10);  
-            setCurrProcess("remove");  
-            //Calls the removal function. 
-            newTree.remove(newTree.getRoot, intInput);     
+            //Checks that the entered value is a number.
+            if (isNaN(inVal))
+            {
+                alert("Must input numbers!");
+            } else {
+                //Sets the current process.
+                var intInput = parseInt(inVal, 10);  
+                setCurrProcess("remove");  
+                //Calls the removal function. 
+                newTree.remove(newTree.getRoot, intInput);     
+            }
         }
+        //Empties the input field.
+        document.getElementById("nodeRemove").value = '';
     }
-    //Empties the input field.
-    document.getElementById("nodeRemove").value = '';
+    
 }
 
 function lmao() {
