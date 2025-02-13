@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Fibonacci Heap
+{% endblock %}
+
+{% block content %}
+
+    <h1>Fibonacci Heap</h1>    
+    <button onclick="qwert()">3 pleaser</button>
+    <div class="tree-canvas" id="treeBox">
+        <canvas id="myCanvas" style="border:1px solid #000000;">
+        </canvas>  
+    </div>
+
+    <p>Footer</p>
+
+    <div class="inputBar">
+
+        <input id="nodeInsert" type="text">
+        <button id="nodeInsertButton" onclick="userInputNode()">Insert!</button>
+
+        <input id="nodeRemove" type="text">
+        <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove!</button>
+
+        <input id="nodeSearch" type="text">
+        <button id="nodeSearchButton" onclick="userSearchNode()">Search!</button>
+
+        <div class="sliderContainer">
+            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">
+            <label id="speedLabel" for="speedSlider">x10</label>
+        </div>
+
+        <label>
+            Show Code:
+            <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
+        </label>
+    </div>
+
+
+
+{% endblock %}

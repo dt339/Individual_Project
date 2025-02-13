@@ -129,6 +129,10 @@ if (curPage == "BST") {
     searchProcess = bSTSearchProcess;
     insertProcess = binaryHeapInsert;
     removeProcess = binaryHeapRemove;
+} else if (curPage == "FH") {
+    searchProcess = bSTSearchProcess;
+    insertProcess = binaryHeapInsert;
+    removeProcess = binaryHeapRemove;
 } else {
     alert("An error has occured.");
 }

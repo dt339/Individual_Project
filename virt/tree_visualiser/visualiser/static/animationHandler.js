@@ -602,3 +602,35 @@ function baseMove() {
         }
     }
 }
+
+function addFibRoot(rootId, rootArr) {
+    
+    const elem = document.createElement('div');
+    elem.id = rootId;
+    elem.className = 'node';
+    elem.textContent = rootId;
+
+    //Gets the elements for the parent node and the canvas.
+    const parentDiv = document.getElementById('treeBox');
+    const containerPos = parentDiv.getBoundingClientRect();
+
+    var numOfRoots = rootArr.length;
+    //alert("num of roots - " + numOfRoots);
+    var spacing = containerPos.width/(numOfRoots+1);
+
+    elem.style.left = (spacing*numOfRoots)+ 'px';
+    elem.style.top = '10px';
+
+    parentDiv.appendChild(elem);
+    
+    for (let i = 0; i < numOfRoots; i++) {
+        //alert(i + " - " + rootArr[i]);
+        var curElem = document.getElementById(rootArr[i]).getBoundingClientRect();
+        // alert(containerPos.width)
+        // alert(spacing)
+        // alert(containerPos.left)
+        move(rootArr[i], (curElem.left - containerPos.left + (curElem.width/2)), (curElem.top-containerPos.top), ((spacing*(i+1))-(containerPos.left)+curElem.width), 10);
+        //move(n1,pos1.left - contPos.left + (pos1.width/2), pos1.top - contPos.top, pos2.left - contPos.left, pos2.top - contPos.top);
+    }
+
+}

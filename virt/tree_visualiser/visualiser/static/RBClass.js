@@ -195,7 +195,7 @@ class RedBlackTree {
         this.setNodeColour(this.getRoot, false);
     }
 
-    remove(theRoot, removeVal) {
+    remove(removeVal) {
         var toRemove = this.search(this.getRoot, removeVal);
         this.queue.addCommand("highlightBorder", [toRemove.getId, "red"]);
         //alert("to remove? = " + toRemove);

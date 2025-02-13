@@ -39,7 +39,7 @@ class AVLTree {
         alert("root: " + this.getRoot.getId + " - left: " + this.getRoot.getLeft.getId + " - right: " + this.getRoot.getRight.getId);
     }
 
-    remove(theRoot, nodeVal) {
+    remove(nodeVal) {
         this.queue.addCommand("highlightLine", ["L0"]);
         this.queue.addCommand("setProcess", ["search"]);
         var toRemove = this.search(this.getRoot, nodeVal);

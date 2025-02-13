@@ -27,6 +27,9 @@ def binHeap(request):
 def redBlack(request):
   return render(request, "RB.html")
 
+def fibonacci(request):
+  return render(request, "FH.html")
+
 def tree_view(request):
   return render(request, "tree.html")
 

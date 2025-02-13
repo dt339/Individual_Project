@@ -8,6 +8,7 @@ urlpatterns = [
     path('AVL/', views.avl, name='avl'),
     path('BH/', views.binHeap, name='binHeap'),
     path('RB/', views.redBlack, name='redBlack'),
+    path('FH/', views.fibonacci, name='fibonacci'),
     path('Tree/', views.tree_view, name='tree')
     
 ]

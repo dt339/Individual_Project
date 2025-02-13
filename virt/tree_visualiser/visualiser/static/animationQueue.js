@@ -118,6 +118,8 @@ class AnimQueue {
             RBRecursiveMove(paramArray[0], paramArray[1]);
         } else if (com.getType=="highlightBorder") {
             highlightBorder(paramArray[0], paramArray[1]);
+        } else if (com.getType=="addFibRoot") {
+            addFibRoot(paramArray[0], paramArray[1]);
         }
 
         

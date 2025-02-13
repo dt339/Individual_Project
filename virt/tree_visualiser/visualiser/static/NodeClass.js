@@ -72,3 +72,59 @@ class RedBlackNode extends Node {
     }
 
 }
+
+class FibonacciNode {
+    constructor(id) {
+        this.id = id;
+        this.parent = null;
+        this.child = null;
+        this.marked = false;
+        this.degree = 0;
+    }
+
+    get getId() {
+        return this.id;
+    }
+
+    get getchild() {
+        return this.child;
+    }
+
+    get getParent() {
+        return this.parent;
+    }
+
+    get getMarked() {
+        return this.marked;
+    }
+
+    get getDegree() {
+        return this.degree;
+    }
+
+    set setId(i) {
+        this.id = i;
+    }
+
+    set setChild(c) {
+        this.child = c;
+    }
+
+    set setParent(p) {
+        this.parent = p;
+    }
+
+    set setMarked(m) {
+        this.marked = m;
+    }
+
+    set setDegree(d) {
+        this.degree = d;
+    }
+
+    changeDegree(changeAmount) {
+        this.setDegree = this.getDegree + changeAmount;
+    }
+    
+
+}
