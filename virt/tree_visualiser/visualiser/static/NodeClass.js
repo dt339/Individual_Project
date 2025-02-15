@@ -80,6 +80,7 @@ class FibonacciNode {
         this.child = null;
         this.marked = false;
         this.degree = 0;
+        this.childList = null; 
     }
 
     get getId() {
@@ -102,6 +103,10 @@ class FibonacciNode {
         return this.degree;
     }
 
+    get getChildList() {
+        return this.childList;
+    }
+
     set setId(i) {
         this.id = i;
     }
@@ -120,6 +125,10 @@ class FibonacciNode {
 
     set setDegree(d) {
         this.degree = d;
+    }
+
+    set setChildList(l) {
+        this.childList = l;
     }
 
     changeDegree(changeAmount) {

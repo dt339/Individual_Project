@@ -119,6 +119,10 @@ function userRemoveNode() {
     
 }
 
+function userRemoveMin() {
+    newTree.removeMin();
+}
+
 function lmao() {
     const elem = document.createElement('p');
     elem.id = 1;

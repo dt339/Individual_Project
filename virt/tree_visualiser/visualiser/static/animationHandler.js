@@ -478,7 +478,7 @@ function newElem(newID, value, parentNode, direction, depth, fillColour="white")
 
 //Draws a line on the canvas between two specified html elements.
 function drawLine(elem1, elem2) {
-
+    
     const canv = document.getElementById("myCanvas");
     const ctx = canv.getContext("2d");
     const containerDiv = document.getElementById('treeBox');
@@ -489,10 +489,12 @@ function drawLine(elem1, elem2) {
     const pos1 = ref1.getBoundingClientRect();
     const pos2 = ref2.getBoundingClientRect();
     
+    
     ctx.beginPath();
     ctx.moveTo(pos1.left - contPos.left + (pos1.width/2), pos1.top - contPos.top + pos1.height);
     ctx.lineTo(pos2.left - contPos.left + (pos2.width/2), pos2.top - contPos.top);
     ctx.stroke();
+    
 }
 
 function clearCanvas() {
@@ -623,14 +625,161 @@ function addFibRoot(rootId, rootArr) {
 
     parentDiv.appendChild(elem);
     
-    for (let i = 0; i < numOfRoots; i++) {
-        //alert(i + " - " + rootArr[i]);
-        var curElem = document.getElementById(rootArr[i]).getBoundingClientRect();
-        // alert(containerPos.width)
-        // alert(spacing)
-        // alert(containerPos.left)
-        move(rootArr[i], (curElem.left - containerPos.left + (curElem.width/2)), (curElem.top-containerPos.top), ((spacing*(i+1))-(containerPos.left)+curElem.width), 10);
-        //move(n1,pos1.left - contPos.left + (pos1.width/2), pos1.top - contPos.top, pos2.left - contPos.left, pos2.top - contPos.top);
-    }
+    clearCanvas();
+    allignRoots(rootArr);
+}
 
+function allignRoots(rootArr) {
+    //Gets the elements for the parent node and the canvas.
+    const parentDiv = document.getElementById('treeBox');
+    const containerPos = parentDiv.getBoundingClientRect();
+
+    var numOfRoots = rootArr.length;
+    //alert("num of roots - " + numOfRoots);
+    var spacing = containerPos.width/(numOfRoots+1);
+    for (let i = 0; i < numOfRoots; i++) {
+        var curElem = document.getElementById(rootArr[i].getId).getBoundingClientRect();
+        move(rootArr[i].getId, (curElem.left - containerPos.left + (curElem.width/2)), (curElem.top-containerPos.top), ((spacing*(i+1))-(containerPos.left)+curElem.width), 10);
+        allignChildren(rootArr[i], rootArr)
+        // if (rootArr[i].getChild!=null) {
+        //     alert(rootArr[i].getId + " has a child!!!");
+
+        // }
+    }
+}
+
+function rootLines(rootArr) {
+    for (let i = 0; i < rootArr.length; i++) {
+        if (i>0) {
+            drawHorizontalLine(rootArr[i].getId, rootArr[i-1].getId)
+        }
+        
+    }
+}
+
+function allignChildren(parent, parentArr, parentArea=null) {
+    
+    if (parentArea==null) {
+        const containerDiv = document.getElementById('treeBox');
+        const containerPos = containerDiv.getBoundingClientRect();
+        parentArea = containerPos.width;        
+    }
+    
+    // var parentDiv = document.getElementById(parent.getId)
+    // var parentPos = parentDiv.getBoundingClientRect();
+
+    // const containerDiv = document.getElementById('treeBox');
+    // const containerPos = containerDiv.getBoundingClientRect();
+
+    // //allignRoots(rootArr);
+
+    // var rootSpacing= containerPos.width/(rootArr.length+1);
+
+    
+    
+    var childArr = parent.getChildList.getAll("node");
+
+    if (childArr != null) {
+        //clearCanvas();
+        for (let i = 0; i < childArr.length; i++) {
+            // var curElem = document.getElementById(childArr[i].getId).getBoundingClientRect();
+    
+            // var initX = (curElem.left - containerPos.left + (curElem.width/2));
+            // var initY = (curElem.top-containerPos.top);
+            // var destX = (parentPos.left-((rootSpacing/2))+(childSpacing*(i+1))-containerPos.left);
+            // var destY = (parentPos.top - containerPos.top + 100);
+    
+            // move(childArr[i].getId, initX, initY, destX, destY);
+            moveChild(parent, childArr[i], parentArea, parentArr, i);
+        }
+    }
+    // var childSpacing = rootSpacing/(childArr.length+1);
+
+}
+
+function moveChild(parent, child, parentArea, parentList, childNum) {
+    
+    var parentDiv = document.getElementById(parent.getId)
+    var parentPos = parentDiv.getBoundingClientRect();
+    
+    const containerDiv = document.getElementById('treeBox');
+    const containerPos = containerDiv.getBoundingClientRect();
+    
+    //Gets the area allocated to the parent of the node in the canvas
+    var parentSpacing = parentArea/(parentList.length+1);
+    
+    //Gets the area allocated to each child of the parent within the allocated space.
+    var childSpacing = parentSpacing/(parent.getChildList.getLength+1);
+    
+    var elem = document.getElementById(child.getId);
+    var elemPos = elem.getBoundingClientRect();
+    
+    //Calculates the destination the child must reach.
+    var initX = (elemPos.left - containerPos.left + (elemPos.width/2));
+    var initY = (elemPos.top-containerPos.top);
+    var destX = (parentPos.left-((parentSpacing/2))+(childSpacing*(childNum+1))-containerPos.left);
+    var destY = (parentPos.top - containerPos.top + 100);
+    
+    var id = null;
+    var xPos = initX;
+    var yPos = initY;    
+    
+    var xDistance = destX-initX;
+    var yDistance = destY-initY;
+    
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance)*getAnimSpeed();
+    
+    var xDirection = 'r';
+    if (initX > destX) {
+        xDirection = 'l';
+    }
+    
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    function frame() {
+        if (xDirection == 'r') {
+            if (xPos >= destX) {
+                clearInterval(id);
+                fixPosition(child.getId, destX, destY);
+                drawLine(parent.getId, child.getId);
+                allignChildren(child, parent.getChildList, childSpacing);
+            } else {
+                xPos+=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos += yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        } else {
+            if (xPos <= destX) {
+                clearInterval(id);
+                fixPosition(child.getId, destX, destY);
+                drawLine(parent.getId, child.getId);
+                allignChildren(child, parent.getChildList, childSpacing);
+            } else {
+                xPos-=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos -= yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        }
+
+    }
+}
+
+function drawHorizontalLine(elem1, elem2) {
+    const canv = document.getElementById("myCanvas");
+    const ctx = canv.getContext("2d");
+    const containerDiv = document.getElementById('treeBox');
+    const contPos = containerDiv.getBoundingClientRect();
+
+    const ref1 = document.getElementById(elem1);
+    const ref2 = document.getElementById(elem2);
+    const pos1 = ref1.getBoundingClientRect();
+    const pos2 = ref2.getBoundingClientRect();
+    
+    ctx.beginPath();
+    ctx.moveTo(pos1.left - contPos.left, pos1.top - contPos.top + pos1.height/2);
+    ctx.lineTo(pos2.left - contPos.left+pos2.width, pos2.top - contPos.top + pos2.height/2) ;
+    ctx.stroke();
 }

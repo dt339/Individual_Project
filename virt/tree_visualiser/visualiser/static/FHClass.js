@@ -70,6 +70,7 @@ class CDLinkedList {
             this.getHead.setleftPointer = newElem;
         }
         this.chnangeLength(1);
+        //alert("I've inserted a node - " + e.getId)
     }
 
     removeElement(e) {
@@ -133,14 +134,19 @@ class CDLinkedList {
         }
     }
 
-    getAllValues() {
+    getAll(type) {
         if (this.getHead!=null) {
             var curElem = this.getHead;
             var output = [];
             var finished = false;
 
             while (!finished) {
-                output.push(curElem.getHeldNode.getId);
+                if (type=="id") {
+                    output.push(curElem.getHeldNode.getId);
+                } else if (type=="node") {
+                    output.push(curElem.getHeldNode);
+                }
+                
                 curElem = curElem.getRightPointer;
                 if (curElem==this.getHead) {
                     finished=true;
@@ -148,7 +154,30 @@ class CDLinkedList {
             }
             return output;
         } else {
-            alert("List is empty");
+            //alert("List is empty");
+            return null;
+        }
+    }
+
+    findMin() {
+        if (this.getHead!=null) {
+            var curElem = this.getHead;
+            var curMin = this.getHead;
+            var finished = false;
+
+            while (!finished) {
+                if (curElem.getHeldNode.getId < curMin.getHeldNode.getId) {
+                    curMin = curElem;
+                }
+                curElem = curElem.getRightPointer;
+                if (curElem==this.getHead) {
+                    finished=true;
+                }
+            }
+            
+            return curMin.getHeldNode;
+        } else {
+            alert("no other nodes in heap");
             return null;
         }
     }
@@ -182,12 +211,27 @@ class FibonacciHeap {
         this.numOfNodes = this.getNumOfNodes + changeValue;
     }
 
+    checkMinNode(newNode) {
+        if (this.getMinNode==null) {
+            this.setMinNode = newNode;
+            this.queue.addCommand("highlightNode", [this.getMinNode.getId, "lime"]);
+        } else if (newNode.getId < this.getMinNode.getId) {
+            this.queue.addCommand("highlightNode", [this.getMinNode.getId, "white"]);
+            this.setMinNode = newNode;
+            this.queue.addCommand("highlightNode", [this.getMinNode.getId, "lime"]);
+        }
+        
+    }
+
     insert(nodeVal, nodeArr) {
         var newNode = new FibonacciNode(parseInt(nodeVal, 10));
+        newNode.setChildList = new CDLinkedList();
         this.rootList.insertElement(newNode);
         this.changeNumOfNodes(1);
         this.rootList.print();
-        this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAllValues()]);
+        this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAll("node")]);
+        this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
+        this.checkMinNode(newNode);
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }
@@ -198,6 +242,73 @@ class FibonacciHeap {
         this.rootList.print();
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
+    }
+
+    removeMin() {
+        var toRemove = this.getMinNode;
+        if (toRemove!= null) {
+            this.queue.addCommand("highlightNode", [toRemove.getId, "red"]);
+            this.queue.addCommand("removeNode", [toRemove.getId]);
+            var childList = toRemove.getChildList;
+            var childArr = childList.getAll("node");
+            if (childArr!=null) {
+                for (let i = 0; i < childArr.length; i++) {
+                    this.rootList.insertElement(childArr[i]);
+                    childArr[i].setParent = null;
+                    //this.queue.addCommand("addFibRoot", [childArr[i].getId, this.rootList.getAll("id")]);
+                }
+                this.queue.addCommand("rootLines", [this.rootList.getAll("id")]);
+            }
+
+            this.rootList.removeElement(toRemove.getId);
+            this.changeNumOfNodes(-1);
+
+            this.setMinNode = this.rootList.findMin();
+            if (this.getMinNode != null) {
+                this.consolidate();
+            }
+            
+            this.queue.addCommand("highlightNode", [this.getMinNode.getId, "lime"]);
+        } else {
+            alert("No nodes in heap!");
+        }
+        this.rootList.print();
+        this.queue.addCommand("setProcess", ["none"]);
+        this.queue.runCommands();
+    }
+
+    consolidate() {
+        var degreeArray = new Array(this.getNumOfNodes).fill(null);
+        var rootArray = this.rootList.getAll("node");
+        for (let i = 0; i < rootArray.length; i++) {
+            var curRoot = rootArray[i];
+            //alert("cur root - " + curRoot.getId);
+            var curDegree = curRoot.getDegree;
+            while (degreeArray[curDegree]!=null) {
+                var joinRoot = degreeArray[curDegree];
+                if (curRoot.getId>joinRoot.getId) {
+                    var hold = curRoot;
+                    curRoot = joinRoot;
+                    joinRoot = hold;
+                } 
+                this.joinRoots(curRoot, joinRoot);
+                degreeArray[curDegree]=null;
+                curDegree += 1;
+            }
+            degreeArray[curDegree] = curRoot;
+        }
+        this.setMinNode = this.rootList.findMin();
+    }
+
+    joinRoots(smallNode, largeNode) {
+        this.rootList.removeElement(largeNode.getId);
+        smallNode.getChildList.insertElement(largeNode); 
+        largeNode.setParent = smallNode;
+        largeNode.setMarked = false;
+        smallNode.changeDegree(1);
+        this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
+        this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);
+        this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
     }
 
 }

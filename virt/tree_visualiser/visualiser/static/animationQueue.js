@@ -120,8 +120,14 @@ class AnimQueue {
             highlightBorder(paramArray[0], paramArray[1]);
         } else if (com.getType=="addFibRoot") {
             addFibRoot(paramArray[0], paramArray[1]);
+        } else if (com.getType=="rootLines") {
+            rootLines(paramArray[0]);
+        } else if (com.getType=="allignRoots") {
+            allignRoots(paramArray[0]);
+        } else if (com.getType=="allignChildren") {
+            allignChildren(paramArray[0], paramArray[1]);
         }
-
+        
         
     }
 }
