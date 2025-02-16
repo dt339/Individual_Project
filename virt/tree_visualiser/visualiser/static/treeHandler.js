@@ -120,6 +120,7 @@ function userRemoveNode() {
 }
 
 function userRemoveMin() {
+    setCurrProcess("remove");  
     newTree.removeMin();
 }
 

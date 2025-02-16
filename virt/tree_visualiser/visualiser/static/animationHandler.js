@@ -620,13 +620,15 @@ function addFibRoot(rootId, rootArr) {
     //alert("num of roots - " + numOfRoots);
     var spacing = containerPos.width/(numOfRoots+1);
 
-    elem.style.left = (spacing*numOfRoots)+ 'px';
+    // elem.style.left = (spacing*numOfRoots)+ 'px';
+    elem.style.left = (containerPos.left)+ 'px';
     elem.style.top = '10px';
 
     parentDiv.appendChild(elem);
     
     clearCanvas();
-    allignRoots(rootArr);
+    //allignRoots(rootArr);
+    allignAll(rootArr);
 }
 
 function allignRoots(rootArr) {
@@ -640,12 +642,122 @@ function allignRoots(rootArr) {
     for (let i = 0; i < numOfRoots; i++) {
         var curElem = document.getElementById(rootArr[i].getId).getBoundingClientRect();
         move(rootArr[i].getId, (curElem.left - containerPos.left + (curElem.width/2)), (curElem.top-containerPos.top), ((spacing*(i+1))-(containerPos.left)+curElem.width), 10);
-        allignChildren(rootArr[i], rootArr)
+        //allignChildren(rootArr[i], rootArr)
         // if (rootArr[i].getChild!=null) {
         //     alert(rootArr[i].getId + " has a child!!!");
 
         // }
     }
+}
+
+function allignAll(curArr, parent=null, posArea=null) {
+    //Gets the elements for the parent node and the canvas.
+
+    const containerDiv = document.getElementById('treeBox');
+    const containerPos = containerDiv.getBoundingClientRect();
+
+    if (parent == null) {
+        posArea = containerPos.width;
+    }
+    var spacing = posArea/(curArr.length+1);
+
+    if (curArr!= null) {
+        for (let i = 0; i < curArr.length; i++) {
+            //alert("cur elem - " + curArr[i].getId)
+            var initX = 0;
+            var initY = 0;
+            var destX = 0;
+            var destY = 0;
+    
+            if (parent==null) {
+                var elem = document.getElementById(curArr[i].getId);
+                var elemPos = elem.getBoundingClientRect();
+                
+                //Calculates the destination the child must reach.
+                initX = (elemPos.left - containerPos.left + (elemPos.width/2))
+                initY = (elemPos.top-containerPos.top)
+                destX = ((spacing*(i+1))-(containerPos.left)+elemPos.width)
+                destY = 10;
+            } else {
+                var parentDiv = document.getElementById(parent.getId)
+                var parentPos = parentDiv.getBoundingClientRect();
+                
+                var elem = document.getElementById(curArr[i].getId);
+                var elemPos = elem.getBoundingClientRect();
+    
+                var initX = (elemPos.left - containerPos.left + (elemPos.width/2));
+                var initY = (elemPos.top-containerPos.top);
+                var destX = (parentPos.left-((posArea/2))+(spacing*(i+1))-containerPos.left);
+                var destY = (parentPos.top - containerPos.top + 100);
+            }
+            
+            fibMove(curArr[i], initX, initY, destX, destY, parent, spacing, curArr, i);     
+        }
+    }
+    
+}
+
+function fibMove(toMove, initPosX, initPosY, destX, destY, parent, spacing, curArr, i) {
+    var id = null;
+    var elem = document.getElementById(toMove.getId);
+    var xPos = initPosX;
+    var yPos = initPosY;    
+    
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance)*getAnimSpeed();
+    
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+    
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    function frame() {
+        if (xDirection == 'r') {
+            if (xPos >= destX) {
+                clearInterval(id);
+                fixPosition(toMove.getId, destX, destY);
+                if (parent==null) {
+                    if (i>0) {
+                        drawHorizontalLine(curArr[i].getId, curArr[i-1].getId);
+                    }                    
+                } else {
+                    
+                    drawLine(parent.getId, toMove.getId);
+                }
+                allignAll(toMove.getChildList.getAll("node"),toMove, spacing);
+            } else {
+                xPos+=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos += yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        } else {
+            if (xPos <= destX) {
+                clearInterval(id);
+                fixPosition(toMove.getId, destX, destY);
+                if (parent==null) {
+                    if (i>0) {
+                        drawHorizontalLine(curArr[i].getId, curArr[i-1].getId);
+                    }                    
+                } else {
+                    drawLine(parent.getId, toMove.getId);
+                }
+                allignAll(toMove.getChildList.getAll("node"),toMove, spacing);
+            } else {
+                xPos-=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos -= yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        }
+
+    }
+    
 }
 
 function rootLines(rootArr) {

@@ -229,8 +229,15 @@ class FibonacciHeap {
         this.rootList.insertElement(newNode);
         this.changeNumOfNodes(1);
         this.rootList.print();
-        this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAll("node")]);
-        this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
+        var rList = this.rootList.getAll("node");
+        this.queue.addCommand("addFibRoot", [nodeVal, rList]);
+        //this.queue.addCommand("allignAll", [rList]);
+        
+        //this.queue.addCommand("addFibRoot", [nodeVal, rList]);
+        //this.queue.addCommand("rootLines", [rList]);
+        // for (let i = 0; i <rList.length; i++) {
+        //     this.queue.addCommand("allignChildren", [rList[i], rList]);
+        // }        
         this.checkMinNode(newNode);
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
@@ -245,33 +252,38 @@ class FibonacciHeap {
     }
 
     removeMin() {
+        alert("start")
         var toRemove = this.getMinNode;
         if (toRemove!= null) {
+            
             this.queue.addCommand("highlightNode", [toRemove.getId, "red"]);
             this.queue.addCommand("removeNode", [toRemove.getId]);
             var childList = toRemove.getChildList;
             var childArr = childList.getAll("node");
+            
             if (childArr!=null) {
                 for (let i = 0; i < childArr.length; i++) {
                     this.rootList.insertElement(childArr[i]);
                     childArr[i].setParent = null;
                     //this.queue.addCommand("addFibRoot", [childArr[i].getId, this.rootList.getAll("id")]);
                 }
-                this.queue.addCommand("rootLines", [this.rootList.getAll("id")]);
+                //this.queue.addCommand("rootLines", [this.rootList.getAll("id")]);
             }
-
+            
             this.rootList.removeElement(toRemove.getId);
             this.changeNumOfNodes(-1);
 
             this.setMinNode = this.rootList.findMin();
             if (this.getMinNode != null) {
+                
                 this.consolidate();
-            }
-            
+            } 
+
             this.queue.addCommand("highlightNode", [this.getMinNode.getId, "lime"]);
         } else {
             alert("No nodes in heap!");
         }
+        alert("end")
         this.rootList.print();
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
@@ -280,6 +292,7 @@ class FibonacciHeap {
     consolidate() {
         var degreeArray = new Array(this.getNumOfNodes).fill(null);
         var rootArray = this.rootList.getAll("node");
+        var changeMade = false;
         for (let i = 0; i < rootArray.length; i++) {
             var curRoot = rootArray[i];
             //alert("cur root - " + curRoot.getId);
@@ -294,21 +307,29 @@ class FibonacciHeap {
                 this.joinRoots(curRoot, joinRoot);
                 degreeArray[curDegree]=null;
                 curDegree += 1;
+                changeMade=true;
             }
             degreeArray[curDegree] = curRoot;
+        }
+
+        alert("5")
+        if(!changeMade) {
+            this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
         }
         this.setMinNode = this.rootList.findMin();
     }
 
     joinRoots(smallNode, largeNode) {
+        this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
         this.rootList.removeElement(largeNode.getId);
         smallNode.getChildList.insertElement(largeNode); 
         largeNode.setParent = smallNode;
         largeNode.setMarked = false;
         smallNode.changeDegree(1);
-        this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
-        this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);
-        this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
+        
+        this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+        //this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);
+        //this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
     }
 
 }

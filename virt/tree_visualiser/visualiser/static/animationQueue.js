@@ -126,6 +126,9 @@ class AnimQueue {
             allignRoots(paramArray[0]);
         } else if (com.getType=="allignChildren") {
             allignChildren(paramArray[0], paramArray[1]);
+        } else if (com.getType=="allignAll") {
+            clearCanvas();
+            allignAll(paramArray[0]);
         }
         
         
