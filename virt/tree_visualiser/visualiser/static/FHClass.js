@@ -56,6 +56,8 @@ class CDLinkedList {
         this.setLength = this.getLength + changeValue;
     }
 
+    //Creates a new linked list element that holds the node in the list.
+    //Inserts this element into the list
     insertElement(e) {
         var newElem = new CDLLNode(e);
         if (this.getHead==null) {
@@ -69,16 +71,18 @@ class CDLinkedList {
             newElem.setRightPointer = this.head;
             this.getHead.setleftPointer = newElem;
         }
+        //Increases the held length of the list.
         this.chnangeLength(1);
-        //alert("I've inserted a node - " + e.getId)
     }
 
     removeElement(e) {
+        //Removes the specified value from the list if found.
         if (this.getHead!=null) {
             var curElem = this.getHead;
             var foundElem = null;
             var found = false;
 
+            //Loops through all elements in the list
             while (found==false) {
                 if (curElem.getHeldNode.getId == e) {
                     foundElem=curElem;
@@ -95,6 +99,7 @@ class CDLinkedList {
             if (foundElem==null) {
                 alert("Element did not exist in list");
             } else {
+                //Removes the specified element
                 if (this.getHead==foundElem) {
                     if (foundElem.getRightPointer==foundElem) {
                        this.setHead=null; 
@@ -116,6 +121,7 @@ class CDLinkedList {
     }
 
     print() {
+        //Loops through all elements in the list and returns the heap node id for each one
         if (this.getHead!=null) {
             var curElem = this.getHead;
             var output = [];
@@ -140,7 +146,9 @@ class CDLinkedList {
             var output = [];
             var finished = false;
 
+            //Loops through thr list and adds the value to an array.
             while (!finished) {
+                //Adds the node id or the node obejct depending on the specified type.
                 if (type=="id") {
                     output.push(curElem.getHeldNode.getId);
                 } else if (type=="node") {
@@ -165,6 +173,7 @@ class CDLinkedList {
             var curMin = this.getHead;
             var finished = false;
 
+            //Loops through the list and finds the smallest element
             while (!finished) {
                 if (curElem.getHeldNode.getId < curMin.getHeldNode.getId) {
                     curMin = curElem;
@@ -212,6 +221,8 @@ class FibonacciHeap {
     }
 
     checkMinNode(newNode) {
+        //Checks to see if the newest inserted node is smaller than the current minimum node
+        //highlights the minimum node green
         if (this.getMinNode==null) {
             this.setMinNode = newNode;
             this.queue.addCommand("highlightNode", [this.getMinNode.getId, "lime"]);
@@ -224,20 +235,17 @@ class FibonacciHeap {
     }
 
     insert(nodeVal, nodeArr) {
+        //creates a new node for the inserted value
         var newNode = new FibonacciNode(parseInt(nodeVal, 10));
         newNode.setChildList = new CDLinkedList();
+
+        //Inserts the new node into the root list
         this.rootList.insertElement(newNode);
         this.changeNumOfNodes(1);
         this.rootList.print();
-        var rList = this.rootList.getAll("node");
-        this.queue.addCommand("addFibRoot", [nodeVal, rList]);
-        //this.queue.addCommand("allignAll", [rList]);
-        
-        //this.queue.addCommand("addFibRoot", [nodeVal, rList]);
-        //this.queue.addCommand("rootLines", [rList]);
-        // for (let i = 0; i <rList.length; i++) {
-        //     this.queue.addCommand("allignChildren", [rList[i], rList]);
-        // }        
+
+        //Rearranges the display the include the new inserted element
+        this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAll("node")]);    
         this.checkMinNode(newNode);
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
@@ -252,7 +260,6 @@ class FibonacciHeap {
     }
 
     removeMin() {
-        alert("start")
         var toRemove = this.getMinNode;
         if (toRemove!= null) {
             
@@ -261,21 +268,22 @@ class FibonacciHeap {
             var childList = toRemove.getChildList;
             var childArr = childList.getAll("node");
             
+            //Adds all children of the removed node to the root list.
             if (childArr!=null) {
                 for (let i = 0; i < childArr.length; i++) {
                     this.rootList.insertElement(childArr[i]);
                     childArr[i].setParent = null;
-                    //this.queue.addCommand("addFibRoot", [childArr[i].getId, this.rootList.getAll("id")]);
                 }
-                //this.queue.addCommand("rootLines", [this.rootList.getAll("id")]);
             }
             
+            //Removes the specified value from the root list
             this.rootList.removeElement(toRemove.getId);
             this.changeNumOfNodes(-1);
 
             this.setMinNode = this.rootList.findMin();
-            if (this.getMinNode != null) {
-                
+
+            //Checks to see if consolidation is required
+            if (this.getMinNode != null) {                
                 this.consolidate();
             } 
 
@@ -283,52 +291,58 @@ class FibonacciHeap {
         } else {
             alert("No nodes in heap!");
         }
-        alert("end")
+        
         this.rootList.print();
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }
 
     consolidate() {
+        //Creates an array with the length equal to the number of nodes in the heap.
+        //Each position in the array is initialised to null
         var degreeArray = new Array(this.getNumOfNodes).fill(null);
         var rootArray = this.rootList.getAll("node");
-        var changeMade = false;
+        
+        //Loops through each root node in the root list
         for (let i = 0; i < rootArray.length; i++) {
             var curRoot = rootArray[i];
-            //alert("cur root - " + curRoot.getId);
+            //Gets the degree of the current root.
             var curDegree = curRoot.getDegree;
+            //If another root exists with the same degree as the current root
+            //Those two roots are joined
             while (degreeArray[curDegree]!=null) {
+                //Gets the other root with the same degree
                 var joinRoot = degreeArray[curDegree];
+                //Ensures that the curRoot is the smallest root
                 if (curRoot.getId>joinRoot.getId) {
                     var hold = curRoot;
                     curRoot = joinRoot;
                     joinRoot = hold;
                 } 
+                //Joins the roots together
                 this.joinRoots(curRoot, joinRoot);
                 degreeArray[curDegree]=null;
                 curDegree += 1;
-                changeMade=true;
             }
             degreeArray[curDegree] = curRoot;
         }
 
-        alert("5")
-        if(!changeMade) {
-            this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
-        }
+        this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
         this.setMinNode = this.rootList.findMin();
     }
 
     joinRoots(smallNode, largeNode) {
         this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
+        //Removes the larger root from the root list
         this.rootList.removeElement(largeNode.getId);
+        //Adds the larger root to the child list of the smaller root
         smallNode.getChildList.insertElement(largeNode); 
         largeNode.setParent = smallNode;
         largeNode.setMarked = false;
         smallNode.changeDegree(1);
         
-        this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
-        //this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);
+        //this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+        this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);
         //this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
     }
 
