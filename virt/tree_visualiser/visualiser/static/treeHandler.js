@@ -119,6 +119,40 @@ function userRemoveNode() {
     
 }
 
+function userDecreaseNode() {
+    //Reads the input field.
+    var inId = document.getElementById("decreaseNodeId").value;
+    var inVal = document.getElementById("decreaseNodeValue").value;
+    //Checks for an empty input.
+    if (inVal == '' || inId=='') {
+        alert("No value entered!");
+    } else {
+        //Checks that the entered value is a number.
+        var allNumbers = true;
+        if (isNaN(inId)) {
+            allNumbers = false;
+        }
+        if (isNaN(inVal)) {
+            allNumbers=false;
+        }
+        
+        if (!allNumbers)
+        {
+            alert("Must input numbers!");
+        } else {
+            //Sets the current process.
+            var intId = parseInt(inId, 10);  
+            var intVal = parseInt(inVal, 10);  
+            setCurrProcess("remove");  
+            //Calls the removal function. 
+            newTree.decrease(intId, intVal);     
+        }
+    }
+    //Empties the input field.
+    document.getElementById("nodeRemove").value = '';
+    
+}
+
 function userRemoveMin() {
     setCurrProcess("remove");  
     newTree.removeMin();
@@ -152,9 +186,17 @@ function userSearchNode() {
             alert("Must input numbers!");
         } else {
             //Sets the current process and calls the search function.
-            setCurrProcess("search");
+            //PLEEEEASEE UNCOMMMENT
+            //setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
-            newTree.search(newTree.getRoot, intInput);            
+
+            if (thisPage!="FH") {
+                newTree.search(newTree.getRoot, intInput);    
+            } else {
+                var balls = newTree.search(newTree.getRootList.getAll("node"), intInput);    
+                alert("balls - " + balls)
+            }
+                    
         }
     }
     //Empties the input field.

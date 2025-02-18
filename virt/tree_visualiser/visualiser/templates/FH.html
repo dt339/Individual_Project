@@ -28,6 +28,12 @@
         <button id="nodeSearchButton" onclick="userSearchNode()">Search!</button>
 
         <button id="nodeRemoveMinButton" onclick="userRemoveMin()">Remove Minimum!</button>
+        
+        <label>Node to Change: </label>
+        <input id="decreaseNodeId" type="text">
+        <label>New Id: </label>
+        <input id="decreaseNodeValue" type="text">
+        <button id="decreaseNodeButton" onclick="userDecreaseNode()">Decrease Value!</button>
 
         <div class="sliderContainer">
             <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">

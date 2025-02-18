@@ -140,6 +140,29 @@ class CDLinkedList {
         }
     }
 
+    get(e) {
+        if (this.getHead!=null) {
+            var curElem = this.getHead;
+            var toOutput = null;
+            var finished = false;
+
+            while (!finished) {
+                if (curElem.getHeldNode.getId==e) {
+                    toOutput = curElem.getHeldNode;
+                    finished=true;
+                }
+                curElem = curElem.getRightPointer;
+                if (curElem==this.getHead) {
+                    finished=true;
+                }
+            }
+            return curElem;
+        } else {
+            alert("List is empty");
+            return null;
+        }
+    }
+
     getAll(type) {
         if (this.getHead!=null) {
             var curElem = this.getHead;
@@ -200,6 +223,10 @@ class FibonacciHeap {
         this.queue = new AnimQueue;
     }
 
+    get getRootList() {
+        return this.rootList;
+    }
+
     get getMinNode() {
         return this.minNode;
     }
@@ -234,6 +261,40 @@ class FibonacciHeap {
         
     }
 
+    search(curArr, nodeVal) {
+        //Takes in the current list to be searched and the value to search for.
+        //Performs depth first search.
+
+        //Checks that the current list is not empty
+        if (curArr!=null) {
+            var searchedNode = null;
+            //Loops through each node in the current list
+            for (let i=0; i<curArr.length;i++) {
+                //If the current node in the current list has the id of the value being searched for, the node is stored.
+                if (curArr[i].getId==nodeVal) {
+                    searchedNode = curArr[i];
+                } else {
+                    //Checks to see if the current node is smaller than the value being searched for.
+                    //The node could only exist as a child of a smaller node than itself.
+                    if (curArr[i].getId < nodeVal) {
+                        if (searchedNode==null) {
+                            //Searches the child list of the current node.
+                            //Stores the result of it if the node is found.
+                            var curSearch = this.search(curArr[i].getChildList.getAll("node"), nodeVal);
+                            if (curSearch!=null) {
+                                searchedNode = curSearch;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            return searchedNode;
+        } else {
+            return null;
+        }
+    }
+
     insert(nodeVal, nodeArr) {
         //creates a new node for the inserted value
         var newNode = new FibonacciNode(parseInt(nodeVal, 10));
@@ -247,6 +308,15 @@ class FibonacciHeap {
         //Rearranges the display the include the new inserted element
         this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAll("node")]);    
         this.checkMinNode(newNode);
+        this.queue.addCommand("setProcess", ["none"]);
+        this.queue.runCommands();
+    }
+
+    decrease(nodeId, newVal) {
+        alert("ball")
+        var toDecrease = this.search(this.rootList.getAll("node") ,nodeId);
+        alert("to decrease - " + toDecrease)
+        this.queue.addCommand("highlightNode", [toDecrease.getId, "red"] );
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }
