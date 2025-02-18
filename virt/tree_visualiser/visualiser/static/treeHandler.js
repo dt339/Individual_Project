@@ -148,8 +148,9 @@ function userDecreaseNode() {
             newTree.decrease(intId, intVal);     
         }
     }
-    //Empties the input field.
-    document.getElementById("nodeRemove").value = '';
+    //Empties the input field.    
+    document.getElementById("decreaseNodeId").value = "";
+    document.getElementById("decreaseNodeValue").value = "";
     
 }
 

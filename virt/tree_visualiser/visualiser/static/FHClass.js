@@ -313,18 +313,74 @@ class FibonacciHeap {
     }
 
     decrease(nodeId, newVal) {
+        var check = this.search(this.rootList.getAll("node") ,newVal);
         alert("ball")
         var toDecrease = this.search(this.rootList.getAll("node") ,nodeId);
-        alert("to decrease - " + toDecrease)
-        this.queue.addCommand("highlightNode", [toDecrease.getId, "red"] );
+        //alert("to decrease - " + toDecrease)
+
+        if (check != null) {
+            alert("A node already exists with the new value.")
+        } else {
+            if (newVal > toDecrease.getId) {
+                alert("Mew value greater than node's current value");
+            } else {
+                
+                this.queue.addCommand("highlightNode", [toDecrease.getId, "red"] );
+                this.queue.addCommand("updateId", [toDecrease.getId, newVal] );
+                toDecrease.setId = newVal;
+                
+                var parent = toDecrease.getParent;
+                if (parent != null) {
+                    if (toDecrease.getId < parent.getId) {
+                        this.cut(toDecrease, parent);
+                        this.recursiveCut(parent);
+                        
+                        this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+                    }
+                }
+                this.queue.addCommand("highlightNode", [toDecrease.getId, "white"] );
+            }     
+        }        
+        
+        this.checkMinNode(toDecrease);
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }
 
+    cut(curNode, parent) {
+        //Removes the current node from its parent.
+        parent.getChildList.removeElement(curNode.getId);
+        parent.changeDegree(-1);
+        //Inserts the current node into the root list of the tree.
+        this.rootList.insertElement(curNode);
+        curNode.setParent = null;
+        curNode.setMarked = false;
+    }
+
+    recursiveCut(curNode) {
+        var parent = curNode.getParent;
+        if (parent != null) {
+            if (curNode.getMarked == false) {
+                curNode.setMarked = true;
+            } else {
+                this.cut(curNode, parent);
+                this.recursiveCut(parent);
+            }
+        }
+    }
+
     remove(nodeVal) {
-        this.rootList.removeElement(nodeVal);
-        this.changeNumOfNodes(-1);
-        this.rootList.print();
+
+        var toRemove = this.search(this.rootList.getAll("node"), nodeVal);
+        if (toRemove!=null) {
+            //Sets the node to have the smallest value in the tree.
+            this.decrease(nodeVal, 0);
+            //Removes the smallest value in the tree which is now the node to be removed.
+            this.removeMin();
+        } else {
+            alert("Specified value does not exist in tree");
+        }
+
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }

@@ -64,7 +64,7 @@ class AnimQueue {
         this.setBack = this.getBack - 1;        
 
         if (this.getBack != 0) {
-            setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
+            setTimeout(() => this.runCommands(), 20000/getAnimSpeed());
         } else {
             //alert("Queue is empty");
         }    
@@ -129,7 +129,9 @@ class AnimQueue {
         } else if (com.getType=="allignAll") {
             clearCanvas();
             allignAll(paramArray[0]);
-        }
+        } else if (com.getType=="updateId") {
+            updateId(paramArray[0], paramArray[1]);
+        } 
         
         
     }

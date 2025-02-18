@@ -895,3 +895,9 @@ function drawHorizontalLine(elem1, elem2) {
     ctx.lineTo(pos2.left - contPos.left+pos2.width, pos2.top - contPos.top + pos2.height/2) ;
     ctx.stroke();
 }
+
+function updateId(toUpdate, newVal) {
+    var updateNode = document.getElementById(toUpdate);  
+    updateNode.id = newVal;
+    updateNode.textContent = newVal;
+}
