@@ -467,9 +467,7 @@ class FibonacciHeap {
         largeNode.setMarked = false;
         smallNode.changeDegree(1);
         
-        //this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
-        this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);
-        //this.queue.addCommand("rootLines", [this.rootList.getAll("node")]);        
+        this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);   
     }
 
 }

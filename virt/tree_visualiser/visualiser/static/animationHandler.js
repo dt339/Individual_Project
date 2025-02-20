@@ -371,7 +371,8 @@ function initialMove(movingNode, destinationNode) {
                 //This function prevents them.
                 fixPosition(movingNode.getId, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                recursiveMove(movingNode);
+                var movedDepth = movingNode.calcDepth();
+                recursiveMove(movingNode, movedDepth);
                 //Creates a new branch between the moved node and its parent.
                 drawLine(movingNode.getParent.getId, movingNode.getId);
             } else {
@@ -386,6 +387,119 @@ function initialMove(movingNode, destinationNode) {
     }
 
 }
+
+function moveToRoot(toMove) {
+    //alert("moving to root!")
+    //Gets the html elements for the canvas and the nodes being moves.
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+    const toMoveElem = document.getElementById(toMove.getId);
+    const toMovePos = toMoveElem.getBoundingClientRect();
+    
+    var id = null;
+
+    //Calculates the start and end positions of the movement.
+    var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
+    var initPosY = toMovePos.top - contPos.top;
+    
+    var destX = (cont.offsetWidth /2) - 20;//toMovePos.width;
+    var destY = 0;
+    
+    //Calculates the distance that will be travelled.
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+    
+    //Calculates how much the node should move for each axis for a smooth movement.
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance) * getAnimSpeed();
+
+    var xPos = initPosX;
+    var yPos = initPosY;   
+    
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+    
+    clearInterval(id);
+    //Calls frame very frequently to create an animation.
+    id = setInterval(frame, 10);
+    function frame() {
+        //Checks the x directyion fo travel for the node.
+        if (xDirection == 'r') {
+            //Once the position of the node reaches the destination movement can stop.
+            if (xPos >= destX) {
+                //Stops running the movement function.
+                clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(toMove.getId, destX, destY);
+                //Calls a function to move any nodes connected to the moved node.
+                if (getTreeType()=="FH") {
+                    RBRecursiveMove(toMove);
+                } else {
+                    recursiveMove(toMove);
+                }
+            } else {
+                //Moves the node html element by a small amount
+                xPos+=xIncrement;
+                toMoveElem.style.left = xPos + "px";
+                yPos += yIncrement;
+                toMoveElem.style.top = yPos + "px";
+            }
+        } else {
+            //Once the position of the node reaches the destination movement can stop.
+            if (xPos <= destX) {
+                //Stops running the movement function.
+                clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(toMove.getId, destX, destY);
+                //Calls a function to move any nodes connected to the moved node.
+                if (getTreeType()=="FH") {
+                    RBRecursiveMove(toMove);
+                } else {
+                    recursiveMove(toMove);
+                }
+                
+            } else {
+                //Moves the node html element by a small amount
+                xPos-=xIncrement;
+                toMoveElem.style.left = xPos + "px";
+                yPos -= yIncrement;
+                toMoveElem.style.top = yPos + "px";
+            }
+        }
+
+    }
+}
+
+function preRotationAllignment(midNode, bottomNode, direction) {
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+    const midElem = document.getElementById(midNode.getId);
+    const midPos = midElem.getBoundingClientRect();
+    const botElem = document.getElementById(bottomNode.getId);
+    const botPos = botElem.getBoundingClientRect();
+
+    var destX = 0; 
+    var destY = 0;
+    var depth = bottomNode.calcDepth() + 1;
+
+    if (direction == 'r') {
+        destX = (midPos.left - contPos.left + (contPos.width /(2**(depth+1)))); 
+        destY = (midPos.top - contPos.top + midPos.height + ((1+depth)* 10));
+    } else {
+        destX = (midPos.left - contPos.left - (contPos.width /(2**(depth+1)))); 
+        destY = (midPos.top - contPos.top + midPos.height + ((1+depth)* 10));
+    }
+
+    move(midNode.getId, midPos.left - contPos.left + (midPos.width/2), midPos.top - contPos.top, destX, destY);
+    move(bottomNode.getId, botPos.left - contPos.left + (botPos.width/2), botPos.top - contPos.top, midPos.left - contPos.left, midPos.top - contPos.top);
+}
+
 
 //Highlights a secified node in a specified colour.
 function highlightNode(nodeId, nodeColour) {
@@ -524,6 +638,10 @@ function swap(n1, n2) {
 
     move(n1,pos1.left - contPos.left + (pos1.width/2), pos1.top - contPos.top, pos2.left - contPos.left, pos2.top - contPos.top);
     move(n2,pos2.left - contPos.left + (pos2.width/2), pos2.top - contPos.top, pos1.left - contPos.left, pos1.top - contPos.top);
+}
+
+function clockwiseRotationAnim() {
+
 }
 
 function move(toMove, initPosX, initPosY, destX, destY) {
@@ -769,6 +887,8 @@ function rootLines(rootArr) {
     }
 }
 
+//function becomeChild(childNode, )
+
 function allignChildren(parent, parentArr, parentArea=null) {
     
     if (parentArea==null) {
@@ -776,32 +896,13 @@ function allignChildren(parent, parentArr, parentArea=null) {
         const containerPos = containerDiv.getBoundingClientRect();
         parentArea = containerPos.width;        
     }
-    
-    // var parentDiv = document.getElementById(parent.getId)
-    // var parentPos = parentDiv.getBoundingClientRect();
-
-    // const containerDiv = document.getElementById('treeBox');
-    // const containerPos = containerDiv.getBoundingClientRect();
-
-    // //allignRoots(rootArr);
-
-    // var rootSpacing= containerPos.width/(rootArr.length+1);
-
-    
+       
     
     var childArr = parent.getChildList.getAll("node");
 
     if (childArr != null) {
         //clearCanvas();
         for (let i = 0; i < childArr.length; i++) {
-            // var curElem = document.getElementById(childArr[i].getId).getBoundingClientRect();
-    
-            // var initX = (curElem.left - containerPos.left + (curElem.width/2));
-            // var initY = (curElem.top-containerPos.top);
-            // var destX = (parentPos.left-((rootSpacing/2))+(childSpacing*(i+1))-containerPos.left);
-            // var destY = (parentPos.top - containerPos.top + 100);
-    
-            // move(childArr[i].getId, initX, initY, destX, destY);
             moveChild(parent, childArr[i], parentArea, parentArr, i);
         }
     }

@@ -104,6 +104,7 @@ const minHeapifyUp = [
 var currProcess = noneProcess;
 var codeBox = null;
 var currHigh = "L0";
+var isShowing = false;
 
 var searchProcess = null;
 var insertProcess = null;
@@ -198,6 +199,7 @@ function showCodeBox() {
     //Calls a function to fill the box with the pseudocode of the current function.
     fillCodeBox();
     highlightLine(currHigh);
+    isShowing = true;
 }
 
 function hideCodeBox() {
@@ -205,6 +207,11 @@ function hideCodeBox() {
 
     emptyBox();
     codeBox.style.visibility = "hidden";
+    isShowing = false;
+}
+
+function getIsShowing() {
+    return isShowing;
 }
 
 function fillCodeBox() {

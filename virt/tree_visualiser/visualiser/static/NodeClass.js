@@ -43,7 +43,7 @@ class Node {
             depth++;
             curNode=curNode.getParent;
         }
-        alert(this.getId + " = " + depth);
+        //alert(this.getId + " = " + depth);
         return depth;
     }
 }

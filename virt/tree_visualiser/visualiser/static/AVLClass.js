@@ -403,6 +403,7 @@ class AVLTree {
                 //Special rotation
 
                 var bottomNode = midNode.getLeft;
+                this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'r']);
 
                 //Set right child of A to be C
                 //Set parent of C to be A
@@ -424,7 +425,9 @@ class AVLTree {
                 this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightLine", ["L5"]);
+                
                 this.antiClockwiseRotation(targetNode, bottomNode);
+                
             }
 
 
@@ -441,6 +444,7 @@ class AVLTree {
                 //Special rotation
                 
                 var bottomNode = midNode.getRight;
+                this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'l']);
 
                 //Set left child of A to be C
                 //Set parent of C to be A
@@ -499,8 +503,16 @@ class AVLTree {
         midNode.setLeft = topNode;
         topNode.setParent = midNode;
 
-        this.queue.addCommand("swap", [topNode.getId, midNode.getId]);  
+        //this.queue.addCommand("swap", [topNode.getId, midNode.getId]);  
         this.queue.addCommand("recMove", [midNode, midNode.calcDepth()]); 
+
+        var parent = midNode.getParent;
+        if (parent != null) {
+            this.queue.addCommand("recMove", [parent, parent.calcDepth()+1]);
+        } else {
+            this.queue.addCommand("moveToRoot", [midNode]);
+        }
+
         this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 
@@ -532,8 +544,15 @@ class AVLTree {
         midNode.setRight = topNode;
         topNode.setParent = midNode;
 
-        this.queue.addCommand("swap", [topNode.getId, midNode.getId]);
-        this.queue.addCommand("recMove", [midNode, midNode.calcDepth()]);
+        // this.queue.addCommand("swap", [topNode.getId, midNode.getId]);
+        this.queue.addCommand("recMove", [midNode, midNode.calcDepth()+1]);
+
+        var parent = midNode.getParent;
+        if (parent != null) {
+            this.queue.addCommand("recMove", [parent, parent.calcDepth()+1]);
+        } else {
+            this.queue.addCommand("moveToRoot", [midNode]);
+        }
         this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 

@@ -64,7 +64,17 @@ class AnimQueue {
         this.setBack = this.getBack - 1;        
 
         if (this.getBack != 0) {
-            setTimeout(() => this.runCommands(), 20000/getAnimSpeed());
+            if (currentCommand.getType == "highlightLine") {
+                if (getIsShowing()) {
+                    setTimeout(() => this.runCommands(), 20000/getAnimSpeed());
+                } else {
+                    this.runCommands();
+                }
+            } else {
+                setTimeout(() => this.runCommands(), 20000/getAnimSpeed());
+            }
+            
+            
         } else {
             //alert("Queue is empty");
         }    
@@ -131,7 +141,11 @@ class AnimQueue {
             allignAll(paramArray[0]);
         } else if (com.getType=="updateId") {
             updateId(paramArray[0], paramArray[1]);
-        } 
+        } else if (com.getType=="moveToRoot") {
+            moveToRoot(paramArray[0]);
+        } else if (com.getType=="preRotationAllignment") {
+            preRotationAllignment(paramArray[0], paramArray[1], paramArray[2]);
+        }
         
         
     }
