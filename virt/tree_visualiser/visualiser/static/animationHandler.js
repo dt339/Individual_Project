@@ -436,7 +436,7 @@ function moveToRoot(toMove) {
                 //This function prevents them.
                 fixPosition(toMove.getId, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                if (getTreeType()=="FH") {
+                if (getTreeType()=="RB") {
                     RBRecursiveMove(toMove);
                 } else {
                     recursiveMove(toMove);
@@ -458,7 +458,7 @@ function moveToRoot(toMove) {
                 //This function prevents them.
                 fixPosition(toMove.getId, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                if (getTreeType()=="FH") {
+                if (getTreeType()=="RB") {
                     RBRecursiveMove(toMove);
                 } else {
                     recursiveMove(toMove);

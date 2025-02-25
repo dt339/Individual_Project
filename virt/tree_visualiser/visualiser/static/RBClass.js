@@ -149,7 +149,8 @@ class RedBlackTree {
                         } else {
                             if (curNode==curNode.getParent.getRight) {
                                 curNode = curNode.getParent;
-                                this.leftRotation(curNode);
+                                //this.leftRotation(curNode);
+                                this.leftRotationPrep(curNode);
                             }
                             // curNode.getParent.setIsRed = false;
                             // curNode.getParent.getParent.setIsRed = true;
@@ -170,7 +171,8 @@ class RedBlackTree {
                         } else {
                             if (curNode==curNode.getParent.getLeft) {                                
                                 curNode = curNode.getParent;
-                                this.rightRotation(curNode);
+                                //this.rightRotation(curNode);
+                                this.rightRotationPrep(curNode);
                             }
                             // curNode.getParent.setIsRed = false;
                             // curNode.getParent.getParent.setIsRed = true;
@@ -196,8 +198,10 @@ class RedBlackTree {
     }
 
     remove(removeVal) {
-        var toRemove = this.search(this.getRoot, removeVal);
-        this.queue.addCommand("highlightBorder", [toRemove.getId, "red"]);
+        var toRemove = this.search(this.getRoot, removeVal);        
+        this.queue.addCommand("setProcess", ["remove"]);
+        this.queue.addCommand("highlightBorder", [toRemove.getId, "red"]);        
+        this.queue.addCommand("removeNode", [toRemove.getId]);
         //alert("to remove? = " + toRemove);
         if (toRemove != null) {
             var x = null;
@@ -206,14 +210,20 @@ class RedBlackTree {
 
             if (toRemove.getLeft.getIsNull) {
                 x = toRemove.getRight;
-                this.queue.addCommand("highlightBorder", [toRemove.getRight.getId, "lime"]);
+                if (x.getIsNull==false) {
+                    this.queue.addCommand("highlightBorder", [x.getId, "lime"]);                    
+                    this.queue.addCommand("highlightBorder", [x.getId, "black"]);
+                }
                 this.transplant(toRemove, toRemove.getRight);
-                this.queue.addCommand("highlightBorder", [toRemove.getRight.getId, "black"]);
             } else if (toRemove.getRight.getIsNull) {
                 x = toRemove.getLeft;
-                this.queue.addCommand("highlightBorder", [toRemove.getLeft.getId, "lime"]);
+                if (x.getIsNull==false) {
+                    this.queue.addCommand("highlightBorder", [x.getId, "lime"]);                  
+                    this.queue.addCommand("highlightBorder", [x.getId, "black"]);
+                }
+                
                 this.transplant(toRemove, toRemove.getLeft);
-                this.queue.addCommand("highlightBorder", [toRemove.getLeft.getId, "black"]);
+                
             } else {
                 y = this.getSuccessor(toRemove.getRight);
                 this.queue.addCommand("highlightBorder", [y.getId, "lime"]);
@@ -238,7 +248,6 @@ class RedBlackTree {
                 this.deleteFixup(x);
             }                
             
-            this.queue.addCommand("removeNode", [toRemove.getId]);
             this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
@@ -274,7 +283,8 @@ class RedBlackTree {
                             // sibling.setIsRed = true;
                             this.setNodeColour(sibling.getLeft, false);
                             this.setNodeColour(sibling, true);
-                            this.rightRotation(sibling);
+                            //this.rightRotation(sibling);
+                            this.rightRotationPrep(sibling);
                             sibling = curNode.getParent.getRight;
                         }
                         // sibling.setIsRed=curNode.getParent.getIsRed;
@@ -306,7 +316,8 @@ class RedBlackTree {
                             // sibling.setIsRed = true;
                             this.setNodeColour(sibling.getRight, false);
                             this.setNodeColour(sibling, true);
-                            this.leftRotation(sibling);
+                            // this.leftRotation(sibling);
+                            this.leftRotationPrep(sibling);
                             sibling = curNode.getParent.getLeft;
                         }
                         // sibling.setIsRed=curNode.getParent.getIsRed;
@@ -347,6 +358,27 @@ class RedBlackTree {
         }
     }
 
+    leftRotationPrep(topNode) {
+        var child = topNode.getRight;
+        topNode.setRight = child.getLeft;
+        child.getLeft.setParent=topNode;
+        // if (child.getLeft.getIsNull==false) {
+        //     child.getLeft.setParent=topNode;
+        // }
+        child.setParent=topNode.getParent;
+        if (topNode.getParent==null) {
+            this.setRoot = child;
+        } else if (topNode==topNode.getParent.getLeft) {
+            topNode.getParent.setLeft = child;
+        } else {
+            topNode.getParent.setRight = child;
+        }
+        child.setLeft = topNode;
+        topNode.setParent = child;
+
+        this.queue.addCommand("preRotationAllignment", [topNode, child, 'l']);
+    }
+
     leftRotation(topNode) {
         var child = topNode.getRight;
         topNode.setRight = child.getLeft;
@@ -365,9 +397,39 @@ class RedBlackTree {
         child.setLeft = topNode;
         topNode.setParent = child;
 
-        this.queue.addCommand("swap", [topNode.getId, child.getId]);  
+        //this.queue.addCommand("swap", [topNode.getId, child.getId]);  
+        this.queue.addCommand("RBRecMove", [child, child.calcDepth()+1]); 
+
+        var parent = child.getParent;
+        if (parent != null) {
+            this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
+        } else {
+            this.queue.addCommand("moveToRoot", [child]);
+        }
+
         //this.queue.addCommand("recMove", [child]); 
         //this.queue.addCommand("RBredrawTree", [this.getRoot, child]);
+    }
+
+    rightRotationPrep(topNode) {
+        var child = topNode.getLeft;
+        topNode.setLeft = child.getRight;
+        child.getRight.setParent=topNode;
+        // if (child.getRight.getIsNull==false) {
+        //     child.getRight.setParent=topNode;
+        // }
+        child.setParent=topNode.getParent;
+        if (topNode.getParent==null) {
+            this.setRoot = child;
+        } else if (topNode==topNode.getParent.getLeft) {
+            topNode.getParent.setLeft = child;
+        } else {
+            topNode.getParent.setRight = child;
+        }
+        child.setRight = topNode;
+        topNode.setParent = child;
+
+        this.queue.addCommand("preRotationAllignment", [topNode, child, 'r']);
     }
 
     rightRotation(topNode) {
@@ -388,7 +450,16 @@ class RedBlackTree {
         child.setRight = topNode;
         topNode.setParent = child;
 
-        this.queue.addCommand("swap", [topNode.getId, child.getId]);  
+        this.queue.addCommand("RBRecMove", [child, child.calcDepth()+1]); 
+
+        var parent = child.getParent;
+        if (parent != null) {
+            this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
+        } else {
+            this.queue.addCommand("moveToRoot", [child]);
+        }
+
+        // this.queue.addCommand("swap", [topNode.getId, child.getId]);  
         //this.queue.addCommand("recMove", [child]); 
         //this.queue.addCommand("RBredrawTree", [this.getRoot, child]);
     }

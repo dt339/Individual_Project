@@ -58,7 +58,7 @@ class AnimQueue {
 
     runCommands() {
         var currentCommand = this.getQueue.shift();
-        //alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
+        // alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
         
         this.exeCommand(currentCommand);
         this.setBack = this.getBack - 1;        
@@ -66,12 +66,12 @@ class AnimQueue {
         if (this.getBack != 0) {
             if (currentCommand.getType == "highlightLine") {
                 if (getIsShowing()) {
-                    setTimeout(() => this.runCommands(), 20000/getAnimSpeed());
+                    setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
                 } else {
                     this.runCommands();
                 }
             } else {
-                setTimeout(() => this.runCommands(), 20000/getAnimSpeed());
+                setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
             }
             
             
@@ -127,6 +127,8 @@ class AnimQueue {
             clearCanvas();
             redBlackRedrawTree(paramArray[0],paramArray[1]);
         } else if (com.getType== "RBRecMove") {
+            clearCanvas();
+            redBlackRedrawTree(newTree.getRoot, paramArray[0].getId);
             RBRecursiveMove(paramArray[0], paramArray[1]);
         } else if (com.getType=="highlightBorder") {
             highlightBorder(paramArray[0], paramArray[1]);
@@ -148,7 +150,11 @@ class AnimQueue {
             moveToRoot(paramArray[0]);
         } else if (com.getType=="preRotationAllignment") {
             clearCanvas();
-            redrawTree(newTree.getRoot, paramArray[1].getId);
+            if (thisPage=="RB") {
+                redBlackRedrawTree(newTree.getRoot, paramArray[1].getId);
+            } else {
+                redrawTree(newTree.getRoot, paramArray[1].getId);
+            }            
             preRotationAllignment(paramArray[0], paramArray[1], paramArray[2]);
         }
         
