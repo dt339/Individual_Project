@@ -156,6 +156,9 @@ class AnimQueue {
                 redrawTree(newTree.getRoot, paramArray[1].getId);
             }            
             preRotationAllignment(paramArray[0], paramArray[1], paramArray[2]);
+        } else if (com.getType=="allignFromList") {
+            clearCanvas();
+            allignFromList(paramArray[0]);
         }
         
         

@@ -768,6 +768,112 @@ function allignRoots(rootArr) {
     }
 }
 
+function allignFromList(curArr, parent=null, posArea=null) {
+    const containerDiv = document.getElementById('treeBox');
+    const containerPos = containerDiv.getBoundingClientRect();
+
+    if (parent == null) {
+        posArea = containerPos.width;
+    }
+    var spacing = posArea/(curArr.length+1);
+
+    if (curArr!=null) {
+        for (let i = 0; i < curArr.length; i++) {
+            // alert("now - " + curArr[i]);
+            // alert("to move - " + + curArr[i][0])
+            var initX = 0;
+            var initY = 0;
+            var destX = 0;
+            var destY = 0;
+    
+            if (parent==null) {
+                var elem = document.getElementById(curArr[i][0]);
+                var elemPos = elem.getBoundingClientRect();
+                
+                //Calculates the destination the child must reach.
+                initX = (elemPos.left - containerPos.left + (elemPos.width/2))
+                initY = (elemPos.top-containerPos.top)
+                destX = ((spacing*(i+1))-(containerPos.left)+elemPos.width)
+                destY = 10;
+            } else {
+                var parentDiv = document.getElementById(parent)
+                var parentPos = parentDiv.getBoundingClientRect();
+                
+                var elem = document.getElementById(curArr[i][0]);
+                var elemPos = elem.getBoundingClientRect();
+    
+                var initX = (elemPos.left - containerPos.left + (elemPos.width/2));
+                var initY = (elemPos.top-containerPos.top);
+                var destX = (parentPos.left-((posArea/2))+(spacing*(i+1))-containerPos.left);
+                var destY = (parentPos.top - containerPos.top + 100);
+            }
+            
+            listMove(curArr[i][0], initX, initY, destX, destY, parent, spacing, curArr, i);  
+        }
+    }
+}
+
+function listMove(toMove, initPosX, initPosY, destX, destY, parent, spacing, curArr, i) {
+    var id = null;
+    var elem = document.getElementById(toMove);
+    var xPos = initPosX;
+    var yPos = initPosY;    
+    
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance)*getAnimSpeed();
+    
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+    
+    clearInterval(id);
+    id = setInterval(frame, 10);
+    function frame() {
+        if (xDirection == 'r') {
+            if (xPos >= destX) {
+                clearInterval(id);
+                fixPosition(toMove, destX, destY);
+                if (parent==null) {
+                    if (i>0) {
+                        drawHorizontalLine(curArr[i][0], curArr[i-1][0]);
+                    }                    
+                } else {                    
+                    drawLine(parent, toMove);
+                }
+                allignFromList(curArr[i][1],toMove, spacing);
+            } else {
+                xPos+=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos += yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        } else {
+            if (xPos <= destX) {
+                clearInterval(id);
+                fixPosition(toMove, destX, destY);
+                if (parent==null) {
+                    if (i>0) {
+                        drawHorizontalLine(curArr[i][0], curArr[i-1][0]);
+                    }                    
+                } else {
+                    drawLine(parent, toMove);
+                }
+                allignFromList(curArr[i][1],toMove, spacing);
+            } else {
+                xPos-=xIncrement;
+                elem.style.left = xPos + "px";
+                yPos -= yIncrement;
+                elem.style.top = yPos + "px";
+            }
+        }
+
+    }
+}
+
 function allignAll(curArr, parent=null, posArea=null) {
     //Gets the elements for the parent node and the canvas.
 

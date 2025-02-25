@@ -56,6 +56,26 @@ class CDLinkedList {
         this.setLength = this.getLength + changeValue;
     }
 
+    getState() {
+        if (this.getHead!=null) {
+            var curElem = this.getHead;
+            var curState = [];
+            var finished = false;
+
+            while (!finished) {
+                var thisTuple = [curElem.getHeldNode.getId, curElem.getHeldNode.getChildList.getState()];
+                curState.push(thisTuple);
+                curElem = curElem.getRightPointer;
+                if (curElem==this.getHead) {
+                    finished=true;
+                }
+            }
+            return curState;
+        } else {
+            return null;
+        }
+    }
+
     //Creates a new linked list element that holds the node in the list.
     //Inserts this element into the list
     insertElement(e) {
@@ -303,7 +323,7 @@ class FibonacciHeap {
         //Inserts the new node into the root list
         this.rootList.insertElement(newNode);
         this.changeNumOfNodes(1);
-        this.rootList.print();
+        // this.rootList.print();
 
         //Rearranges the display the include the new inserted element
         this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAll("node")]);    
@@ -458,16 +478,23 @@ class FibonacciHeap {
     }
 
     joinRoots(smallNode, largeNode) {
-        this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
+        //this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
         //Removes the larger root from the root list
         this.rootList.removeElement(largeNode.getId);
         //Adds the larger root to the child list of the smaller root
         smallNode.getChildList.insertElement(largeNode); 
         largeNode.setParent = smallNode;
         largeNode.setMarked = false;
-        smallNode.changeDegree(1);
+        smallNode.changeDegree(1);        
         
-        this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);   
+        var currentState = this.rootList.getState();
+        // alert("cur state - " + currentState);
+        // alert("pos 0 - " + currentState[0])
+        // alert("pos 1 - " + currentState[1])
+
+        this.queue.addCommand("allignFromList", [currentState]);   
+
+        // this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);   
     }
 
 }
