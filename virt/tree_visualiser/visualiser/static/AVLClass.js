@@ -503,12 +503,14 @@ class AVLTree {
         midNode.setLeft = topNode;
         topNode.setParent = midNode;
 
+        
+        // this.queue.addCommand("redrawTree", [this.getRoot, midNode.getId]); 
         //this.queue.addCommand("swap", [topNode.getId, midNode.getId]);  
-        this.queue.addCommand("recMove", [midNode, midNode.calcDepth()]); 
+        this.queue.addCommand("recMove", [midNode, midNode.calcDepth()+1]); 
 
         var parent = midNode.getParent;
         if (parent != null) {
-            this.queue.addCommand("recMove", [parent, parent.calcDepth()+1]);
+            this.queue.addCommand("recMove", [parent, parent.calcDepth()]);
         } else {
             this.queue.addCommand("moveToRoot", [midNode]);
         }
@@ -544,12 +546,13 @@ class AVLTree {
         midNode.setRight = topNode;
         topNode.setParent = midNode;
 
+        // this.queue.addCommand("redrawTree", [this.getRoot, midNode.getId]); 
         // this.queue.addCommand("swap", [topNode.getId, midNode.getId]);
         this.queue.addCommand("recMove", [midNode, midNode.calcDepth()+1]);
 
         var parent = midNode.getParent;
         if (parent != null) {
-            this.queue.addCommand("recMove", [parent, parent.calcDepth()+1]);
+            this.queue.addCommand("recMove", [parent, parent.calcDepth()]);
         } else {
             this.queue.addCommand("moveToRoot", [midNode]);
         }

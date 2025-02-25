@@ -108,6 +108,8 @@ class AnimQueue {
         } else if (com.getType == "initMove") {
             initialMove(paramArray[0], paramArray[1]);
         } else if (com.getType == "recMove") {
+            clearCanvas();
+            redrawTree(newTree.getRoot, paramArray[0].getId);
             recursiveMove(paramArray[0], paramArray[1]);
         } else if (com.getType == "removeNode") {
             removeElem(paramArray[0]);
@@ -142,8 +144,11 @@ class AnimQueue {
         } else if (com.getType=="updateId") {
             updateId(paramArray[0], paramArray[1]);
         } else if (com.getType=="moveToRoot") {
+            clearCanvas();
             moveToRoot(paramArray[0]);
         } else if (com.getType=="preRotationAllignment") {
+            clearCanvas();
+            redrawTree(newTree.getRoot, paramArray[1].getId);
             preRotationAllignment(paramArray[0], paramArray[1], paramArray[2]);
         }
         
