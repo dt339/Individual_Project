@@ -143,7 +143,7 @@ function userDecreaseNode() {
             //Sets the current process.
             var intId = parseInt(inId, 10);  
             var intVal = parseInt(inVal, 10);  
-            setCurrProcess("remove");  
+            setCurrProcess("FHdecrease");  
             //Calls the removal function. 
             newTree.decrease(intId, intVal);     
         }
@@ -155,7 +155,7 @@ function userDecreaseNode() {
 }
 
 function userRemoveMin() {
-    setCurrProcess("remove");  
+    setCurrProcess("removeMin");  
     newTree.removeMin();
 }
 

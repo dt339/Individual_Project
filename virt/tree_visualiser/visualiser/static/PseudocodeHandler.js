@@ -1,9 +1,53 @@
 //Stores the lines of pseudocode for the different processes.
 //CHANGE TO FILE OR SOMETHING
 const noneProcess = ["No current process!"];
-const bSTSearchProcess = ["Start search at root", "Compare current node N with value being searched for S", "If S = N then", "  S has been found!", "If S > N then", "  If N has a right child then", "     Make the right child of N the Current Node", "  If N has no right child then", "     S does not exist in the tree", "If S < N then", "  If N has a left child then", "     Make the left child of N the Current Node", "  If N has no left child then", "     S does not exist in the tree"];
-const bSTInsertProcess = ["Start search for location at root", "If there is no root, insert new node N at root", "Compare current node C to N", "If N > C then", "  If C has a right child then", "     Repeat with the right child of C being the new current node", "  If C has no right child then", "     Insert N as the right child of C", "If N < C then", "  If C has a left child then ", "      Repeat with the left child of C being the new current node", "  If C has no left child then ", "      Insert N as the left child of C", "If N = C then", "  N already exists and cannot be inserted"];
-const bSTRemoveProcess = ["Search for node to be removed R", "If R is found then", "  Remove R", "  If R had no children then", "     Take no further action", "  Else If R had only 1 child then", "     Replace R with the only child", "  Else If R had 2 children then", "     Replace R with the largest value in the left subtree of R", "Else", "  R does not exist so cannot be removed"];
+
+const bSTSearchProcess = [
+    "Start search at root", 
+    "Compare current node N with value being searched for S", 
+    "If S = N then", 
+    "  S has been found!", 
+    "If S > N then", 
+    "  If N has a right child then", 
+    "     Make the right child of N the Current Node", 
+    "  If N has no right child then", 
+    "     S does not exist in the tree", 
+    "If S < N then", 
+    "  If N has a left child then", 
+    "     Make the left child of N the Current Node", 
+    "  If N has no left child then", 
+    "     S does not exist in the tree"];
+
+const bSTInsertProcess = [
+    "Start search for location at root", 
+    "If there is no root, insert new node N at root", 
+    "Compare current node C to N", 
+    "If N > C then", 
+    "  If C has a right child then", 
+    "     Repeat with the right child of C being the new current node", 
+    "  If C has no right child then", 
+    "     Insert N as the right child of C", 
+    "If N < C then", 
+    "  If C has a left child then ", 
+    "      Repeat with the left child of C being the new current node", 
+    "  If C has no left child then ", 
+    "      Insert N as the left child of C", 
+    "If N = C then", 
+    "  N already exists and cannot be inserted"];
+
+const bSTRemoveProcess = [
+    "Search for node to be removed R", 
+    "If R is found then", 
+    "  Remove R", 
+    "  If R had no children then", 
+    "     Take no further action", 
+    "  Else If R had only 1 child then", 
+    "     Replace R with the only child", 
+    "  Else If R had 2 children then", 
+    "     Replace R with the largest value in the left subtree of R", 
+    "Else", 
+    "  R does not exist so cannot be removed"];
+
 const aVLInsertProcess = [
     "Start search for position at root",
     "If Tree has no data Then",
@@ -98,6 +142,61 @@ const minHeapifyUp = [
     "  Else",
     "     Take no further action"];
 
+const FHInsertProcess = [
+    "Create a node N with the gievn value",
+    "Insert N into the root list",
+    "If the root list was empty Then",
+    "   Set N as the minimum node",
+    "Else",
+    "   If N < the minimum node Then",
+    "     Set N to be the minimum node"];
+
+const FHRemoveMinProcess = [
+    "If the heap is not empty Then",
+    "   Remove N from the root list",
+    "   Add each child of the minimum node N to the root list",
+    "   If the heap is not empty Then",
+    "     Consolidate the heap",
+    "   Else",
+    "     Take no further action",
+    "Else",
+    "   There is no node to be removed"
+    ];
+
+const FHConsolidateProcess = [
+    "Set the current node C to be the head of the root list",
+    "If there exist any node N in the root list to the left of C that have the same degree as C Then",
+    "   If C < N Then",
+    "     Make N the child of C",
+    "   Else if N < C Then",
+    "     Make C the child of N",
+    "Else",
+    "   If the next node in the root list is the head Then",
+    "     The heap has been consolidated",
+    "   Else",
+    "     Set the current node C to be the next node in the root list"
+    ];
+
+const FHDecreaseProcess = [
+    "If new value V < current node value N Then",
+    "   Update N to equal V",
+    "   If N has a parent P Then",
+    "     If N < P Then",
+    "       Remove N from the child list of P",
+    "       Add N to the root list",
+    "   Update the minimum node of the heap",  
+    "Else",
+    "   Take no action"
+    ]
+        
+const FHRemoveProcess = [
+    "If node to remove R exists in the heap Then",
+    "   Update R's key to be 0",
+    "   Remove the minimum node in the heap",
+    "Else",
+    "   R does not exist so cannot be removed"
+    ];
+
 // const fr = new FileReader();
 // const filePath = new F
 
@@ -131,9 +230,9 @@ if (curPage == "BST") {
     insertProcess = binaryHeapInsert;
     removeProcess = binaryHeapRemove;
 } else if (curPage == "FH") {
-    searchProcess = bSTSearchProcess;
-    insertProcess = binaryHeapInsert;
-    removeProcess = binaryHeapRemove;
+    searchProcess = noneProcess;
+    insertProcess = FHInsertProcess;
+    removeProcess = FHRemoveProcess;
 } else {
     alert("An error has occured.");
 }
@@ -165,6 +264,12 @@ function setCurrProcess(p) {
             currProcess = minHeapifyUp;
         } else if (p == "downHeap") {
             currProcess = minHeapifyDown;
+        } else if (p == "FHConsolidate") {
+            currProcess = FHConsolidateProcess;
+        } else if (p == "removeMin") {
+            currProcess = FHRemoveMinProcess;
+        } else if (p == "FHdecrease") {
+            currProcess = FHDecreaseProcess;
         } else {
             alert("what")
         }
@@ -245,6 +350,7 @@ function highlightLine(x) {
         currHigh = x;
         toHighlight.style.backgroundColor = "lightpink";
         //Only one line of code can be highlighted at once.
+        
     }
 }
 

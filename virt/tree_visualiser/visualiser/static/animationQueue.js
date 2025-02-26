@@ -58,7 +58,7 @@ class AnimQueue {
 
     runCommands() {
         var currentCommand = this.getQueue.shift();
-        // alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
+        //alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
         
         this.exeCommand(currentCommand);
         this.setBack = this.getBack - 1;        
@@ -74,7 +74,7 @@ class AnimQueue {
                 setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
             }
             
-            
+            // setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
         } else {
             //alert("Queue is empty");
         }    
