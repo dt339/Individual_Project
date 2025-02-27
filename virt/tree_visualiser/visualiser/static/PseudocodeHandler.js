@@ -207,37 +207,38 @@ const RBInsertProcess = [
     "       Set the right child of C as the current node",
     "     Else",
     "       Create new red node N at the right child of N",
-    "       Check the Red-Black properties",
     "   Else if N < C Then",
     "     If C has a left child Then",
     "       Set the left child of C as the current node",
     "     Else",
     "       Create new red node N at the left child of N",
-    "       Check the Red-Black properties",
     "   Else if N = C Then",
-    "     N already exists and cannot be inserted"
+    "     N already exists and cannot be inserted",    
+    "Check the Red-Black properties",
     ];
     
 const RBInsertFixupProcess = [
     "Set the current node C to be the newly inserted node",
-    "If C is red Then",
+    "If the parent P of C is red Then",
     "   If the uncle U of C is red Then",
-    "     Set the parent C to black",
+    "     Set P to black",
     "     Set U to black",
     "     Set the grandparent of C to red",
-    "     Set the C to be the grandparent of C",
-    "Else",
-    "   Set the parent of C to black",
-    "   Set the grandparent of C to red",
-    "   Perform a rotation on C"
+    "   Else",
+    "     Set P to black",
+    "     Set the grandparent of C to red",
+    "     Perform a rotation on C",
+    "   Set C to the parent of C",
+    "Set the root of the tree to black"
     ];
     
 const RBRemoveProcess = [
     "Find the node to be removed R",
-    "If R has no children Then",
-    "   Remove R",
-    "Else if R has one child Then",
-    "   Replace R with its only child",
+    "Remove R",
+    "If R has no left child Then",
+    "   Replace R with its right child",
+    "Else if R has no right child Then",
+    "   Replace R with its left child",
     "Else if R has two children Then",
     "   Replace R with the largest node L in its right subtree",
     "   Set L to the colour of R",
@@ -286,8 +287,7 @@ var curPage = getTreeType();
 if (curPage == "BST") {
     searchProcess = bSTSearchProcess;
     insertProcess = bSTInsertProcess;
-    removeProcess = bSTRemoveProcess;
-    
+    removeProcess = bSTRemoveProcess;    
 } else if (curPage == "AVL") {
     searchProcess = bSTSearchProcess;
     insertProcess = aVLInsertProcess;
@@ -298,8 +298,8 @@ if (curPage == "BST") {
     removeProcess = binaryHeapRemove;
 } else if (curPage == "RB") {
     searchProcess = bSTSearchProcess;
-    insertProcess = binaryHeapInsert;
-    removeProcess = binaryHeapRemove;
+    insertProcess = RBInsertProcess;
+    removeProcess = RBRemoveProcess;
 } else if (curPage == "FH") {
     searchProcess = noneProcess;
     insertProcess = FHInsertProcess;
@@ -341,6 +341,10 @@ function setCurrProcess(p) {
             currProcess = FHRemoveMinProcess;
         } else if (p == "FHdecrease") {
             currProcess = FHDecreaseProcess;
+        } else if (p == "insertFixup") {
+            currProcess = RBInsertFixupProcess;
+        } else if (p == "deleteFixup") {
+            currProcess = RBDeleteFixupProcess;
         } else {
             alert("what")
         }
