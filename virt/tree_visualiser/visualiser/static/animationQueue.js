@@ -58,7 +58,7 @@ class AnimQueue {
 
     runCommands() {
         var currentCommand = this.getQueue.shift();
-        //alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
+        // alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
         
         this.exeCommand(currentCommand);
         this.setBack = this.getBack - 1;        

@@ -190,7 +190,8 @@ function userSearchNode() {
             //PLEEEEASEE UNCOMMMENT
             //setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
-
+  
+            setCurrProcess("search"); 
             if (thisPage!="FH") {
                 newTree.search(newTree.getRoot, intInput);    
             } else {

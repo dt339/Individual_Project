@@ -197,6 +197,77 @@ const FHRemoveProcess = [
     "   R does not exist so cannot be removed"
     ];
 
+const RBInsertProcess = [
+    "If the tree has no data Then",
+    "   Insert new value N at the root of the tree",
+    "Else",
+    "   Set the root of the tree to be the current node C",
+    "   If N > C Then",
+    "     If C has a right child Then",
+    "       Set the right child of C as the current node",
+    "     Else",
+    "       Create new red node N at the right child of N",
+    "       Check the Red-Black properties",
+    "   Else if N < C Then",
+    "     If C has a left child Then",
+    "       Set the left child of C as the current node",
+    "     Else",
+    "       Create new red node N at the left child of N",
+    "       Check the Red-Black properties",
+    "   Else if N = C Then",
+    "     N already exists and cannot be inserted"
+    ];
+    
+const RBInsertFixupProcess = [
+    "Set the current node C to be the newly inserted node",
+    "If C is red Then",
+    "   If the uncle U of C is red Then",
+    "     Set the parent C to black",
+    "     Set U to black",
+    "     Set the grandparent of C to red",
+    "     Set the C to be the grandparent of C",
+    "Else",
+    "   Set the parent of C to black",
+    "   Set the grandparent of C to red",
+    "   Perform a rotation on C"
+    ];
+    
+const RBRemoveProcess = [
+    "Find the node to be removed R",
+    "If R has no children Then",
+    "   Remove R",
+    "Else if R has one child Then",
+    "   Replace R with its only child",
+    "Else if R has two children Then",
+    "   Replace R with the largest node L in its right subtree",
+    "   Set L to the colour of R",
+    "If R was black Then",
+    "   Check the Red-Black Priority"
+    ];
+        
+const RBDeleteFixupProcess = [
+    "Set the current node C to be the replacement node",
+    "If C is not the root and C is black Then",
+    "   If the sibling S of C is red Then",
+    "     Set S to black",
+    "     Set the parent of C to red",
+    "     Rotate around the parent of C",
+    "   If both children of the sibling S of C are black Then",
+    "     Set S to red",
+    "     Set the current node C to be the parent of C",
+    "   Else",
+    "     If the opposite child of S is black Then",
+    "       Set the other child of S to black",
+    "       Set S to red",
+    "       Rotate around S",
+    "     Set S to the colour of the parent P of C",
+    "     Set P to black",
+    "     Set the opposite child of S to black",
+    "     Rotate around P",
+    ];
+        
+        
+
 // const fr = new FileReader();
 // const filePath = new F
 
@@ -301,7 +372,8 @@ function showCodeBox() {
         codeBox.style.visibility = "visible";
     }
 
-    //Calls a function to fill the box with the pseudocode of the current function.
+    //Calls a function to fill the box with the pseudocode of the current function.    
+    emptyBox();
     fillCodeBox();
     highlightLine(currHigh);
     isShowing = true;
@@ -310,7 +382,6 @@ function showCodeBox() {
 function hideCodeBox() {
     //Removes the box from the scene.
 
-    emptyBox();
     codeBox.style.visibility = "hidden";
     isShowing = false;
 }
