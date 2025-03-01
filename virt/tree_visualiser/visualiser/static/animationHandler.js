@@ -1108,3 +1108,21 @@ function updateId(toUpdate, newVal) {
     updateNode.id = newVal;
     updateNode.textContent = newVal;
 }
+
+function clearBox() {
+    const containerDiv = document.getElementById('treeBox');
+    containerDiv.textContent = '';
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "myCanvas";
+    canvas.style.border = "1px solid black"; // Just for visibility
+
+    // Append the canvas to the container
+    containerDiv.appendChild(canvas);
+
+    resizeCanvas();
+    // <canvas id="myCanvas" style="border:1px solid #000000;">
+    // </canvas> 
+    // containerDiv.textContent = '';
+
+}

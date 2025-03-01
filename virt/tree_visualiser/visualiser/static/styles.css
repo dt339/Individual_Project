@@ -72,3 +72,9 @@
     white-space: pre;
   }
 
+  .rightButton {
+    position: fixed;
+    right: 0;
+    padding: 10px;
+  }
+

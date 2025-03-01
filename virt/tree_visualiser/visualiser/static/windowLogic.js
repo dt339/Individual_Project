@@ -60,7 +60,7 @@ function resizeCanvas() {
     ctx.canvas.width  = window.innerWidth *0.9;
     ctx.canvas.height = window.innerHeight * 0.9;
 
-    callRedraw();
+    //callRedraw();
 }
 
 function setInputFields(toEnable) {

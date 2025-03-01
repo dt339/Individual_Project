@@ -27,6 +27,10 @@ function getName() {
 
 }
 
+function changeHeapType() {
+    newTree.changeIsMin();
+}
+
 function displayTree() {
     alert("Please");
     let bill = newTree.traverse(newTree.getRoot);

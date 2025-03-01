@@ -4,6 +4,7 @@ class BinaryHeap {
         this.rootNode = null;
         this.queue = new AnimQueue;
         this.nextPos = 1;
+        this.isMin = true;
     }
 
     get getRoot() {
@@ -22,12 +23,39 @@ class BinaryHeap {
         this.nextPos = n;
     }
 
+    get getisMin() {
+        return this.isMin;
+    }
+
+    set setIsMin(m) {
+        this.isMin = m;
+    }
+
+    changeIsMin() {
+        var heapTitle = document.getElementById("pageTitle");
+        var switchButton = document.getElementById("changeTypeButton");
+        if (this.getisMin) {
+            this.setIsMin = false;
+            heapTitle.textContent = "Binary Max Heap";
+            switchButton.textContent = "Set to Min Heap";
+        } else {
+            this.setIsMin = true;
+            heapTitle.textContent = "Binary Min Heap";
+            switchButton.textContent = "Set to Max Heap";
+        }
+        clearBox();
+        this.setRoot = null;
+        this.setNextPos = 1;       
+        
+    }
+
     traverse(node) {
         if (node != null) {
             return ["(",node.getId, this.traverse(node.getLeft), this.traverse(node.getRight),")"];
         } else {
             return 'x';
         }
+        
     }  
 
     insert(nodeVal, nodeArr) {
@@ -73,7 +101,7 @@ class BinaryHeap {
         } else {
             //alert("insert")
             if (path.shift() == "1") {
-                //alert("right")
+                
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
@@ -83,7 +111,7 @@ class BinaryHeap {
                 this.heapifyUp(newNode);
                 this.queue.addCommand("setProcess", ["none"]);
             } else {
-                //alert("left")
+                
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
@@ -110,9 +138,9 @@ class BinaryHeap {
             this.setRoot = null;
         } else {
             var pathToNode = this.calculatePath();
-            alert("path - " + pathToNode);
+            
             var replacementNode = this.findNode(this.getRoot, pathToNode);
-            alert("rep - " + replacementNode.getId);
+            
             var rootNode = this.getRoot;
             //Swap root and node
             this.queue.addCommand("highlightLine", ["L0"]);
@@ -142,6 +170,7 @@ class BinaryHeap {
             replacementNode.setParent = null;
             
             this.setRoot = replacementNode;    
+            
             
             this.queue.addCommand("setProcess", ["downHeap"])
             this.heapifyDown(this.getRoot);
@@ -183,19 +212,25 @@ class BinaryHeap {
     }
 
     heapifyDown(curNode) {
+        
         var leftChild = curNode.getLeft;
         var rightChild = curNode.getRight;
-
+        
         //Checks to see if the node has any children.
         if (leftChild == null && rightChild == null) {
+            
             //Heap order maintained because node now a leaf.
             this.queue.addCommand("highlightLine", ["L16"]);
             this.queue.addCommand("highlightLine", ["L17"]);
         } else if (leftChild != null && rightChild == null) {
+            
             //If the node has only a left child
             //Compares it against the only child.
             this.queue.addCommand("highlightLine", ["L0"]);
-            if (leftChild.getId < curNode.getId) {
+            // if (leftChild.getId < curNode.getId) {
+            
+            if (this.checkCondition(leftChild.getId, curNode.getId)) {
+                
                 //If the left child is smaller, swap the two nodes around.
                 //swap
                 this.queue.addCommand("highlightLine", ["L1"]);
@@ -206,17 +241,22 @@ class BinaryHeap {
                 this.swapNodes(curNode, leftChild);
                 this.heapifyDown(curNode);
             } else {
+                
                 //ordered
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightLine", ["L5"]);
             }
         } else if (leftChild != null && rightChild != null) {
+            
             //If the node has 2 children
             //Check to find the smaller of the two
             //Swap with the smallest node if it is smaller than the current node.
             this.queue.addCommand("highlightLine", ["L6"]);
-            if (leftChild.getId < rightChild.getId) {
-                if (leftChild.getId < curNode.getId) {
+            // if (leftChild.getId < rightChild.getId) {
+            if (this.checkCondition(leftChild.getId, rightChild.getId)) {
+               
+                // if (leftChild.getId < curNode.getId) {
+                if (this.checkCondition(leftChild.getId, curNode.getId)) {
                     this.queue.addCommand("highlightLine", ["L7"]);
                     this.queue.addCommand("highlightLine", ["L8"]);
                     this.queue.addCommand("highlightLine", ["L9"]);
@@ -232,7 +272,9 @@ class BinaryHeap {
                     this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 }
             } else {
-                if (rightChild.getId < curNode.getId) {
+                
+                // if (rightChild.getId < curNode.getId) {
+                if (this.checkCondition(rightChild.getId, curNode.getId)) {
                     //swap
                     this.queue.addCommand("highlightLine", ["L7"]);
                     this.queue.addCommand("highlightLine", ["L11"]);
@@ -309,37 +351,6 @@ class BinaryHeap {
         this.queue.addCommand("swap", [parent.getId, child.getId]);
 
 
-        // //Check to see if the parent is the root of the tree.
-        // if (parent.getParent == null) {
-        //     this.setRoot = child;
-        // }
-
-        // child.setParent = parent.getParent;
-        // parent.setParent = child;
-
-        // if (child.getLeft != null) {
-        //     child.getLeft.setParent = parent;
-        // }
-        // if (child.getRight != null) {
-        //     child.getRight.setParent = parent;
-        // }
-
-        // var holdNode = null;
-        // if (parent.getLeft == child) {
-        //     holdNode = parent.getRight;
-        //     parent.setLeft = child.getLeft;
-        //     parent.setRight = child.getRight;
-        //     child.setLeft = parent;
-        //     child.setRight = holdNode;
-        //     holdNode.setParent = child;
-        // } else {
-        //     holdNode = parent.getLeft;
-        //     parent.setLeft = child.getLeft;
-        //     parent.setRight = child.getRight;
-        //     child.setRight = parent;
-        //     child.setLeft = holdNode;
-        //     holdNode.setParent = child;
-        // }
     }
 
     heapifyUp(curNode) {
@@ -348,7 +359,8 @@ class BinaryHeap {
         //alert("traversal - " + this.traverse(this.getRoot));
         if (curNode.getParent != null) {
             this.queue.addCommand("highlightLine", ["L3"]);
-            if (curNode.getId < curNode.getParent.getId) {
+            // if (curNode.getId < curNode.getParent.getId) {
+            if (this.checkCondition(curNode.getId, curNode.getParent.getId)) {
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
                 this.queue.addCommand("highlightLine", ["L5"]);
@@ -368,5 +380,22 @@ class BinaryHeap {
         }
     }
 
-    
+    checkCondition(n1, n2) {
+        var conditionMet = true;
+        if (this.getisMin) {
+            if (n1<n2) {
+                conditionMet = true;
+            } else {
+                conditionMet =false;
+            }
+        } else {
+            if (n1>n2) {
+                conditionMet = true;
+            } else {
+                conditionMet =false;
+            }
+        }
+        
+        return conditionMet;
+    }
 }
