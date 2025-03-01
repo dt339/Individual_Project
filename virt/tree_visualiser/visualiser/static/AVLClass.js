@@ -41,12 +41,18 @@ class AVLTree {
 
     remove(nodeVal) {
         this.queue.addCommand("highlightLine", ["L0"]);
-        this.queue.addCommand("setProcess", ["search"]);
-        var toRemove = this.search(this.getRoot, nodeVal);
-        this.queue.addCommand("setProcess", ["remove"]);
+
+        var toRemove = null;
+
+        if (this.getRoot!=null) {
+            this.queue.addCommand("setProcess", ["search"]);
+            toRemove = this.search(this.getRoot, nodeVal);
+        }
+        
         var balanceStart = null;
 
         if (toRemove != null) {
+            this.queue.addCommand("setProcess", ["remove"]);
             this.queue.addCommand("highlightLine", ["L1"]);
             this.queue.addCommand("highlightLine", ["L2"]);
             //If the removed node has no children.
@@ -64,7 +70,7 @@ class AVLTree {
                 }
                 
                 this.queue.addCommand("removeNode", [toRemove.getId]);
-                this.queue.addCommand("redrawTree", [this.getRoot, null]);
+                //this.queue.addCommand("redrawTree", [this.getRoot, toRemove.getParent.getId]);
                 this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightLine", ["L4"]);
 
@@ -181,7 +187,6 @@ class AVLTree {
             this.queue.addCommand("highlightLine", ["L11"]);
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
-            alert("Value does not exist so cannot be rmeoved");
         }
 
         
@@ -515,6 +520,7 @@ class AVLTree {
             this.queue.addCommand("moveToRoot", [midNode]);
         }
 
+            
         this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 

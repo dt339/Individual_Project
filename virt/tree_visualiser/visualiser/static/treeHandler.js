@@ -195,8 +195,7 @@ function userSearchNode() {
             if (thisPage!="FH") {
                 newTree.search(newTree.getRoot, intInput);    
             } else {
-                var balls = newTree.search(newTree.getRootList.getAll("node"), intInput);    
-                alert("balls - " + balls)
+                var balls = newTree.search(newTree.getRootList.getAll("node"), intInput);
             }
                     
         }

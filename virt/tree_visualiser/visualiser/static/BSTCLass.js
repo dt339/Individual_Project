@@ -208,12 +208,18 @@ class BSTTree {
     }
 
     remove(removeVal) {
-        this.queue.addCommand("highlightLine", ["L0"]);        
-        this.queue.addCommand("setProcess", ["search"]);
-        var nodeToRem = this.search(this.getRoot, removeVal);
-        this.queue.addCommand("setProcess", ["remove"]);
+        this.queue.addCommand("highlightLine", ["L0"]);   
+
+        var nodeToRem = null;
+        if (this.getRoot!=null) {     
+            this.queue.addCommand("setProcess", ["search"]);
+            nodeToRem = this.search(this.getRoot, removeVal);
+        }
+        
+        
 
         if (nodeToRem!=null) {
+            this.queue.addCommand("setProcess", ["remove"]);
             this.queue.addCommand("highlightLine", ["L1"]);
             this.queue.addCommand("highlightLine", ["L2"]);
             this.queue.addCommand("highlightNode", [removeVal, "red"]);
