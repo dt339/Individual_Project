@@ -59,6 +59,9 @@ class BinaryHeap {
     }  
 
     insert(nodeVal, nodeArr) {
+        
+
+
         this.queue.addCommand("highlightLine", ["L0"]);
         //Creates a new node from the entered data
         var newNode = new Node(parseInt(nodeVal, 10));
@@ -71,15 +74,21 @@ class BinaryHeap {
             this.queue.addCommand("highlightNode", [newNode.getId, 'white']);
             
         } else {
-            var path = this.calculatePath();            
-            //Increases the next position.
-            this.setNextPos = this.getNextPos+1;
-            //alert(path);
-            this.recursiveInsert(newNode, this.getRoot, 1, nodeArr, path);
+            var searchRes = this.checkExists(this.getRoot, nodeVal);
+            
+            if (!searchRes) {
+                var path = this.calculatePath();            
+                //Increases the next position.
+                this.setNextPos = this.getNextPos+1;
+                //alert(path);
+                this.recursiveInsert(newNode, this.getRoot, 1, nodeArr, path);
+            } else {
+                alert("Value already exists in heap")
+            }
+
         }    
         
-        this.queue.addCommand("setProcess", ["none"]);  
-        
+        this.queue.addCommand("setProcess", ["none"]);          
         this.queue.runCommands();
         
     }
@@ -397,5 +406,26 @@ class BinaryHeap {
         }
         
         return conditionMet;
+    }
+
+    checkExists(curNode, searchVal) {
+        if (curNode.getId == searchVal) {
+            return true;
+        } else {
+            var searchResult = false;
+            if (curNode.getLeft != null) {
+                var leftResult = this.checkExists(curNode.getLeft, searchVal);
+                if (leftResult) {
+                    searchResult = true;
+                }
+            }
+            if (curNode.getRight != null) {
+                var rightResult = this.checkExists(curNode.getRight, searchVal);
+                if (rightResult) {
+                    searchResult = true;
+                }
+            }
+            return searchResult;
+        }
     }
 }

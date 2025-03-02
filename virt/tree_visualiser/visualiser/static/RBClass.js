@@ -276,8 +276,6 @@ class RedBlackTree {
             this.queue.addCommand("setProcess", ["remove"]);
             this.queue.addCommand("highlightBorder", [toRemove.getId, "red"]);    
             this.queue.addCommand("highlightLine", ["L1"]);    
-            this.queue.addCommand("removeNode", [toRemove.getId]);
-
 
             var x = null;
             var y = toRemove;
@@ -292,6 +290,7 @@ class RedBlackTree {
                     this.queue.addCommand("highlightBorder", [x.getId, "black"]);
                 }
                 this.transplant(toRemove, toRemove.getRight);
+                this.queue.addCommand("removeNode", [toRemove.getId]);
             } else if (toRemove.getRight.getIsNull) {
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightLine", ["L5"]);
@@ -302,6 +301,7 @@ class RedBlackTree {
                 }
                 
                 this.transplant(toRemove, toRemove.getLeft);
+                this.queue.addCommand("removeNode", [toRemove.getId]);
                 
             } else {
                 this.queue.addCommand("highlightLine", ["L6"]);
@@ -321,6 +321,7 @@ class RedBlackTree {
                 y.setLeft = toRemove.getLeft;
                 y.getLeft.setParent = y;
                 //y.setIsRed = toRemove.getIsRed;
+                this.queue.addCommand("removeNode", [toRemove.getId]);
                 this.queue.addCommand("highlightLine", ["L8"]);
                 this.setNodeColour(y, toRemove.getIsRed);
                 this.queue.addCommand("highlightBorder", [y.getId, "black"]);
@@ -332,6 +333,7 @@ class RedBlackTree {
                 this.queue.addCommand("setProcess", ["deleteFixup"]);
                 this.deleteFixup(x);
             }                
+            
             
             this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
             this.queue.addCommand("setProcess", ["none"]);
@@ -473,7 +475,8 @@ class RedBlackTree {
         child.setParent = parent.getParent;
 
         if (child.getIsNull==false) {
-            this.queue.addCommand("swap", [parent.getId, child.getId]);
+            //this.queue.addCommand("swap", [parent.getId, child.getId]);
+            this.queue.addCommand("initMove", [child, parent.getId]);
         }
     }
 

@@ -313,6 +313,9 @@ class AVLTree {
 
             this.queue.addCommand("highlightLine", ["L5"]);
             this.queue.addCommand("highlightLine", ["L6"]);
+
+            this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
+            this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
             this.queue.addCommand("setProcess", ["none"]);
 
         } else {

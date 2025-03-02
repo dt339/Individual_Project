@@ -214,9 +214,7 @@ class BSTTree {
         if (this.getRoot!=null) {     
             this.queue.addCommand("setProcess", ["search"]);
             nodeToRem = this.search(this.getRoot, removeVal);
-        }
-        
-        
+        }       
 
         if (nodeToRem!=null) {
             this.queue.addCommand("setProcess", ["remove"]);
