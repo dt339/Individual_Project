@@ -304,8 +304,6 @@ if (curPage == "BST") {
     searchProcess = noneProcess;
     insertProcess = FHInsertProcess;
     removeProcess = FHRemoveProcess;
-} else {
-    alert("An error has occured.");
 }
 
 //alert(removeProcess);

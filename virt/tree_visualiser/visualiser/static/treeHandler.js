@@ -15,8 +15,6 @@ if (thisPage == "BST") {
     newTree = new RedBlackTree();
 } else if (thisPage == "FH") {
     newTree = new FibonacciHeap();
-} else {
-    alert("An error has occured.");
 }
 
 function getName() {

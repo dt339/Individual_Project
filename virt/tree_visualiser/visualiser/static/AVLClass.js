@@ -99,6 +99,8 @@ class AVLTree {
                     successor.setRight = toRemove.getRight;
                     toRemove.getRight.setParent = successor;
 
+                } else {
+                    balanceStart = toRemove.getParent;
                 }
 
                 if (parentOfRemoved == null) {
@@ -120,7 +122,7 @@ class AVLTree {
                 this.queue.addCommand("highlightNode", [successor.getId, "lightgreen"]);
                 this.queue.addCommand("initMove", [successor, toRemove.getId]);
                 this.queue.addCommand("highlightNode", [successor.getId, "white"]);
-                
+                alert("A--")
 
             //If the removed node has only a left child or 2 children.
             //The tree will always replace the removed node with the Precessor when it can.
@@ -174,11 +176,14 @@ class AVLTree {
 
             //Checks the tree for any imbalances caused by the removal.
             //The node it starts from is the lowest node included in the removal operation.
-            
+            alert("--B")
             this.queue.addCommand("removeNode", [toRemove.getId]);
             this.queue.addCommand("highlightLine", ["L9"]);
             this.queue.addCommand("setProcess", ["balance"]);
+            alert("--C")
+            alert(balanceStart)
             this.checkBalance(balanceStart);
+            alert("--D")
             this.queue.addCommand("redrawTree", [this.getRoot, null]);
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();

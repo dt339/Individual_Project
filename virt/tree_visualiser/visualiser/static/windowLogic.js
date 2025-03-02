@@ -71,14 +71,17 @@ function setInputFields(toEnable) {
         var removeButton = document.getElementById("nodeRemoveButton");
         removeButton.disabled = false;
 
-        if (treeType != "BH") {
+        if (treeType == "AVL" || treeType == "BST" || treeType == "RB") {
             var searchButton = document.getElementById("nodeSearchButton");
             searchButton.disabled = false;
-        }
+        }        
 
         if (treeType == "FH") {
             var removeMinButton = document.getElementById("nodeRemoveMinButton");
             removeMinButton.disabled = false;
+
+            var decreaseButton = document.getElementById("decreaseNodeButton");
+            decreaseButton.disabled = false;
             
         }
     } else {
@@ -88,7 +91,7 @@ function setInputFields(toEnable) {
         var removeButton = document.getElementById("nodeRemoveButton");
         removeButton.disabled = true;
 
-        if (treeType != "BH") {
+        if (treeType == "AVL" || treeType == "BST" || treeType == "RB") {
             var searchButton = document.getElementById("nodeSearchButton");
             searchButton.disabled = true;
         }
@@ -96,6 +99,9 @@ function setInputFields(toEnable) {
         if (treeType == "FH") {
             var removeMinButton = document.getElementById("nodeRemoveMinButton");
             removeMinButton.disabled = true;
+
+            var decreaseButton = document.getElementById("decreaseNodeButton");
+            decreaseButton.disabled = true;
             
         }
     }

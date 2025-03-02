@@ -60,7 +60,7 @@ class AnimQueue {
         var currentCommand = this.getQueue.shift();
 
         if (currentCommand.getType!="highlightLine") {
-            // alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
+            //alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
         }
         
         
