@@ -507,6 +507,19 @@ function highlightNode(nodeId, nodeColour) {
     nodeToHighlight.style.backgroundColor = nodeColour;
 }
 
+function redrawTreeFromArray(curArray, stopNode) {
+    if (curArray[0]!=stopNode) {        
+        if (curArray[1] != null) {
+            drawLine(curArray[0], curArray[1][0]);
+            redrawTreeFromArray(curArray[1], stopNode);
+        }        
+        if (curArray[2] != null) {
+            drawLine(curArray[0], curArray[2][0]);
+            redrawTreeFromArray(curArray[2], stopNode);
+        }
+    }
+} 
+
 //Draws the branches between nodes from the specified node.
 //Stops drawing when it reaches the searchNode
 function redrawTree(curNode, searchNode) {

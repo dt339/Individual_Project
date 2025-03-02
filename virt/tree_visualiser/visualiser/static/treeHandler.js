@@ -52,7 +52,6 @@ function userInputNode() {
         //Denoted by the use of commas
         if (inVal.includes(",")) {
             //Sets the current process.
-            setCurrProcess("insert");
             //Splits the input into diferent values.
             var nodeArr = inVal.split(",").map(item => item.trim());
 
@@ -67,6 +66,8 @@ function userInputNode() {
             if (allNumbers) {
                 //Inserts the first number
                 //Also passes the array of other numbers to insert.
+                
+                setCurrProcess("insert");
                 var intInput = parseInt(nodeArr[0], 10); 
                 newTree.insert(intInput, nodeArr); 
             } else {
@@ -103,17 +104,58 @@ function userRemoveNode() {
         if (inVal == '') {
             alert("No value entered!");
         } else {
-            //Checks that the entered value is a number.
-            if (isNaN(inVal))
-            {
-                alert("Must input numbers!");
-            } else {
+            if (inVal.includes(",")) {
                 //Sets the current process.
-                var intInput = parseInt(inVal, 10);  
-                setCurrProcess("remove");  
-                //Calls the removal function. 
-                newTree.remove(intInput);     
+                //Splits the input into diferent values.
+                var nodeArr = inVal.split(",").map(item => item.trim());
+    
+                //Checks that all values are numbers.
+                var allNumbers = true;
+                for (let i = 0; i < nodeArr.length; i++) {
+                    if (isNaN(nodeArr[i])) {
+                        allNumbers = false;
+                    }                
+                }
+    
+                if (allNumbers) {
+                    //Inserts the first number
+                    //Also passes the array of other numbers to insert.
+                    
+                    setCurrProcess("remove");
+                    var intInput = parseInt(nodeArr[0], 10); 
+                    newTree.remove(intInput, nodeArr); 
+                } else {
+                    alert("Must input numbers!");
+                }
+    
+    
+            } else { 
+                //Checks that the single input is a number.
+                if (isNaN(inVal))
+                {
+                    alert("Must input numbers!");
+                } else { 
+                    //Sets the current process.
+                    setCurrProcess("remove");
+                    //Inserts the single value.
+                    //Passes an array with only the single value in it.
+                    var intInput = parseInt(inVal, 10);                 
+                    newTree.remove(intInput, [intInput]);          
+                }
             }
+
+
+            // //Checks that the entered value is a number.
+            // if (isNaN(inVal))
+            // {
+            //     alert("Must input numbers!");
+            // } else {
+            //     //Sets the current process.
+            //     var intInput = parseInt(inVal, 10);  
+            //     setCurrProcess("remove");  
+            //     //Calls the removal function. 
+            //     newTree.remove(intInput);     
+            // }
         }
         //Empties the input field.
         document.getElementById("nodeRemove").value = '';
@@ -188,17 +230,16 @@ function userSearchNode() {
         {
             alert("Must input numbers!");
         } else {
-            //Sets the current process and calls the search function.
-            //PLEEEEASEE UNCOMMMENT
-            //setCurrProcess("search");
             var intInput = parseInt(inVal, 10);
   
             setCurrProcess("search"); 
             if (thisPage!="FH") {
                 newTree.search(newTree.getRoot, intInput);    
             } else {
-                var balls = newTree.search(newTree.getRootList.getAll("node"), intInput);
+                newTree.search(newTree.getRootList.getAll("node"), intInput);
             }
+            newTree.queue.addCommand("setProcess", ["none"]);
+            newTree.queue.runCommands();
                     
         }
     }

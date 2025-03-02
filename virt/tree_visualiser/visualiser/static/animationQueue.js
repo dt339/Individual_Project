@@ -163,6 +163,9 @@ class AnimQueue {
         } else if (com.getType=="allignFromList") {
             clearCanvas();
             allignFromList(paramArray[0]);
+        } else if (com.getType=="redrawFromArray") {
+            clearCanvas();
+            redrawTreeFromArray(paramArray[0], paramArray[1]);
         }
         
         

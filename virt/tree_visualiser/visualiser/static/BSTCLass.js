@@ -17,6 +17,14 @@ class BSTTree {
         alert("I'm a BST");
     }
 
+    traverse(curNode) {
+        if (curNode != null) {
+            return [curNode.getId, this.traverse(curNode.getLeft), this.traverse(curNode.getRight)];                 
+        } else {
+            return null;
+        }
+    }
+
     insert(newNodeVal, nodeArr) {
         //Creates a new node from the value given.
         var newNode = new Node(parseInt(newNodeVal, 10));
@@ -38,14 +46,14 @@ class BSTTree {
                 this.insert(nodeArr[0], nodeArr);
             } else {
                 //If no other nodes exist in the list then insertion is over.
+                this.queue.addCommand("setProcess", ["none"]);
+                this.queue.runCommands();
             }
         } else {
             //Calls a recursive function to insert the node if a root exists.
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
-
         }
-        this.queue.addCommand("setProcess", ["none"]);
-        this.queue.runCommands();
+
     }
 
     recursiveInsert(newNode, curNode, depth, nodeArr) {
@@ -81,6 +89,8 @@ class BSTTree {
                     this.insert(nodeArr[0], nodeArr)
                 } else {
                     //If no other nodes exist in the list then insertion is over.
+                    this.queue.addCommand("setProcess", ["none"]);
+                    this.queue.runCommands();
                 }
             } else {
                 //If a right child exists, compare the new node to the right child.
@@ -111,6 +121,8 @@ class BSTTree {
                     this.insert(nodeArr[0], nodeArr)
                 } else {
                     //If no other nodes exist in the list then insertion is over.
+                    this.queue.addCommand("setProcess", ["none"]);
+                    this.queue.runCommands();
                 }
             } else {
                 //If a left child exists, compare the new node and the left child.
@@ -133,6 +145,8 @@ class BSTTree {
                 this.insert(nodeArr[0], nodeArr)
             } else {
                 //If no other nodes exist in the list then insertion is over.
+                this.queue.addCommand("setProcess", ["none"]);
+                this.queue.runCommands();
             }
         }
     }
@@ -169,8 +183,8 @@ class BSTTree {
             this.queue.addCommand("highlightLine", ["L3"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "lime"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-            this.queue.addCommand("setProcess", ["none"]);
-            this.queue.runCommands();
+            // this.queue.addCommand("setProcess", ["none"]);
+            // this.queue.runCommands();
             return curNode;
         } else {
             if (searchNode>curNode.getId) {
@@ -180,8 +194,8 @@ class BSTTree {
                     this.queue.addCommand("highlightLine", ["L8"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-                    this.queue.addCommand("setProcess", ["none"]);
-                    this.queue.runCommands();
+                    // this.queue.addCommand("setProcess", ["none"]);
+                    // this.queue.runCommands();
                     return null;
                 } else {
                     this.queue.addCommand("highlightLine", ["L5"]);
@@ -195,8 +209,8 @@ class BSTTree {
                     this.queue.addCommand("highlightLine", ["L13"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-                    this.queue.addCommand("setProcess", ["none"]);
-                    this.queue.runCommands();
+                    // this.queue.addCommand("setProcess", ["none"]);
+                    // this.queue.runCommands();
                     return null;
                 } else {
                     this.queue.addCommand("highlightLine", ["L10"]);
@@ -207,7 +221,7 @@ class BSTTree {
         }
     }
 
-    remove(removeVal) {
+    remove(removeVal, nodeArr) {
         this.queue.addCommand("highlightLine", ["L0"]);   
 
         var nodeToRem = null;
@@ -239,7 +253,10 @@ class BSTTree {
                 this.queue.addCommand("removeNode", [removeVal]);                
 
                 //Redraws the tree so that there are no unecessary branches.
-                this.queue.addCommand("redrawTree", [this.getRoot, null]);
+                // this.queue.addCommand("redrawTree", [this.getRoot, null]);
+
+                var arrayRep = this.traverse(this.getRoot);
+                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightLine", ["L4"]);
@@ -265,7 +282,10 @@ class BSTTree {
                 this.queue.addCommand("removeNode", [removeVal]);                         
                 
                 //Redraws the tree so there are no unecessary branches.
-                this.queue.addCommand("redrawTree", [this.getRoot, nodeToRem.getRight]);
+                // this.queue.addCommand("redrawTree", [this.getRoot, nodeToRem.getRight]);
+
+                var arrayRep = this.traverse(this.getRoot);
+                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L5"]);
                 this.queue.addCommand("highlightLine", ["L6"]);
@@ -292,7 +312,9 @@ class BSTTree {
                 this.queue.addCommand("removeNode", [removeVal]);                  
                 
                 //Redraws the tree so there are no unecessary branches.
-                this.queue.addCommand("redrawTree", [this.getRoot, null]);
+                // this.queue.addCommand("redrawTree", [this.getRoot, null]);
+                var arrayRep = this.traverse(this.getRoot);
+                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L5"]);
                 this.queue.addCommand("highlightLine", ["L6"]);
@@ -343,7 +365,9 @@ class BSTTree {
                 this.queue.addCommand("removeNode", [removeVal]);  
                 
                 //Redraws the tree to remove any unecessary brances.
-                this.queue.addCommand("redrawTree", [this.getRoot, maxNode]);
+                // this.queue.addCommand("redrawTree", [this.getRoot, maxNode]);
+                var arrayRep = this.traverse(this.getRoot);
+                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L7"]);
                 this.queue.addCommand("highlightLine", ["L8"]);
@@ -354,8 +378,19 @@ class BSTTree {
             this.queue.addCommand("highlightLine", ["L10"]);
 
         }
-        this.queue.addCommand("setProcess", ["none"]);
-        this.queue.runCommands();
+
+        if(nodeArr.length > 1) {
+            //Removes the first value in the list of values.
+            nodeArr.shift();
+            //Removes the next node in the list.
+            this.remove(nodeArr[0], nodeArr);
+        } else {
+            //If no other nodes exist in the list then insertion is over.
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
+        }
+        // this.queue.addCommand("setProcess", ["none"]);
+        // this.queue.runCommands();
 
     }
 
