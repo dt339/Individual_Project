@@ -1,3 +1,235 @@
+function recursiveMoveArray(curArr, depth=1) {
+    // alert("start - " + curArr)
+    const movedNode = document.getElementById(curArr[0]);
+    const movedNodePos = movedNode.getBoundingClientRect();
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+
+    let rightAnim = null;
+    let leftAnim = null;
+
+    if (curArr[1]!=null) {
+        //Moves the node to the correct position relative to its parent - the previously moved node.
+        //Uses the same method as initialMove()
+        const toMoveL = document.getElementById(curArr[1][0]);
+        const toMovePosL = toMoveL.getBoundingClientRect();        
+
+        var initPosXL = toMovePosL.left - contPos.left + (toMovePosL.width/2);
+        var initPosYL = toMovePosL.top - contPos.top;
+        var destXL = (movedNodePos.left - contPos.left - (contPos.width /(2**(depth+1)))); //((10-depth)* 10));//(movedNodePos.left - contPos.left - movedNodePos.width - 100);
+        var destYL = (movedNodePos.top - contPos.top + movedNodePos.height + ((1+depth)* 10));//(movedNodePos.top - contPos.top + movedNodePos.height + 50);
+
+        var xDistanceL = destXL-initPosXL;
+        var yDistanceL = destYL-initPosYL;
+
+        var xIncrementL = 1*getAnimSpeed();
+        var yIncrementL = (yDistanceL/xDistanceL) * getAnimSpeed();
+
+        var xPosL = initPosXL;
+        var yPosL = initPosYL;   
+
+        var xDirectionL = 'r';
+        if (initPosXL > destXL) {
+            xDirectionL = 'l';
+        }
+
+        // alert("moving! - " + curArr[1])
+        clearInterval(leftAnim);
+        leftAnim = setInterval(leftFrame, 10);
+        function leftFrame() {
+            if (xDirectionL == 'r') {
+                if (xPosL >= destXL) {
+                    clearInterval(leftAnim);
+                    fixPosition(curArr[1][0], destXL, destYL);
+                    drawLine(curArr[0], curArr[1][0]);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMoveArray(curArr[1], tempDepth);
+                } else {
+                    xPosL+=xIncrementL;
+                    toMoveL.style.left = xPosL + "px";
+                    yPosL += yIncrementL;
+                    toMoveL.style.top = yPosL + "px";
+                }
+            } else {
+                if (xPosL <= destXL) {
+                    clearInterval(leftAnim);
+                    fixPosition(curArr[1][0], destXL, destYL);
+                    drawLine(curArr[0], curArr[1][0]);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMoveArray(curArr[1], tempDepth);
+                } else {
+                    xPosL-=xIncrementL;
+                    toMoveL.style.left = xPosL + "px";
+                    yPosL -= yIncrementL;
+                    toMoveL.style.top = yPosL + "px";
+                }
+            }
+        }
+    }
+    if (curArr[2]!=null) {
+        //Moves the node to the correct position relative to its parent - the previously moved node.
+        //Uses the same method as initialMove()
+        const toMove = document.getElementById(curArr[2][0]);
+        const toMovePos = toMove.getBoundingClientRect();        
+
+        var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
+        var initPosY = toMovePos.top - contPos.top;
+        var destX = (movedNodePos.left - contPos.left + (contPos.width /(2**(depth+1))));//(movedNodePos.left - contPos.left + movedNodePos.width + 100);
+        var destY = (movedNodePos.top - contPos.top + movedNodePos.height + ((1+depth)* 10));//(movedNodePos.top - contPos.top + movedNodePos.height + 50);
+
+        var xDistance = destX-initPosX;
+        var yDistance = destY-initPosY;
+
+        var xIncrement = 1*getAnimSpeed();
+        var yIncrement = (yDistance/xDistance) * getAnimSpeed();
+
+        var xPos = initPosX;
+        var yPos = initPosY;   
+
+        var xDirection = 'r';
+        if (initPosX > destX) {
+            xDirection = 'l';
+        }
+
+        // alert("moving! - " + curArr[2])
+        clearInterval(rightAnim);
+        rightAnim = setInterval(rightFrame, 10);
+        function rightFrame() {
+            if (xDirection == 'r') {
+                if (xPos >= destX) {
+                    clearInterval(rightAnim);
+                    fixPosition(curArr[2][0], destX, destY);
+                    drawLine(curArr[0], curArr[2][0]);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMoveArray(curArr[2], tempDepth);
+                } else {
+                    xPos+=xIncrement;
+                    toMove.style.left = xPos + "px";
+                    yPos += yIncrement;
+                    toMove.style.top = yPos + "px";
+                }
+            } else {
+                if (xPos <= destX) {
+                    clearInterval(rightAnim);
+                    fixPosition(curArr[2][0], destX, destY);
+                    drawLine(curArr[0], curArr[2][0]);
+                    //Calls itself and uses the newly moved node as the previously moved node.
+                    //To move any children of the newly moved node.
+                    var tempDepth = depth;
+                    tempDepth++;
+                    recursiveMoveArray(curArr[2], tempDepth);
+                } else {
+                    xPos-=xIncrement;
+                    toMove.style.left = xPos + "px";
+                    yPos -= yIncrement;
+                    toMove.style.top = yPos + "px";
+                }
+            }
+        }
+    }
+}
+
+function initMoveArray(movingNode, parentNode, destinationNode, movingArr, movingDepth=1) {
+
+    //Gets the html elements for the canvas and the nodes being moves.
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+    const childNode = document.getElementById(movingNode);
+    const childNodePos = childNode.getBoundingClientRect();
+    const remNode = document.getElementById(destinationNode);
+    const remNodePos = remNode.getBoundingClientRect();
+
+    var id = null;
+
+    //Calculates the start and end positions of the movement.
+    var initPosX = childNodePos.left - contPos.left + (childNodePos.width/2)
+    var initPosY = childNodePos.top - contPos.top
+    var destX = remNodePos.left - contPos.left
+    var destY = remNodePos.top - contPos.top
+
+    //Calculates the distance that will be travelled.
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+
+    //Calculates how much the node should move for each axis for a smooth movement.
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance) * getAnimSpeed();
+
+    var xPos = initPosX;
+    var yPos = initPosY;   
+
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+
+    clearInterval(id);
+    //Calls frame very frequently to create an animation.
+    id = setInterval(frame, 10);
+    function frame() {
+        //Checks the x directyion fo travel for the node.
+        if (xDirection == 'r') {
+            //Once the position of the node reaches the destination movement can stop.
+            if (xPos >= destX) {
+                //Stops running the movement function.
+                clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(movingNode, destX, destY);
+                //Calls a function to move any nodes connected to the moved node.
+                recursiveMoveArray(movingArr, movingDepth);
+                //Creates a new branch between the moved node and its parent.
+
+                if (parentNode!=null) {
+                    drawLine(parentNode, movingNode);
+                }
+                
+            } else {
+                //Moves the node html element by a small amount
+                xPos+=xIncrement;
+                childNode.style.left = xPos + "px";
+                yPos += yIncrement;
+                childNode.style.top = yPos + "px";
+            }
+        } else {
+            //Once the position of the node reaches the destination movement can stop.
+            if (xPos <= destX) {
+                //Stops running the movement function.
+                clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(movingNode, destX, destY);
+                //Calls a function to move any nodes connected to the moved node.
+                recursiveMoveArray(movingArr, movingDepth);
+                //Creates a new branch between the moved node and its parent.
+                if (parentNode!=null) {
+                    drawLine(parentNode, movingNode);
+                }
+            } else {
+                //Moves the node html element by a small amount
+                xPos-=xIncrement;
+                childNode.style.left = xPos + "px";
+                yPos -= yIncrement;
+                childNode.style.top = yPos + "px";
+            }
+        }
+
+    }
+
+}
+
+
 function recursiveMove(movedRoot, depth=1) {
     // alert("start - " + movedRoot.getId);
     // if (movedRoot.getLeft.getIsNull!=true) {
@@ -386,6 +618,86 @@ function initialMove(movingNode, destinationNode) {
 
     }
 
+}
+
+function moveToRootArray(toMoveArr) {
+    //alert("moving to root!")
+    //Gets the html elements for the canvas and the nodes being moves.
+    const cont = document.getElementById('treeBox');
+    const contPos = cont.getBoundingClientRect();
+    const toMoveElem = document.getElementById(toMoveArr[0]);
+    const toMovePos = toMoveElem.getBoundingClientRect();
+    
+    var id = null;
+
+    //Calculates the start and end positions of the movement.
+    var initPosX = toMovePos.left - contPos.left + (toMovePos.width/2);
+    var initPosY = toMovePos.top - contPos.top;
+    
+    var destX = (cont.offsetWidth /2) - 20;//toMovePos.width;
+    var destY = 0;
+    
+    //Calculates the distance that will be travelled.
+    var xDistance = destX-initPosX;
+    var yDistance = destY-initPosY;
+    
+    //Calculates how much the node should move for each axis for a smooth movement.
+    var xIncrement = 1*getAnimSpeed();
+    var yIncrement = (yDistance/xDistance) * getAnimSpeed();
+
+    var xPos = initPosX;
+    var yPos = initPosY;   
+    
+    var xDirection = 'r';
+    if (initPosX > destX) {
+        xDirection = 'l';
+    }
+    
+    clearInterval(id);
+    //Calls frame very frequently to create an animation.
+    id = setInterval(frame, 10);
+    function frame() {
+        //Checks the x directyion fo travel for the node.
+        if (xDirection == 'r') {
+            //Once the position of the node reaches the destination movement can stop.
+            if (xPos >= destX) {
+                //Stops running the movement function.
+                clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(toMoveArr[0], destX, destY);
+                //Calls a function to move any nodes connected to the moved node.
+                recursiveMoveArray(toMoveArr);
+            } else {
+                //Moves the node html element by a small amount
+                xPos+=xIncrement;
+                toMoveElem.style.left = xPos + "px";
+                yPos += yIncrement;
+                toMoveElem.style.top = yPos + "px";
+            }
+        } else {
+            //Once the position of the node reaches the destination movement can stop.
+            if (xPos <= destX) {
+                //Stops running the movement function.
+                clearInterval(id);
+                //Calls a function to correct the position of the node after movement
+                //If the animation speed is too high, visual errors may occur.
+                //This function prevents them.
+                fixPosition(toMoveArr[0], destX, destY);
+                //Calls a function to move any nodes connected to the moved node.
+                recursiveMoveArray(toMoveArr);
+                
+            } else {
+                //Moves the node html element by a small amount
+                xPos-=xIncrement;
+                toMoveElem.style.left = xPos + "px";
+                yPos -= yIncrement;
+                toMoveElem.style.top = yPos + "px";
+            }
+        }
+
+    }
 }
 
 function moveToRoot(toMove) {

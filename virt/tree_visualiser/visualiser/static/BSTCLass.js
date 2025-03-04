@@ -255,8 +255,10 @@ class BSTTree {
                 //Redraws the tree so that there are no unecessary branches.
                 // this.queue.addCommand("redrawTree", [this.getRoot, null]);
 
-                var arrayRep = this.traverse(this.getRoot);
-                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+                if (this.getRoot!=null) {
+                    var arrayRep = this.traverse(this.getRoot);
+                    this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+                }
 
                 this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightLine", ["L4"]);
@@ -276,7 +278,14 @@ class BSTTree {
                 nodeToRem.getRight.setParent = nodeToRem.getParent;
 
                 //Calls a function to visually move nodes to be in the correct position.
-                this.queue.addCommand("initMove", [nodeToRem.getRight, nodeToRem.getId]);
+                // this.queue.addCommand("initMove", [nodeToRem.getRight, nodeToRem.getId]);
+
+                var parent = nodeToRem.getRight.getParent;
+                var lineParent = null;
+                if (parent!=null) {
+                    lineParent = parent.getId;
+                }
+                this.queue.addCommand("initMoveArr", [nodeToRem.getRight.getId, lineParent, nodeToRem.getId, this.traverse(nodeToRem.getRight), nodeToRem.getRight.calcDepth()]);
 
                 //Deletes the node from the user's view.
                 this.queue.addCommand("removeNode", [removeVal]);                         
@@ -306,7 +315,14 @@ class BSTTree {
                 nodeToRem.getLeft.setParent = nodeToRem.getParent;
 
                 //Calls a function to visually move nodes to be in the correct position.
-                this.queue.addCommand("initMove", [nodeToRem.getLeft, nodeToRem.getId]);
+                // this.queue.addCommand("initMove", [nodeToRem.getLeft, nodeToRem.getId]);
+
+                var parent = nodeToRem.getLeft.getParent;
+                var lineParent = null;
+                if (parent!=null) {
+                    lineParent = parent.getId;
+                }
+                this.queue.addCommand("initMoveArr", [nodeToRem.getLeft.getId, lineParent, nodeToRem.getId, this.traverse(nodeToRem.getLeft), nodeToRem.getLeft.calcDepth()]);
 
                 //Deletes the node from the user's view.
                 this.queue.addCommand("removeNode", [removeVal]);                  
@@ -359,7 +375,14 @@ class BSTTree {
                 }
 
                 //Calls a function to visualy move all necessary nodes.
-                this.queue.addCommand("initMove", [maxNode, nodeToRem.getId]);
+                // this.queue.addCommand("initMove", [maxNode, nodeToRem.getId]);
+
+                var parent = maxNode.getParent;
+                var lineParent = null;
+                if (parent!=null) {
+                    lineParent = parent.getId;
+                }
+                this.queue.addCommand("initMoveArr", [maxNode.getId, lineParent, nodeToRem.getId, this.traverse(maxNode), maxNode.calcDepth()]);
 
                 //Removes the visual representation of the removed node.
                 this.queue.addCommand("removeNode", [removeVal]);  

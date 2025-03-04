@@ -58,8 +58,7 @@ class BinaryHeap {
         
     }  
 
-    insert(nodeVal, nodeArr) {
-        
+    insert(nodeVal, nodeArr) {       
 
 
         this.queue.addCommand("highlightLine", ["L0"]);
@@ -88,8 +87,19 @@ class BinaryHeap {
 
         }    
         
-        this.queue.addCommand("setProcess", ["none"]);          
-        this.queue.runCommands();
+        if(nodeArr.length > 1) {
+            //Removes the first node in the list of nodes
+            nodeArr.shift();
+            //Inserts the next node in the list.
+            this.queue.addCommand("setProcess", ["insert"]);
+            this.insert(nodeArr[0], nodeArr)
+        } else {
+            //If no other nodes exist in the list then insertion is over.
+            this.queue.addCommand("setProcess", ["none"]);
+            this.queue.runCommands();
+        }
+        // this.queue.addCommand("setProcess", ["none"]);          
+        // this.queue.runCommands();
         
     }
 

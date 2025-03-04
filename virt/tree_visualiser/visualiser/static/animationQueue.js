@@ -70,12 +70,12 @@ class AnimQueue {
         if (this.getBack != 0) {
             if (currentCommand.getType == "highlightLine") {
                 if (getIsShowing()) {
-                    setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
+                    setTimeout(() => this.runCommands(), 15000/getAnimSpeed());
                 } else {
                     this.runCommands();
                 }
             } else {
-                setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
+                setTimeout(() => this.runCommands(), 15000/getAnimSpeed());
             }
             
             // setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
@@ -166,6 +166,15 @@ class AnimQueue {
         } else if (com.getType=="redrawFromArray") {
             clearCanvas();
             redrawTreeFromArray(paramArray[0], paramArray[1]);
+        } else if (com.getType=="recMoveArr") {
+            //clearCanvas();
+            //redrawTreeFromArray(newTree.traverse(newTree.getRoot), paramArray[0][0])
+            // alert("rec move - " + paramArray[0])
+            recursiveMoveArray(paramArray[0], paramArray[1]);
+        } else if (com.getType == "initMoveArr") {
+            initMoveArray(paramArray[0], paramArray[1], paramArray[2], paramArray[3], paramArray[4]);
+        } else if (com.getType == "moveToRootArray") {
+            moveToRootArray(paramArray[0]);
         }
         
         

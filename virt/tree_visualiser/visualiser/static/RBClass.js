@@ -23,13 +23,9 @@ class RedBlackTree {
     traverse(node) {
         if (node != null) {
             if (node.getIsNull) {
-                return 'x';
+                return null;
             } else {
-                if (node.getIsRed) {
-                    return ["(",(node.getId+"red"), this.traverse(node.getLeft), this.traverse(node.getRight),")"];
-                } else {
-                    return ["(",(node.getId+"black"), this.traverse(node.getLeft), this.traverse(node.getRight),")"];
-                }
+                return [node.getId, this.traverse(node.getLeft), this.traverse(node.getRight)];
             }
            
         } 
@@ -48,8 +44,8 @@ class RedBlackTree {
             this.queue.addCommand("highlightLine", ["L3"]);
             this.queue.addCommand("highlightBorder", [curNode.getId, "lime"]);
             this.queue.addCommand("highlightBorder", [curNode.getId, "black"]);
-            this.queue.addCommand("setProcess", ["none"]);
-            this.queue.runCommands();
+            // this.queue.addCommand("setProcess", ["none"]);
+            // this.queue.runCommands();
             return curNode;
         } else if (toFind > curNode.getId) {
             this.queue.addCommand("highlightLine", ["L4"]);
@@ -62,8 +58,8 @@ class RedBlackTree {
                 this.queue.addCommand("highlightLine", ["L8"]);
                 this.queue.addCommand("highlightBorder", [curNode.getId, "red"]);
                 this.queue.addCommand("highlightBorder", [curNode.getId, "black"]);
-                this.queue.addCommand("setProcess", ["none"]);
-                this.queue.runCommands();
+                // this.queue.addCommand("setProcess", ["none"]);
+                // this.queue.runCommands();
                 return null;
             }
         } else if (toFind < curNode.getId) {
@@ -77,8 +73,8 @@ class RedBlackTree {
                 this.queue.addCommand("highlightLine", ["L13"]);
                 this.queue.addCommand("highlightBorder", [curNode.getId, "red"]);
                 this.queue.addCommand("highlightBorder", [curNode.getId, "black"]);
-                this.queue.addCommand("setProcess", ["none"]);
-                this.queue.runCommands();
+                // this.queue.addCommand("setProcess", ["none"]);
+                // this.queue.runCommands();
                 return null;
             }
         }
@@ -167,8 +163,19 @@ class RedBlackTree {
             this.insertFixup(newNode);
 
         }
-        this.queue.addCommand("setProcess", ["none"]);
-        this.queue.runCommands();
+
+        if (nodeArr.length > 1) {
+            nodeArr.shift();
+            this.queue.addCommand("setProcess", ["insert"]);
+            this.insert(nodeArr[0], nodeArr);
+        } else {
+            //Set process to none.
+            this.queue.addCommand("setProcess", ["none"]);  
+            this.queue.runCommands();
+        }
+
+        // this.queue.addCommand("setProcess", ["none"]);
+        // this.queue.runCommands();
     } 
 
     insertFixup(curNode) {
@@ -256,8 +263,10 @@ class RedBlackTree {
             
         }
         if (changeOccured) {
-            this.queue.addCommand("RBRecMove", [this.getRoot, 1]); 
-            this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+            // this.queue.addCommand("RBRecMove", [this.getRoot, 1]); 
+            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot),null]);
+            this.queue.addCommand("recMoveArr", [this.traverse(this.getRoot), 1]); 
+            // this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
         }
         this.queue.addCommand("highlightLine", ["L11"]);
         //this.queue.addCommand("RBredrawTree", [this.getRoot, this.getRoot]);
@@ -335,7 +344,8 @@ class RedBlackTree {
             }                
             
             
-            this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+            // this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), null]);
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
 
@@ -459,8 +469,10 @@ class RedBlackTree {
         // curNode.setIsRed = false;
         if (this.getRoot.getIsNull==false) {
             this.setNodeColour(curNode, false);
-            this.queue.addCommand("RBRecMove", [this.getRoot, 1]); 
-            this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+            // this.queue.addCommand("RBRecMove", [this.getRoot, 1]); 
+            // this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
+            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), null]);
+            this.queue.addCommand("recMoveArr", [this.traverse(this.getRoot), 1]); 
         }
     }
 
@@ -476,7 +488,13 @@ class RedBlackTree {
 
         if (child.getIsNull==false) {
             //this.queue.addCommand("swap", [parent.getId, child.getId]);
-            this.queue.addCommand("initMove", [child, parent.getId]);
+            // this.queue.addCommand("initMove", [child, parent.getId]);
+            var tempParent = child.getParent;
+            var lineParent = null;
+            if (tempParent!=null) {
+                lineParent = tempParent.getId;
+            }
+            this.queue.addCommand("initMoveArr", [child.getId, lineParent, parent.getId, this.traverse(child), child.calcDepth()]);
         }
     }
 
@@ -520,13 +538,18 @@ class RedBlackTree {
         topNode.setParent = child;
 
         //this.queue.addCommand("swap", [topNode.getId, child.getId]);  
-        this.queue.addCommand("RBRecMove", [child, child.calcDepth()+1]); 
+        // this.queue.addCommand("RBRecMove", [child, child.calcDepth()+1]); 
+        this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), child.getId]);
+        this.queue.addCommand("recMoveArr", [this.traverse(child), child.calcDepth()+1]); 
 
         var parent = child.getParent;
         if (parent != null) {
-            this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
+            // this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
+            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), parent.getId]);
+            this.queue.addCommand("recMoveArr", [this.traverse(parent), parent.calcDepth()+1]); 
         } else {
-            this.queue.addCommand("moveToRoot", [child]);
+            // this.queue.addCommand("moveToRoot", [child]);
+            this.queue.addCommand("moveToRootArray", [this.traverse(child)]);
         }
 
         //this.queue.addCommand("recMove", [child]); 
@@ -572,13 +595,18 @@ class RedBlackTree {
         child.setRight = topNode;
         topNode.setParent = child;
 
-        this.queue.addCommand("RBRecMove", [child, child.calcDepth()+1]); 
+        // this.queue.addCommand("RBRecMove", [child, child.calcDepth()+1]); 
+        this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), child.getId]);
+        this.queue.addCommand("recMoveArr", [this.traverse(child), child.calcDepth()+1]); 
 
         var parent = child.getParent;
         if (parent != null) {
-            this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
+            // this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
+            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), parent.getId]);
+            this.queue.addCommand("recMoveArr", [this.traverse(parent), parent.calcDepth()+1]); 
         } else {
-            this.queue.addCommand("moveToRoot", [child]);
+            // this.queue.addCommand("moveToRoot", [child]);
+            this.queue.addCommand("moveToRootArray", [this.traverse(child)]);
         }
 
         // this.queue.addCommand("swap", [topNode.getId, child.getId]);  
