@@ -23,24 +23,31 @@
 
   <div class="inputBar">
 
+    <pre>
+    Insert:
     <input id="nodeInsert" type="text">
-    <button id="nodeInsertButton" onclick="userInputNode()">Insert!</button>
+    <button id="nodeInsertButton" onclick="userInputNode()">Insert!</button> <button id="insertInfo" class="infoButton" onclick="showInfo('BH', 'insert')">Info!</button>
+    </pre>
+    
+    <pre>
+    Removal of Minimum:
+    <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove Min!</button> <button id="insertInfo" class="infoButton" onclick="showInfo('BH', 'remove')">Info!</button>
+    </pre>
+    
+    <pre>
+    <button id="changeTypeButton" onclick="changeHeapType()">Set to Max Heap</button>
+    </pre>    
 
-    <!-- <input id="nodeRemove" type="text"> -->
-    <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove Min!</button>
+    <pre class="sliderContainer">
+    Set Animation Speed:
+    <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">
+    <label id="speedLabel" for="speedSlider">x10</label>
+    </pre>
 
-    <button class="rightButton" id="changeTypeButton" onclick="changeHeapType()">Set to Max Heap</button>
-
-    <div class="sliderContainer">
-      <!-- Slider should only go up to 10 or something -->
-        <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">
-        <label id="speedLabel" for="speedSlider">x10</label>
-    </div>
-
-    <label>
-        Show Code:
-        <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
-    </label>
+    <pre>
+    Show Code:
+    <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
+    </pre>
 </div>
 
 {% endblock %}

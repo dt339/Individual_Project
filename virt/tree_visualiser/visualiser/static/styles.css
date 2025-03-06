@@ -53,10 +53,11 @@
 
   .inputBar {
     background-color: #555;
-    overflow: hidden;
     position: fixed;
     bottom: 0;
     width: 100%;
+    justify-content: space-around;
+    display: flex;
   }
 
   .codePanel {
@@ -108,4 +109,38 @@
   a {
     display: block;
     text-decoration: none;
+  }
+
+  .infoBox {
+    width: 80%;
+    max-width: 500px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    position: fixed;
+    background-color: cyan;
+  }
+
+  /* Style for the title */
+  .infoBox h1 {
+      margin: 0 0 20px;
+      color: #333;
+  }
+
+  /* Style for the text block */
+  .infoBox p {
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+  }
+
+  .infoButton {
+    background-color: cyan;
+  }
+
+  pre {
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
   }

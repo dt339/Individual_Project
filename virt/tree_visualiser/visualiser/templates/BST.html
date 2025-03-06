@@ -18,25 +18,35 @@
     <p>Footer</p>
 
     <div class="inputBar">
-
+        <pre>
+        Insert:
         <input id="nodeInsert" type="text">
-        <button id="nodeInsertButton" onclick="userInputNode()">Insert!</button>
-
+        <button id="nodeInsertButton" onclick="userInputNode()">Insert!</button> <button id="insertInfo" class="infoButton" onclick="showInfo('BST', 'insert')">Info!</button>
+        </pre>
+        
+        <pre>
+        Remove:
         <input id="nodeRemove" type="text">
-        <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove!</button>
+        <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove!</button> <button id="insertInfo" class="infoButton" onclick="showInfo('BST', 'remove')">Info!</button>
+        </pre>
 
-        <input id="nodeSearch" type="text">
-        <button id="nodeSearchButton" onclick="userSearchNode()">Search!</button>
 
-        <div class="sliderContainer">
-            <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">
-            <label id="speedLabel" for="speedSlider">x10</label>
-        </div>
+        <pre>
+        Search:
+        <input id="nodeSearch" type="text"> 
+        <button id="nodeSearchButton" onclick="userSearchNode()">Search!</button> <button id="insertInfo" class="infoButton" onclick="showInfo('BST', 'search')">Info!</button>    
+        </pre>      
+        
+        <pre class="sliderContainer">
+        Animation Speed:
+        <input onchange="updateAnimSpeed()" type="range" min="0.25" max="100" value="10" step="0.25" class="slider" id="speedSlider">
+        <label id="speedLabel" for="speedSlider">x10</label>
+        </pre>
 
-        <label>
-            Show Code:
-            <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
-        </label>
+        <pre>
+        Show Code:
+        <input oninput="updateShowCode()" id="codeCheckBox" type="checkbox">
+        </pre>
     </div>
 
 

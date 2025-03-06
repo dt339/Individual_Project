@@ -273,7 +273,7 @@ class RedBlackTree {
         this.setNodeColour(this.getRoot, false);
     }
 
-    remove(removeVal) {
+    remove(removeVal, nodeArr) {
         this.queue.addCommand("highlightLine", ["L0"]);
         var toRemove = null;
         if (this.getRoot.getIsNull==false) {
@@ -346,13 +346,35 @@ class RedBlackTree {
             
             // this.queue.addCommand("RBredrawTree", [this.getRoot, null]); 
             this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), null]);
-            this.queue.addCommand("setProcess", ["none"]);
-            this.queue.runCommands();
+
+            if (nodeArr.length > 1) {
+                nodeArr.shift();
+                this.queue.addCommand("setProcess", ["remove"]);
+                this.remove(nodeArr[0], nodeArr);
+            } else {
+                //Set process to none.
+                this.queue.addCommand("setProcess", ["none"]);  
+                this.queue.runCommands();
+            }
+
+            // this.queue.addCommand("setProcess", ["none"]);
+            // this.queue.runCommands();
 
         } else {
             alert("Value does not exist");
-            this.queue.addCommand("setProcess", ["none"]);
-            this.queue.runCommands();
+
+            if (nodeArr.length > 1) {
+                nodeArr.shift();
+                this.queue.addCommand("setProcess", ["remove"]);
+                this.remove(nodeArr[0], nodeArr);
+            } else {
+                //Set process to none.
+                this.queue.addCommand("setProcess", ["none"]);  
+                this.queue.runCommands();
+            }
+
+            // this.queue.addCommand("setProcess", ["none"]);
+            // this.queue.runCommands();
         }
     }
 

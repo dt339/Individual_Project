@@ -350,8 +350,18 @@ class FibonacciHeap {
             alert("Nodes must have a value greater than 0!");
         }
         
-        this.queue.addCommand("setProcess", ["none"]);
-        this.queue.runCommands();
+        if (nodeArr.length > 1) {
+            nodeArr.shift();
+            this.queue.addCommand("setProcess", ["insert"]);
+            this.insert(nodeArr[0], nodeArr);
+        } else {
+            //Set process to none.
+            this.queue.addCommand("setProcess", ["none"]);  
+            this.queue.runCommands();
+        }
+
+        // this.queue.addCommand("setProcess", ["none"]);
+        // this.queue.runCommands();
     }
 
     decrease(nodeId, newVal) {
