@@ -78,3 +78,34 @@
     padding: 10px;
   }
 
+  .homeBlock {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    background-color: grey;
+    color: white;
+    padding: 20px;
+    margin: 20px auto;
+    text-align: left;
+    font-size: 20px;
+    border-radius: 10px;
+    word-wrap: normal;
+  }
+
+  .homeBlock img {
+    width: 30%;
+    height: auto;
+    max-height: 150px; /* Adjust as needed */
+    object-fit: cover; /* Ensures the image covers the area nicely */
+    border-radius: 5px;
+  }
+  .homeBlock h2 {
+    width: 80%;
+    padding-left: 20px;
+  }
+
+  a {
+    display: block;
+    text-decoration: none;
+  }
