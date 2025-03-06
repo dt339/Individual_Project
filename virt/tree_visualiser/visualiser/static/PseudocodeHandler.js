@@ -105,13 +105,13 @@ const binaryHeapInsert = [
     "Next availlable position is the next empty space on the lowest depth going left to right",
     "Then check heap order priority upwards from the new node"];
     
-const binaryHeapRemove = [
+var binaryHeapRemove = [
     "Swap the mininum node with the node in the most recently inserted position",
     "Remove Minimum Node",
     "Perform heap order priority check downwards on the heap"];
     
 //Use if removing root and replacing it with lower node
-const minHeapifyDown = [
+var minHeapifyDown = [
     "If current node C has one child Then",
     "  If C > the only child of C Then",
     "     Swap C and its child",
@@ -131,7 +131,7 @@ const minHeapifyDown = [
     "Else If C has no children Then",
     "  Take no further action"];
     
-const minHeapifyUp = [
+var minHeapifyUp = [
     "If current node N has no parent Then",
     "  N is now the root and heap order priority is restored",
     "Else",

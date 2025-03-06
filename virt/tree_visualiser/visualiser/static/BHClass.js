@@ -38,10 +38,24 @@ class BinaryHeap {
             this.setIsMin = false;
             heapTitle.textContent = "Binary Max Heap";
             switchButton.textContent = "Set to Min Heap";
+
+            binaryHeapRemove[1] = "Remove Maximum Node";
+            minHeapifyDown[1] = "  If C < the only child of C Then";
+            minHeapifyDown[4] = "  Else If C > the only child of C Then";
+            minHeapifyDown[7] = "  If C < L OR C < R Then";
+            minHeapifyDown[8] = "     If L > R Then";
+            minHeapifyUp[4] = "  If N > P Then";
         } else {
             this.setIsMin = true;
             heapTitle.textContent = "Binary Min Heap";
             switchButton.textContent = "Set to Max Heap";
+
+            binaryHeapRemove[1] = "Remove Minimum Node";
+            minHeapifyDown[1] = "  If C > the only child of C Then";
+            minHeapifyDown[4] = "  Else If C < the only child of C Then";
+            minHeapifyDown[7] = "  If C > L OR C > R Then";
+            minHeapifyDown[8] = "     If L < R Then";
+            minHeapifyUp[4] = "  If N < P Then";
         }
         clearBox();
         this.setRoot = null;
