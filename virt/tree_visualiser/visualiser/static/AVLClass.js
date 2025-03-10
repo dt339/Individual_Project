@@ -269,6 +269,8 @@ class AVLTree {
             this.queue.addCommand("highlightLine", ["L3"]);
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
 
+            var arrayRep = this.traverse(this.getRoot);
+            this.queue.addCommand("redrawFromArray", [arrayRep, null]);
             if (nodeArr.length > 1) {
                 nodeArr.shift();
                 this.queue.addCommand("setProcess", ["insert"]);
@@ -421,7 +423,7 @@ class AVLTree {
                 //Special rotation
 
                 var bottomNode = midNode.getLeft;
-                this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'r']);
+                this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'r', this.traverse(this.getRoot)]);
 
                 //Set right child of A to be C
                 //Set parent of C to be A
@@ -462,7 +464,7 @@ class AVLTree {
                 //Special rotation
                 
                 var bottomNode = midNode.getRight;
-                this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'l']);
+                this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'l', this.traverse(this.getRoot)]);
 
                 //Set left child of A to be C
                 //Set parent of C to be A

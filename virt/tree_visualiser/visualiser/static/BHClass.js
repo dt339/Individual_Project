@@ -65,16 +65,14 @@ class BinaryHeap {
 
     traverse(node) {
         if (node != null) {
-            return ["(",node.getId, this.traverse(node.getLeft), this.traverse(node.getRight),")"];
+            return [node.getId, this.traverse(node.getLeft), this.traverse(node.getRight)];
         } else {
-            return 'x';
+            return null;
         }
         
     }  
 
-    insert(nodeVal, nodeArr) {       
-
-
+    insert(nodeVal, nodeArr) {    
         this.queue.addCommand("highlightLine", ["L0"]);
         //Creates a new node from the entered data
         var newNode = new Node(parseInt(nodeVal, 10));
@@ -209,7 +207,7 @@ class BinaryHeap {
             this.heapifyDown(this.getRoot);
             this.queue.addCommand("setProcess", ["none"])
             this.queue.runCommands();
-            this.queue.addCommand("redrawTree", [this.getRoot, null]);
+            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), null]);
         }
         
     }

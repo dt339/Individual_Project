@@ -100,21 +100,10 @@ class AnimQueue {
         var paramArray = com.getParams;
         if (com.getType == "createRoot") {
             createRoot(paramArray[0], paramArray[0]);
-        } else if (com.getType == "createNode") {   
-            //alert("createNode - " + paramArray[0] + " - " + paramArray[1] + " - " + paramArray[2] + " - " + paramArray[3] + " - " + paramArray[4]);         
+        } else if (com.getType == "createNode") {     
             newElem(paramArray[0],paramArray[1],paramArray[2],paramArray[3],paramArray[4]);
-        } else if (com.getType == "redrawTree") {
-            clearCanvas();
-            redrawTree(paramArray[0],paramArray[1]);
         } else if (com.getType == "swap") {
-            //alert("swapping  - " + paramArray[0] + " - " + paramArray[1]);
             swap(paramArray[0], paramArray[1]);
-        } else if (com.getType == "initMove") {
-            initialMove(paramArray[0], paramArray[1]);
-        } else if (com.getType == "recMove") {
-            clearCanvas();
-            redrawTree(newTree.getRoot, paramArray[0].getId);
-            recursiveMove(paramArray[0], paramArray[1]);
         } else if (com.getType == "removeNode") {
             removeElem(paramArray[0]);
         } else if (com.getType == "highlightNode") {
@@ -127,38 +116,15 @@ class AnimQueue {
             createRoot(paramArray[0], paramArray[0], paramArray[1]);
         } else if (com.getType == "createColouredNode") {      
             newElem(paramArray[0],paramArray[1],paramArray[2],paramArray[3],paramArray[4], paramArray[5]);
-        } else if (com.getType == "RBredrawTree") {      
-            clearCanvas();
-            redBlackRedrawTree(paramArray[0],paramArray[1]);
-        } else if (com.getType== "RBRecMove") {
-            clearCanvas();
-            redBlackRedrawTree(newTree.getRoot, paramArray[0].getId);
-            RBRecursiveMove(paramArray[0], paramArray[1]);
         } else if (com.getType=="highlightBorder") {
             highlightBorder(paramArray[0], paramArray[1]);
         } else if (com.getType=="addFibRoot") {
             addFibRoot(paramArray[0], paramArray[1]);
-        } else if (com.getType=="rootLines") {
-            rootLines(paramArray[0]);
-        } else if (com.getType=="allignRoots") {
-            allignRoots(paramArray[0]);
-        } else if (com.getType=="allignChildren") {
-            allignChildren(paramArray[0], paramArray[1]);
-        } else if (com.getType=="allignAll") {
-            clearCanvas();
-            allignAll(paramArray[0]);
         } else if (com.getType=="updateId") {
             updateId(paramArray[0], paramArray[1]);
-        } else if (com.getType=="moveToRoot") {
-            clearCanvas();
-            moveToRoot(paramArray[0]);
         } else if (com.getType=="preRotationAllignment") {
-            clearCanvas();
-            if (thisPage=="RB") {
-                redBlackRedrawTree(newTree.getRoot, paramArray[1].getId);
-            } else {
-                redrawTree(newTree.getRoot, paramArray[1].getId);
-            }            
+            clearCanvas();  
+            redrawTreeFromArray(paramArray[3], paramArray[1].getId);
             preRotationAllignment(paramArray[0], paramArray[1], paramArray[2]);
         } else if (com.getType=="allignFromList") {
             clearCanvas();
@@ -167,9 +133,6 @@ class AnimQueue {
             clearCanvas();
             redrawTreeFromArray(paramArray[0], paramArray[1]);
         } else if (com.getType=="recMoveArr") {
-            //clearCanvas();
-            //redrawTreeFromArray(newTree.traverse(newTree.getRoot), paramArray[0][0])
-            // alert("rec move - " + paramArray[0])
             recursiveMoveArray(paramArray[0], paramArray[1]);
         } else if (com.getType == "initMoveArr") {
             initMoveArray(paramArray[0], paramArray[1], paramArray[2], paramArray[3], paramArray[4]);

@@ -329,7 +329,7 @@ class FibonacciHeap {
             this.queue.addCommand("highlightLine", ["L0"]);
             this.queue.addCommand("highlightLine", ["L1"]);
             //Rearranges the display the include the new inserted element
-            this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getAll("node")]);    
+            this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getState()]);    
 
             if (this.getMinNode==null) {
                 this.queue.addCommand("highlightLine", ["L2"]);
@@ -394,7 +394,9 @@ class FibonacciHeap {
                         
                         this.cut(toDecrease, parent);
                         this.recursiveCut(parent);
-                        this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+                        // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+                        var currentState = this.rootList.getState();
+                        this.queue.addCommand("allignFromList", [currentState]);  
                    
                     }
                 }
@@ -557,7 +559,9 @@ class FibonacciHeap {
         }
         this.queue.addCommand("highlightLine", ["L7"]);
         this.queue.addCommand("highlightLine", ["L8"]);
-        this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+        // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+        var currentState = this.rootList.getState();
+        this.queue.addCommand("allignFromList", [currentState]);  
         this.setMinNode = this.rootList.findMin();
     }
 

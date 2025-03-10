@@ -164,6 +164,7 @@ class RedBlackTree {
 
         }
 
+        this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), null]);
         if (nodeArr.length > 1) {
             nodeArr.shift();
             this.queue.addCommand("setProcess", ["insert"]);
@@ -538,7 +539,7 @@ class RedBlackTree {
         child.setLeft = topNode;
         topNode.setParent = child;
 
-        this.queue.addCommand("preRotationAllignment", [topNode, child, 'l']);
+        this.queue.addCommand("preRotationAllignment", [topNode, child, 'l', this.traverse(this.getRoot)]);
     }
 
     leftRotation(topNode) {
@@ -596,7 +597,7 @@ class RedBlackTree {
         child.setRight = topNode;
         topNode.setParent = child;
 
-        this.queue.addCommand("preRotationAllignment", [topNode, child, 'r']);
+        this.queue.addCommand("preRotationAllignment", [topNode, child, 'r', this.traverse(this.getRoot)]);
     }
 
     rightRotation(topNode) {
