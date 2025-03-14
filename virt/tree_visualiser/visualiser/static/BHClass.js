@@ -31,6 +31,8 @@ class BinaryHeap {
         this.isMin = m;
     }
 
+    //Switches the data structure between a min and max heap.
+    //Changes the pseudocode and the UI
     changeIsMin() {
         var heapTitle = document.getElementById("pageTitle");
         var switchButton = document.getElementById("changeTypeButton");
@@ -59,21 +61,22 @@ class BinaryHeap {
         }
         clearBox();
         this.setRoot = null;
-        this.setNextPos = 1;       
-        
+        this.setNextPos = 1;               
     }
 
+    //Performs a pre-order traversal on the tree to get its current state.
     traverse(node) {
         if (node != null) {
             return [node.getId, this.traverse(node.getLeft), this.traverse(node.getRight)];
         } else {
             return null;
-        }
-        
+        }        
     }  
 
+    //Inserts a new node into the heap.
     insert(nodeVal, nodeArr) {    
         this.queue.addCommand("highlightLine", ["L0"]);
+
         //Creates a new node from the entered data
         var newNode = new Node(parseInt(nodeVal, 10));
         if (this.getRoot == null) {
@@ -85,13 +88,14 @@ class BinaryHeap {
             this.queue.addCommand("highlightNode", [newNode.getId, 'white']);
             
         } else {
+            //Checks if the value already exists in the heap.
             var searchRes = this.checkExists(this.getRoot, nodeVal);
             
             if (!searchRes) {
+                //Calculates the path that the next node must be follow to be inserted.
                 var path = this.calculatePath();            
                 //Increases the next position.
                 this.setNextPos = this.getNextPos+1;
-                //alert(path);
                 this.recursiveInsert(newNode, this.getRoot, 1, nodeArr, path);
             } else {
                 alert("Value already exists in heap")
@@ -109,30 +113,27 @@ class BinaryHeap {
             //If no other nodes exist in the list then insertion is over.
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
-        }
-        // this.queue.addCommand("setProcess", ["none"]);          
-        // this.queue.runCommands();
-        
+        }        
     }
 
+    //Inserts the new node by following the calculated path.
     recursiveInsert(newNode, curNode, depth, nodeArr, path) {
         this.queue.addCommand("highlightNode", [curNode.getId, 'lightblue']);
         if (curNode.getParent!=null) {
             this.queue.addCommand("highlightNode", [curNode.getParent.getId, 'white']);
         }
-        //alert("path - " + path);
+ 
         if (path.length > 1) {
-            //alert("recurse again")
             depth++;
+            //Moves to the next node and step in the path
             if (path.shift() == "1") {
                 this.recursiveInsert(newNode, curNode.getRight, depth++, nodeArr, path);
             } else {
                 this.recursiveInsert(newNode, curNode.getLeft, depth++, nodeArr, path);
             }
         } else {
-            //alert("insert")
-            if (path.shift() == "1") {
-                
+            if (path.shift() == "1") {   
+                //Inserts the new node as the right child of the current node            
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'r', depth]);
@@ -142,7 +143,7 @@ class BinaryHeap {
                 this.heapifyUp(newNode);
                 this.queue.addCommand("setProcess", ["none"]);
             } else {
-                
+                //Inserts the new node as the left child of the current node
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
                 this.queue.addCommand("createNode", [newNode.getId, newNode.getId, curNode.getId, 'l', depth]);
@@ -155,25 +156,26 @@ class BinaryHeap {
         }
     }
 
-    remove() {
-        //Find node at newest position
-        //Swap root and that node
-        //Remove root
-        //heap sort down tree        
+    //Removes the minimum node from the root of the tree.
+    remove() {   
         
         this.setNextPos = this.getNextPos - 1;
+
+        //Checks if the root is the sole node in the heap.
         if (this.getRoot.getLeft==null) {
             this.queue.addCommand("removeNode", [this.getRoot.getId]);
             this.queue.addCommand("setProcess", ["none"])
             this.queue.runCommands();
             this.setRoot = null;
         } else {
+            //Calculates the path to the most recently inserted node.
             var pathToNode = this.calculatePath();
             
+            //Finds the replacement node
             var replacementNode = this.findNode(this.getRoot, pathToNode);
             
             var rootNode = this.getRoot;
-            //Swap root and node
+            //Swaps root and replacement node
             this.queue.addCommand("highlightLine", ["L0"]);
             this.queue.addCommand("highlightNode", [this.getRoot.getId, 'red']);
             this.queue.addCommand("highlightNode", [replacementNode.getId, 'lightgreen']);
@@ -183,6 +185,7 @@ class BinaryHeap {
             this.queue.addCommand("removeNode", [this.getRoot.getId]);
             this.queue.addCommand("highlightLine", ["L2"]);    
             
+            //Establishes connections between the swapped nodes and their new parents and children
             replacementNode.setLeft = rootNode.getLeft;
             replacementNode.setRight = rootNode.getRight;
             
@@ -200,8 +203,7 @@ class BinaryHeap {
             }
             replacementNode.setParent = null;
             
-            this.setRoot = replacementNode;    
-            
+            this.setRoot = replacementNode;                
             
             this.queue.addCommand("setProcess", ["downHeap"])
             this.heapifyDown(this.getRoot);
@@ -212,6 +214,7 @@ class BinaryHeap {
         
     }
 
+    //Follows a path to get a node object.
     findNode(curNode, path) {
         if (path.length > 1) {       
             if (path.shift() == "1") {
@@ -228,22 +231,20 @@ class BinaryHeap {
         }
     }
 
+    //Calculates the path by converting the number to binary and removing the leftmost digit.
     calculatePath() {
-        //alert("next pos - " + this.getNextPos);
         //Converts the next position into binary.
         var binaryPath = this.getNextPos.toString(2);
-        //alert("binary path - " + binaryPath);
         //Converts binary number to array of binary digits.
         var pathArray = [...binaryPath];
-        //alert("array path - " + pathArray);
         //Removes the first emelent of the array for a correct path.
         pathArray.shift();
-        //alert("path array - " + pathArray);
         return pathArray;
     }
 
-    heapifyDown(curNode) {
-        
+    //Performs checks on nodes travelling down the heap.
+    //Performs swaps on nodes where the condition is not met
+    heapifyDown(curNode) {        
         var leftChild = curNode.getLeft;
         var rightChild = curNode.getRight;
         
@@ -258,12 +259,10 @@ class BinaryHeap {
             //If the node has only a left child
             //Compares it against the only child.
             this.queue.addCommand("highlightLine", ["L0"]);
-            // if (leftChild.getId < curNode.getId) {
             
             if (this.checkCondition(leftChild.getId, curNode.getId)) {
                 
                 //If the left child is smaller, swap the two nodes around.
-                //swap
                 this.queue.addCommand("highlightLine", ["L1"]);
                 this.queue.addCommand("highlightLine", ["L2"]);
                 this.queue.addCommand("highlightLine", ["L3"]);
@@ -273,7 +272,7 @@ class BinaryHeap {
                 this.heapifyDown(curNode);
             } else {
                 
-                //ordered
+                //The heap is ordered.
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightLine", ["L5"]);
             }
@@ -283,10 +282,8 @@ class BinaryHeap {
             //Check to find the smaller of the two
             //Swap with the smallest node if it is smaller than the current node.
             this.queue.addCommand("highlightLine", ["L6"]);
-            // if (leftChild.getId < rightChild.getId) {
             if (this.checkCondition(leftChild.getId, rightChild.getId)) {
                
-                // if (leftChild.getId < curNode.getId) {
                 if (this.checkCondition(leftChild.getId, curNode.getId)) {
                     this.queue.addCommand("highlightLine", ["L7"]);
                     this.queue.addCommand("highlightLine", ["L8"]);
@@ -304,9 +301,8 @@ class BinaryHeap {
                 }
             } else {
                 
-                // if (rightChild.getId < curNode.getId) {
                 if (this.checkCondition(rightChild.getId, curNode.getId)) {
-                    //swap
+                    //Swaps the two nodes
                     this.queue.addCommand("highlightLine", ["L7"]);
                     this.queue.addCommand("highlightLine", ["L11"]);
                     this.queue.addCommand("highlightLine", ["L12"]);
@@ -316,7 +312,7 @@ class BinaryHeap {
                     this.queue.addCommand("highlightLine", ["L13"]);
                     this.heapifyDown(curNode);
                 } else {
-                    //ordered
+                    //The heap obeys the property.
                     this.queue.addCommand("highlightLine", ["L14"]);
                     this.queue.addCommand("highlightLine", ["L15"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, 'lightgreen']);
@@ -326,15 +322,13 @@ class BinaryHeap {
         }
     }
 
+    //Swaps the position of two nodes in the heap.
     swapNodes(parent, child) {
-        //Swap current and parent node.
         var parent = child.getParent;
         var grandParent = parent.getParent;
-        //alert("cur - " + child.getId + " parent - " + parent.getId);
 
         child.setParent = grandParent;
         if (grandParent != null) {
-            //alert(" - grandparent - " + grandParent.getId);
             if (parent == grandParent.getRight) {
                 grandParent.setRight = child;
             } else {
@@ -355,15 +349,12 @@ class BinaryHeap {
             var holdNode = null;
 
             if (parent.getRight.getId == child.getId) {
-                //alert("right + cur - " + child.getId);
                 holdNode = parent.getLeft;
-                //alert("parent - " + parent.getId + " - hold - " + holdNode.getId);
                 parent.setLeft = child.getLeft;
                 parent.setRight = child.getRight;
                 child.setRight = parent;
                 child.setLeft = holdNode;
             } else {
-                //alert("left + cur - " + child.getId);
                 holdNode = parent.getRight;
                 parent.setLeft = child.getLeft;
                 parent.setRight = child.getRight;
@@ -380,18 +371,17 @@ class BinaryHeap {
 
         parent.setParent = child;
         this.queue.addCommand("swap", [parent.getId, child.getId]);
-
-
     }
 
+    //Performs checks on nodes travelling up the heap.
+    //Performs swaps on nodes where the condition is not met
     heapifyUp(curNode) {
         this.queue.addCommand("highlightNode", [curNode.getId, 'lightblue']);
         
-        //alert("traversal - " + this.traverse(this.getRoot));
         if (curNode.getParent != null) {
             this.queue.addCommand("highlightLine", ["L3"]);
-            // if (curNode.getId < curNode.getParent.getId) {
             if (this.checkCondition(curNode.getId, curNode.getParent.getId)) {
+                //The condition is broken and a swap must occur.
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'red']);
                 this.queue.addCommand("highlightLine", ["L5"]);
@@ -399,18 +389,22 @@ class BinaryHeap {
                 this.queue.addCommand("highlightLine", ["L6"]);
                 this.heapifyUp(curNode);
             } else {
+                //The condition is met so no further comparisons must be made.
                 this.queue.addCommand("highlightLine", ["L7"]);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'lightgreen']);
                 this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
                 this.queue.addCommand("highlightLine", ["L8"]);
             }
         } else {
+            //The root has been reached an no further comparisons must be made.
             this.queue.addCommand("highlightLine", ["L0"]);
             this.queue.addCommand("highlightLine", ["L1"]);
             this.queue.addCommand("highlightNode", [curNode.getId, 'white']);
         }
     }
 
+    //Compares two nodes.
+    //The result of the comparison depends on if the heap is a min heap or a max heap.
     checkCondition(n1, n2) {
         var conditionMet = true;
         if (this.getisMin) {
@@ -425,23 +419,27 @@ class BinaryHeap {
             } else {
                 conditionMet =false;
             }
-        }
-        
+        }        
         return conditionMet;
     }
 
+    //Checks if a value exists in the heap.
+    //Does not have the same property as a search tree so cannot be done efficiently
+    //All nodes must be searched
     checkExists(curNode, searchVal) {
         if (curNode.getId == searchVal) {
             return true;
         } else {
             var searchResult = false;
             if (curNode.getLeft != null) {
+                //Checks all nodes in the left subtree
                 var leftResult = this.checkExists(curNode.getLeft, searchVal);
                 if (leftResult) {
                     searchResult = true;
                 }
             }
             if (curNode.getRight != null) {
+                //Checks all nodes in the right subtree
                 var rightResult = this.checkExists(curNode.getRight, searchVal);
                 if (rightResult) {
                     searchResult = true;

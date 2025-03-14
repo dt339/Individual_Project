@@ -1,3 +1,4 @@
+//this class holds information for each animation function that must be executed.
 class Command {
     constructor(type, params) {
         this.type = type;
@@ -22,6 +23,8 @@ class Command {
 
 }
 
+//Holds the queue of animation function commands
+//Can then run them each sequentially with a delay to perform the animation produced by the logic of the data structure.
 class AnimQueue {
     constructor () {
         this.front = 0;
@@ -49,25 +52,28 @@ class AnimQueue {
         this.back = b;
     }
 
+    //Inserts a new command into the queue.
     addCommand(type, params) {
         let newCom = new Command(type, params);
         this.setBack = this.getBack + 1;
         this.getQueue.push(newCom);
-        //alert("added - " + type);
     }
 
+    //Runs each function in the queue sequentially with a delay.
     runCommands() {
-        var currentCommand = this.getQueue.shift();
-
-        if (currentCommand.getType!="highlightLine") {
-            //alert("curr - " + currentCommand.getType + " - " + currentCommand.getParams);
-        }
+        //Gets and removes the command at the front of the queue.
+        var currentCommand = this.getQueue.shift();        
         
-        
+        //Calls for the command to run the corresponding function in animationHandler
         this.exeCommand(currentCommand);
         this.setBack = this.getBack - 1;        
 
+        //Runs the next command in the queue if one exists.
+        //Waits a certain amount of time that is dependant on the speed of animation specified by the user.
         if (this.getBack != 0) {
+            //If the command is to highlight a line of pseudocode then
+            //A delay is only added if the pseudocode is visible.
+            //This ensures animation is fast when pseudocode is not showing.
             if (currentCommand.getType == "highlightLine") {
                 if (getIsShowing()) {
                     setTimeout(() => this.runCommands(), 15000/getAnimSpeed());
@@ -75,29 +81,20 @@ class AnimQueue {
                     this.runCommands();
                 }
             } else {
+                //Runs the next command as usual with a delay.
                 setTimeout(() => this.runCommands(), 15000/getAnimSpeed());
             }
             
-            // setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
-        } else {
-            //alert("Queue is empty");
-        }    
-
-        // if (this.getBack != 0) {
-        //     var currentCommand = this.getQueue.shift();
-        //     //alert("curr - " + currentCommand.getType);
-        //     this.exeCommand(currentCommand);
-        //     this.setBack = this.getBack - 1;
-        //     setTimeout(() => this.runCommands(), 10000/getAnimSpeed());
-
-        // } else {
-        //     alert("Queue is empty");
-        // }        
+            
+        }     
 
     }
 
+    //Runs the corresponding function of the given command
     exeCommand(com) {
         var paramArray = com.getParams;
+        //Finds the needed function
+        //Runs the function with the given parameters
         if (com.getType == "createRoot") {
             createRoot(paramArray[0], paramArray[0]);
         } else if (com.getType == "createNode") {     

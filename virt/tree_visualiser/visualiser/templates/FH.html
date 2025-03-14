@@ -7,7 +7,9 @@
 
 {% block content %}
 
-    <h1>Fibonacci Heap</h1>    
+    <h1>Fibonacci Heap</h1>  
+    <button id="insertInfo" class="infoButton" onclick="showInfo('FH', 'base')">Info!</button>
+    
     <div class="tree-canvas" id="treeBox">
         <canvas id="myCanvas" style="border:1px solid #000000;">
         </canvas>  
@@ -26,7 +28,7 @@
         <pre>
         Remove:
         <input id="nodeRemove" type="text">
-        <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove!</button> <button class="infoButton" onclick="showInfo('FH', 'insert')">Info!</button>
+        <button id="nodeRemoveButton" onclick="userRemoveNode()">Remove!</button> <button class="infoButton" onclick="showInfo('FH', 'remove')">Info!</button>
         </pre>
 
 
@@ -42,7 +44,6 @@
         <label>New Id: </label>               <input id="decreaseNodeValue" type="text">
         <button id="decreaseNodeButton" onclick="userDecreaseNode()">Decrease Value!</button> <button class="infoButton" onclick="showInfo('FH', 'decrease')">Info!</button>
         </pre>
-
 
         <pre class="sliderContainer">
         Change Animation Speed

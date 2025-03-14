@@ -13,6 +13,8 @@ class AVLTree {
         this.rootNode = r;
     }
 
+    //Performs a pre-order traversal on the tree.
+    //Used to get the current state of the tree for animation.
     traverse(node) {
         if (node != null) {
             return [node.getId, this.traverse(node.getLeft), this.traverse(node.getRight)];
@@ -21,27 +23,34 @@ class AVLTree {
         }
     }    
 
+    //Removes a node from the tree.
     remove(nodeVal, nodeArr) {
         this.queue.addCommand("highlightLine", ["L0"]);
 
         var toRemove = null;
 
+        //Searches for the node to be removed if the tree is not empty.
         if (this.getRoot!=null) {
             this.queue.addCommand("setProcess", ["search"]);
             toRemove = this.search(this.getRoot, nodeVal);
         }
         
+        //Stores the node that should be started at when checking the balance of the tree.
         var balanceStart = null;
 
         if (toRemove != null) {
             this.queue.addCommand("setProcess", ["remove"]);
             this.queue.addCommand("highlightLine", ["L1"]);
             this.queue.addCommand("highlightLine", ["L2"]);
+
             //If the removed node has no children.
             if (toRemove.getLeft == null && toRemove.getRight == null) {
+
+                //Sets the tree as empty if the removed node was the root.
                 if (this.getRoot.getId == toRemove.getId) {
                     this.setRoot = null;
                 } else {
+                    //Sets the parent of the node to have a null node in place of the removed node.
                     if (toRemove.getId > toRemove.getParent.getId) {
                         toRemove.getParent.setRight = null;
                     } else {
@@ -52,7 +61,6 @@ class AVLTree {
                 }
                 
                 this.queue.addCommand("removeNode", [toRemove.getId]);
-                //this.queue.addCommand("redrawTree", [this.getRoot, toRemove.getParent.getId]);
                 this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightLine", ["L4"]);
 
@@ -102,7 +110,6 @@ class AVLTree {
                 this.queue.addCommand("highlightLine", ["L5"]);
                 this.queue.addCommand("highlightLine", ["L6"]);
                 this.queue.addCommand("highlightNode", [successor.getId, "lightgreen"]);
-                // this.queue.addCommand("initMove", [successor, toRemove.getId]);
 
                 var parent = successor.getParent;
                 var lineParent = null;
@@ -159,15 +166,13 @@ class AVLTree {
                 this.queue.addCommand("highlightLine", ["L7"]);
                 this.queue.addCommand("highlightLine", ["L8"]);
                 this.queue.addCommand("highlightNode", [precessor.getId, "lightgreen"]);
-                // this.queue.addCommand("initMove", [precessor, toRemove.getId]);
 
                 var parent = precessor.getParent;
                 var lineParent = null;
                 if (parent!=null) {
                     lineParent = parent.getId;
                 }
-                this.queue.addCommand("initMoveArr", [precessor.getId, lineParent, toRemove.getId, this.traverse(precessor), precessor.calcDepth()]);
-                
+                this.queue.addCommand("initMoveArr", [precessor.getId, lineParent, toRemove.getId, this.traverse(precessor), precessor.calcDepth()]);                
                 this.queue.addCommand("highlightNode", [precessor.getId, "white"]);
             }
 
@@ -176,52 +181,57 @@ class AVLTree {
             this.queue.addCommand("removeNode", [toRemove.getId]);
             this.queue.addCommand("highlightLine", ["L9"]);
             this.queue.addCommand("setProcess", ["balance"]);
+
+            //Calls a function that checks if the tree is balanced after the operation.
             this.checkBalance(balanceStart);
+
             var arrayRep = this.traverse(this.getRoot);
             this.queue.addCommand("redrawFromArray", [arrayRep, null]);
-            // this.queue.addCommand("redrawTree", [this.getRoot, null]);
 
+            //Checks to see if there are any other values in the input to be removed.
+            //Allows for multiple operations in one input
             if (nodeArr.length > 1) {
+                //Removes the first value in the input
                 nodeArr.shift();
+                //Calls for the next value to be removed.
                 this.queue.addCommand("setProcess", ["remove"]);
                 this.remove(nodeArr[0], nodeArr);
             } else {
                 //Set process to none.
+                //Starts the animation.
                 this.queue.addCommand("setProcess", ["none"]);  
                 this.queue.runCommands();
             }
 
-
-            // this.queue.addCommand("setProcess", ["none"]);
-            // this.queue.runCommands();
         } else {
             this.queue.addCommand("highlightLine", ["L10"]);
             this.queue.addCommand("highlightLine", ["L11"]);
 
+            //Checks to see if there are any other values in the input to be removed.
+            //Allows for multiple operations in one input
             if (nodeArr.length > 1) {
+                //Removes the first value in the input
                 nodeArr.shift();
+                //Calls for the next value to be removed.
                 this.queue.addCommand("setProcess", ["remove"]);
                 this.remove(nodeArr[0], nodeArr);
             } else {
                 //Set process to none.
+                //Starts the animation.
                 this.queue.addCommand("setProcess", ["none"]);  
                 this.queue.runCommands();
             }
 
-            // this.queue.addCommand("setProcess", ["none"]);
-            // this.queue.runCommands();
-        }
-
-        
+        }        
     }
 
+    //Finds the largest node in the left subtree of initialNode
     getPrecessor(initialNode) {
+        //The largest node is the rightmost node, meaning it is the first node with no right child.
         this.queue.addCommand("highlightNode", [initialNode.getId, "lightblue"]);
-        //Finds the largest node in the left subtree of initialNode;
         if (initialNode.getRight == null) {
             this.queue.addCommand("highlightNode", [initialNode.getId, "lightgreen"]);
             this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
-            //alert("precessor - " + initialNode.getId);
             return initialNode;
         } else {
             this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
@@ -229,11 +239,11 @@ class AVLTree {
         }
     }   
 
+    //Finds the smallest node in the right subtree of initialNode.
     getSuccessor(initialNode) {        
-        this.queue.addCommand("highlightNode", [initialNode.getId, "lightblue"]);
-        //Finds the smallest node in the right subtree of initialNode;
+        //The smallesr node is the leftmonst node, meaning it is the first node with no left child.
+        this.queue.addCommand("highlightNode", [initialNode.getId, "lightblue"]);        
         if (initialNode.getLeft == null) {
-            //alert("precessor - " + initialNode.getId);
             this.queue.addCommand("highlightNode", [initialNode.getId, "lightgreen"]);
             this.queue.addCommand("highlightNode", [initialNode.getId, "white"]);
             return initialNode;
@@ -243,48 +253,60 @@ class AVLTree {
         }
     }
 
+    //Inserts a node into the tree.
     insert(nodeVal, nodeArr) {
-        // alert("nodearr - " + nodeArr)
+
+        //Creates a new node object to be inserted
         var newNode = new Node(parseInt(nodeVal, 10));
+
         this.queue.addCommand("highlightLine", ["L0"]);
+
+        //If the tree is empty, sets the root of the tree to be the new value.
         if (this.getRoot == null) {
             this.queue.addCommand("highlightLine", ["L1"]);
             this.queue.addCommand("highlightLine", ["L2"]);
-            //If the tree is empty, sets the root of the tree to be the new value.
+            
             this.setRoot = newNode;
             this.queue.addCommand("createRoot", [nodeVal]);
             this.queue.addCommand("highlightNode", [newNode.getId, "lightblue"]);
             this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
+            //Inserts the next value in the input list.
             if (nodeArr.length > 1) {
                 nodeArr.shift();
                 this.insert(nodeArr[0], nodeArr);
             } else {
                 //Set process to none.
+                //Begins the animation.
                 this.queue.addCommand("setProcess", ["none"]);  
                 this.queue.runCommands();
             }
 
+        //Finds the location to insert the node into if the tree is not empty.
         } else {
             this.queue.addCommand("highlightLine", ["L3"]);
+
+            //Inserts the node.
             this.recursiveInsert(newNode, this.getRoot, 1, nodeArr);
 
+            //Redraws the tree to fix any visual errors caused by animations.
             var arrayRep = this.traverse(this.getRoot);
             this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+
+            //Inserts the next value in the input list.
             if (nodeArr.length > 1) {
                 nodeArr.shift();
-                this.queue.addCommand("setProcess", ["insert"]);
                 this.insert(nodeArr[0], nodeArr);
             } else {
                 //Set process to none.
+                //Begins the animation.
                 this.queue.addCommand("setProcess", ["none"]);  
                 this.queue.runCommands();
             }
         }    
-
     }
 
-    
+    //Searches for the location to insert the new node into.
     recursiveInsert(newNode, curNode, depth, nodeArr) {
         this.queue.addCommand("highlightLine", ["L4"]);
         this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
@@ -295,7 +317,7 @@ class AVLTree {
         if (newNode.getId > curNode.getId) {
             this.queue.addCommand("highlightLine", ["L7"]);
             if (curNode.getRight == null) {
-                //inserts the node as the right child 
+                //Inserts the node as the right child of the current node.
                 curNode.setRight = newNode;
                 newNode.setParent = curNode;      
                           
@@ -307,11 +329,12 @@ class AVLTree {
                 this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
                 this.queue.addCommand("highlightNode", [newNode.getId, "white"]);
 
-                
+                //Checks the balance of the tree.
                 this.queue.addCommand("setProcess", ["balance"]);
                 this.checkBalance(newNode);  
 
-            } else {                
+            } else {   
+                //Searches the right child of the current node.             
                 this.queue.addCommand("highlightLine", ["L8"]);
                 this.queue.addCommand("highlightLine", ["L9"]);
 
@@ -321,7 +344,7 @@ class AVLTree {
         } else if (newNode.getId < curNode.getId) {
             this.queue.addCommand("highlightLine", ["L12"]);
             if (curNode.getLeft == null) {
-
+                //Inserts the node as the left child of the current node.
                 curNode.setLeft = newNode;
                 newNode.setParent = curNode;
 
@@ -338,6 +361,7 @@ class AVLTree {
                 
                 
             } else {
+                //Searches the left child of the current node.
                 this.queue.addCommand("highlightLine", ["L13"]);
                 this.queue.addCommand("highlightLine", ["L14"]);
 
@@ -345,8 +369,8 @@ class AVLTree {
                 this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr);
             }
         } else if (newNode.getId == curNode.getId) {
-            //Show node already exists.
-            alert("Value already exists in the tree");
+            //The node already exists in the tree and cannot be inserted.
+            //Nodes must be unique in order for the animation to function.
 
             this.queue.addCommand("highlightLine", ["L5"]);
             this.queue.addCommand("highlightLine", ["L6"]);
@@ -356,21 +380,23 @@ class AVLTree {
             this.queue.addCommand("setProcess", ["none"]);
 
         } else {
+            //The code should never reach here.
             alert("Something has gone wrong.");
         }
     }
 
+    //Searches for a specified value.
     search(currentNode, targetNode) {
         this.queue.addCommand("highlightLine", ["L1"]);
-
         this.queue.addCommand("highlightNode", [currentNode.getId, "lightblue"]);
+
+        //Compares the current node against the value being searched for
         if (targetNode == currentNode.getId) {
             this.queue.addCommand("highlightLine", ["L2"]);
             this.queue.addCommand("highlightLine", ["L3"]);
             this.queue.addCommand("highlightNode", [currentNode.getId, "lightgreen"]);
             this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
-            // this.queue.addCommand("setProcess", ["none"]);
-            // this.queue.runCommands();
+            //Returns the node that matches the value.
             return currentNode;
         } else if (targetNode > currentNode.getId) {
             this.queue.addCommand("highlightLine", ["L4"]);
@@ -378,14 +404,14 @@ class AVLTree {
                 this.queue.addCommand("highlightLine", ["L5"]);
                 this.queue.addCommand("highlightLine", ["L6"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+                //Searches the right subtree of the current node.
                 return this.search(currentNode.getRight, targetNode);
             } else {
+                //The node does not exist in the tree so searching stops.
                 this.queue.addCommand("highlightLine", ["L7"]);
                 this.queue.addCommand("highlightLine", ["L8"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "red"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
-                // this.queue.addCommand("setProcess", ["none"]);
-                // this.queue.runCommands();
                 return null;
             }
         } else if (targetNode < currentNode.getId) {
@@ -394,24 +420,27 @@ class AVLTree {
                 this.queue.addCommand("highlightLine", ["L10"]);
                 this.queue.addCommand("highlightLine", ["L11"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
+                //Searches the left subtree of the current node.
                 return this.search(currentNode.getLeft, targetNode);
             } else {
                 this.queue.addCommand("highlightLine", ["L12"]);
                 this.queue.addCommand("highlightLine", ["L13"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "red"]);
                 this.queue.addCommand("highlightNode", [currentNode.getId, "white"]);
-                // this.queue.addCommand("SetProcess", ["none"]);
-                // this.queue.runCommands();
+                //The node does not exist in the tree so searching stops.
                 return null;
             }
         }  
 
     }
 
+    //Performs a rotation on the specified node to balance that part of the tree.
     rebalance(targetNode, balanceFactor) {
-        //alert("Rebalance! - " + targetNode.getId);
+       
+        //Checks which direction of rotation is needed.
         if (balanceFactor > 1) {
             this.queue.addCommand("highlightLine", ["L2"]);
+
             //anticlockwise rotation
             var midNode = targetNode.getRight;
 
@@ -424,21 +453,18 @@ class AVLTree {
 
                 var bottomNode = midNode.getLeft;
                 this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'r', this.traverse(this.getRoot)]);
+                
+                //Changes the connections between nodes to prepare them for a rotation.
+                //Changes the bottom node to become the middle node.
 
-                //Set right child of A to be C
-                //Set parent of C to be A
                 targetNode.setRight = bottomNode;
                 bottomNode.setParent = targetNode;
-                
-                //Set left child of B to be Y
-                //Set parent of Y to be B
+                               
                 midNode.setLeft = bottomNode.getRight;
                 if (bottomNode.getRight != null) {
                     bottomNode.getRight.setParent = midNode;
                 }
 
-                //Set right child of C to be B
-                //Set parent of B to be C
                 bottomNode.setRight = midNode;
                 midNode.setParent = bottomNode;
 
@@ -446,8 +472,7 @@ class AVLTree {
                 this.queue.addCommand("highlightLine", ["L4"]);
                 this.queue.addCommand("highlightLine", ["L5"]);
                 
-                this.antiClockwiseRotation(targetNode, bottomNode);
-                
+                this.antiClockwiseRotation(targetNode, bottomNode);                
             }
 
 
@@ -456,47 +481,41 @@ class AVLTree {
             var midNode = targetNode.getLeft;
             this.queue.addCommand("highlightLine", ["L6"]);
             if (this.calculateHeight(midNode.getLeft) > this.calculateHeight(midNode.getRight)) {
+
                 //Regular rotation
                 this.queue.addCommand("highlightLine", ["L9"]);
                 this.clockwiseRotation(targetNode, midNode);
-
             } else {
-                //Special rotation
-                
+                //Special rotation                
                 var bottomNode = midNode.getRight;
                 this.queue.addCommand("preRotationAllignment", [midNode, bottomNode, 'l', this.traverse(this.getRoot)]);
 
-                //Set left child of A to be C
-                //Set parent of C to be A
+                //Changes the connections between nodes to prepare them for a rotation.
+                //Changes the bottom node to become the middle node.
                 targetNode.setLeft = bottomNode;
                 bottomNode.setParent = targetNode;
 
-                //Set right child of B to be Z
-                //Set parent of Z to be B 
                 midNode.setRight = bottomNode.getLeft;
                 if (bottomNode.getLeft != null) {
                     bottomNode.getLeft.setParent = midNode;
                 }
 
-                //Set parent of B to be C
-                //Set left child of C to be B
                 midNode.setParent = bottomNode;
                 bottomNode.setLeft = midNode;
 
                 this.queue.addCommand("highlightLine", ["L7"]);
                 this.queue.addCommand("highlightLine", ["L8"]);
                 this.queue.addCommand("highlightLine", ["L9"]);
-                this.clockwiseRotation(targetNode, bottomNode);
-                
+                this.clockwiseRotation(targetNode, bottomNode);                
             }
         }
         this.checkBalance(targetNode);
     }
 
+    //Performs a anticlockwise rotation on the specified nodes.
     antiClockwiseRotation(topNode, midNode) {
 
-        //Set right child of A to be X
-        //Set parent of X to be A
+        //Changes the connections of all nodes involved in the rotation.
         if (midNode.getLeft != null) {
             topNode.setRight = midNode.getLeft;
             midNode.getLeft.setParent = topNode;
@@ -504,8 +523,6 @@ class AVLTree {
             topNode.setRight= null;
         }
         
-        //Set parent of B to be parent of A
-        //Set child of parent of A to be B
         if (this.getRoot.getId == topNode.getId) {
             this.setRoot = midNode;
             midNode.setParent = null;
@@ -518,38 +535,30 @@ class AVLTree {
             midNode.setParent = topNode.getParent;
         }
 
-        //Set left child of B to be A
-        //Set parent of A to be B
         midNode.setLeft = topNode;
         topNode.setParent = midNode;
 
-        
-        // this.queue.addCommand("redrawTree", [this.getRoot, midNode.getId]); 
-        //this.queue.addCommand("swap", [topNode.getId, midNode.getId]);  
-        //this.queue.addCommand("recMove", [midNode, midNode.calcDepth()+1]); 
+        //Calls the necessary animation functions to show the rotation accurately.
         this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), midNode.getId]);
-        this.queue.addCommand("recMoveArr", [this.traverse(midNode), midNode.calcDepth()+1]); 
-        
+        this.queue.addCommand("recMoveArr", [this.traverse(midNode), midNode.calcDepth()+1]);         
 
         var parent = midNode.getParent;
         if (parent != null) {
-            //this.queue.addCommand("recMove", [parent, parent.calcDepth()]);
             this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), parent.getId]);
             this.queue.addCommand("recMoveArr", [this.traverse(parent), parent.calcDepth()]);
         } else {
-            // this.queue.addCommand("moveToRoot", [midNode]);
             this.queue.addCommand("moveToRootArray", [this.traverse(midNode)]);
             
         }
 
         var arrayRep = this.traverse(this.getRoot);
         this.queue.addCommand("redrawFromArray", [arrayRep, null]);
-        // this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 
+    //Performs a clockwise rotation on the specified nodes.
     clockwiseRotation(topNode, midNode) {
 
-        //Creates the connection between the top node and the right child of the mid node.
+        //Changes the connections of all nodes involved in the rotation.
         if (midNode.getRight != null) {
             topNode.setLeft = midNode.getRight;
             midNode.getRight.setParent = topNode;
@@ -557,12 +566,10 @@ class AVLTree {
             topNode.setLeft = null;
         }
 
-        //If the top node is the root then it changes the root to be the middle node.
         if (this.getRoot.getId == topNode.getId) {
             this.setRoot = midNode;
             midNode.setParent = null;
         } else {
-            //Sets the child of the parent of the top node to be the middle node.
             if(topNode.getId < topNode.getParent.getId) {
                 topNode.getParent.setLeft = midNode;
             } else {
@@ -571,39 +578,33 @@ class AVLTree {
             midNode.setParent = topNode.getParent;
         }
         
-        //Creates the new connection between the top and mid nodes.
         midNode.setRight = topNode;
         topNode.setParent = midNode;
 
-        // this.queue.addCommand("redrawTree", [this.getRoot, midNode.getId]); 
-        // this.queue.addCommand("swap", [topNode.getId, midNode.getId]);
-        // this.queue.addCommand("recMove", [midNode, midNode.calcDepth()+1]);
+        //Calls the necessary animation functions to show the rotation accurately.
         this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), midNode.getId]);
         this.queue.addCommand("recMoveArr", [this.traverse(midNode), midNode.calcDepth()+1]);
 
         var parent = midNode.getParent;
         if (parent != null) {
-            // this.queue.addCommand("recMove", [parent, parent.calcDepth()]);
             this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), parent.getId]);
             this.queue.addCommand("recMoveArr", [this.traverse(parent), parent.calcDepth()]);
         } else {
-            // this.queue.addCommand("moveToRoot", [midNode]);
             this.queue.addCommand("moveToRootArray", [this.traverse(midNode)]);
         }
 
-
         var arrayRep = this.traverse(this.getRoot);
         this.queue.addCommand("redrawFromArray", [arrayRep, null]);
-        // this.queue.addCommand("redrawTree", [this.getRoot, midNode]);
     }
 
+    //Moves up the tree from a starting node and checks the balance of each one.
+    //If an unbalanced node is found then it is balanced.
     checkBalance(curNode) {
         var curBalance = this.calculateBalance(curNode);
         this.queue.addCommand("highlightLine", ["L0"]);
         this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
         if (curBalance > 1 || curBalance <-1) {
-            //UNBALANCED
-            //alert("unbalanced - " + curNode.getId);
+            //The node is unalanced and must be balanced.
             this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
             this.rebalance(curNode, curBalance);
@@ -612,6 +613,8 @@ class AVLTree {
             this.queue.addCommand("highlightNode", [curNode.getId, "lightgreen"]);
             this.queue.addCommand("highlightLine", ["L11"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
+
+            //Checks the balance of the parent of the current node if one exists.
             if (curNode.getParent != null) {
                 this.queue.addCommand("highlightLine", ["L14"]);
                 this.queue.addCommand("highlightLine", ["L15"]);
@@ -619,40 +622,19 @@ class AVLTree {
             } else {
                 this.queue.addCommand("highlightLine", ["L12"]);
                 this.queue.addCommand("highlightLine", ["L13"]);
+                //The tree has been checked and must be balanced.
             }
             
         }
-
-
-
-        // if (curNode == null) {
-        //     //No imbalance
-        //     alert("5");
-        // } else {
-        //     var curBalance = this.calculateBalance(curNode);
-        //     //this.queue.addCommand("highlightLine", ["L0"]);
-        //     this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
-        //     if (curBalance > 1 || curBalance <-1) {
-        //         //UNBALANCED
-        //         alert("unbalanced - " + curNode.getId);
-        //         this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
-        //         this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-        //         this.rebalance(curNode, curBalance);
-        //     } else {
-        //         this.queue.addCommand("highlightLine", ["L10"]);
-        //         this.queue.addCommand("highlightNode", [curNode.getId, "lightgreen"]);
-        //         this.queue.addCommand("highlightLine", ["L11"]);
-        //         this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-        //         this.checkBalance(curNode.getParent);
-        //     }
-        // }
     }
 
+    //Calculates the balance of the given node.
     calculateBalance(checkNode) {
         var balanceFactor = this.calculateHeight(checkNode.getRight) - this.calculateHeight(checkNode.getLeft);
         return balanceFactor;
     }
 
+    //Calculates the height of the given node.
     calculateHeight(checkNode) {
         if(checkNode == null) {
             return -1;

@@ -344,7 +344,7 @@ function setCurrProcess(p) {
         } else if (p == "deleteFixup") {
             currProcess = RBDeleteFixupProcess;
         } else {
-            alert("what")
+            alert("An error has occured")
         }
         setInputFields(false);
     }
