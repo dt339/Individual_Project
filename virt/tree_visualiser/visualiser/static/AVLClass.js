@@ -116,7 +116,7 @@ class AVLTree {
                 if (parent!=null) {
                     lineParent = parent.getId;
                 }
-                this.queue.addCommand("initMoveArr", [successor.getId, lineParent, toRemove.getId, this.traverse(successor), successor.calcDepth()]);
+                this.queue.addCommand("initMove", [successor.getId, lineParent, toRemove.getId, this.traverse(successor), successor.calcDepth()]);
 
                 this.queue.addCommand("highlightNode", [successor.getId, "white"]);
 
@@ -172,7 +172,7 @@ class AVLTree {
                 if (parent!=null) {
                     lineParent = parent.getId;
                 }
-                this.queue.addCommand("initMoveArr", [precessor.getId, lineParent, toRemove.getId, this.traverse(precessor), precessor.calcDepth()]);                
+                this.queue.addCommand("initMove", [precessor.getId, lineParent, toRemove.getId, this.traverse(precessor), precessor.calcDepth()]);                
                 this.queue.addCommand("highlightNode", [precessor.getId, "white"]);
             }
 
@@ -186,7 +186,7 @@ class AVLTree {
             this.checkBalance(balanceStart);
 
             var arrayRep = this.traverse(this.getRoot);
-            this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+            this.queue.addCommand("redrawTree", [arrayRep, null]);
 
             //Checks to see if there are any other values in the input to be removed.
             //Allows for multiple operations in one input
@@ -291,7 +291,7 @@ class AVLTree {
 
             //Redraws the tree to fix any visual errors caused by animations.
             var arrayRep = this.traverse(this.getRoot);
-            this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+            this.queue.addCommand("redrawTree", [arrayRep, null]);
 
             //Inserts the next value in the input list.
             if (nodeArr.length > 1) {
@@ -539,20 +539,20 @@ class AVLTree {
         topNode.setParent = midNode;
 
         //Calls the necessary animation functions to show the rotation accurately.
-        this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), midNode.getId]);
-        this.queue.addCommand("recMoveArr", [this.traverse(midNode), midNode.calcDepth()+1]);         
+        this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), midNode.getId]);
+        this.queue.addCommand("recMove", [this.traverse(midNode), midNode.calcDepth()+1]);         
 
         var parent = midNode.getParent;
         if (parent != null) {
-            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), parent.getId]);
-            this.queue.addCommand("recMoveArr", [this.traverse(parent), parent.calcDepth()]);
+            this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), parent.getId]);
+            this.queue.addCommand("recMove", [this.traverse(parent), parent.calcDepth()]);
         } else {
-            this.queue.addCommand("moveToRootArray", [this.traverse(midNode)]);
+            this.queue.addCommand("moveToRoot", [this.traverse(midNode)]);
             
         }
 
         var arrayRep = this.traverse(this.getRoot);
-        this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+        this.queue.addCommand("redrawTree", [arrayRep, null]);
     }
 
     //Performs a clockwise rotation on the specified nodes.
@@ -582,19 +582,19 @@ class AVLTree {
         topNode.setParent = midNode;
 
         //Calls the necessary animation functions to show the rotation accurately.
-        this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), midNode.getId]);
-        this.queue.addCommand("recMoveArr", [this.traverse(midNode), midNode.calcDepth()+1]);
+        this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), midNode.getId]);
+        this.queue.addCommand("recMove", [this.traverse(midNode), midNode.calcDepth()+1]);
 
         var parent = midNode.getParent;
         if (parent != null) {
-            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), parent.getId]);
-            this.queue.addCommand("recMoveArr", [this.traverse(parent), parent.calcDepth()]);
+            this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), parent.getId]);
+            this.queue.addCommand("recMove", [this.traverse(parent), parent.calcDepth()]);
         } else {
-            this.queue.addCommand("moveToRootArray", [this.traverse(midNode)]);
+            this.queue.addCommand("moveToRoot", [this.traverse(midNode)]);
         }
 
         var arrayRep = this.traverse(this.getRoot);
-        this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+        this.queue.addCommand("redrawTree", [arrayRep, null]);
     }
 
     //Moves up the tree from a starting node and checks the balance of each one.

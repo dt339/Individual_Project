@@ -209,7 +209,7 @@ class BinaryHeap {
             this.heapifyDown(this.getRoot);
             this.queue.addCommand("setProcess", ["none"])
             this.queue.runCommands();
-            this.queue.addCommand("redrawFromArray", [this.traverse(this.getRoot), null]);
+            this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), null]);
         }
         
     }

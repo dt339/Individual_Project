@@ -257,7 +257,7 @@ class BSTTree {
 
                 if (this.getRoot!=null) {
                     var arrayRep = this.traverse(this.getRoot);
-                    this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+                    this.queue.addCommand("redrawTree", [arrayRep, null]);
                 }
 
                 this.queue.addCommand("highlightLine", ["L3"]);
@@ -285,7 +285,7 @@ class BSTTree {
                 if (parent!=null) {
                     lineParent = parent.getId;
                 }
-                this.queue.addCommand("initMoveArr", [nodeToRem.getRight.getId, lineParent, nodeToRem.getId, this.traverse(nodeToRem.getRight), nodeToRem.getRight.calcDepth()]);
+                this.queue.addCommand("initMove", [nodeToRem.getRight.getId, lineParent, nodeToRem.getId, this.traverse(nodeToRem.getRight), nodeToRem.getRight.calcDepth()]);
 
                 //Deletes the node from the user's view.
                 this.queue.addCommand("removeNode", [removeVal]);                         
@@ -294,7 +294,7 @@ class BSTTree {
                 // this.queue.addCommand("redrawTree", [this.getRoot, nodeToRem.getRight]);
 
                 var arrayRep = this.traverse(this.getRoot);
-                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+                this.queue.addCommand("redrawTree", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L5"]);
                 this.queue.addCommand("highlightLine", ["L6"]);
@@ -322,7 +322,7 @@ class BSTTree {
                 if (parent!=null) {
                     lineParent = parent.getId;
                 }
-                this.queue.addCommand("initMoveArr", [nodeToRem.getLeft.getId, lineParent, nodeToRem.getId, this.traverse(nodeToRem.getLeft), nodeToRem.getLeft.calcDepth()]);
+                this.queue.addCommand("initMove", [nodeToRem.getLeft.getId, lineParent, nodeToRem.getId, this.traverse(nodeToRem.getLeft), nodeToRem.getLeft.calcDepth()]);
 
                 //Deletes the node from the user's view.
                 this.queue.addCommand("removeNode", [removeVal]);                  
@@ -330,7 +330,7 @@ class BSTTree {
                 //Redraws the tree so there are no unecessary branches.
                 // this.queue.addCommand("redrawTree", [this.getRoot, null]);
                 var arrayRep = this.traverse(this.getRoot);
-                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+                this.queue.addCommand("redrawTree", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L5"]);
                 this.queue.addCommand("highlightLine", ["L6"]);
@@ -382,7 +382,7 @@ class BSTTree {
                 if (parent!=null) {
                     lineParent = parent.getId;
                 }
-                this.queue.addCommand("initMoveArr", [maxNode.getId, lineParent, nodeToRem.getId, this.traverse(maxNode), maxNode.calcDepth()]);
+                this.queue.addCommand("initMove", [maxNode.getId, lineParent, nodeToRem.getId, this.traverse(maxNode), maxNode.calcDepth()]);
 
                 //Removes the visual representation of the removed node.
                 this.queue.addCommand("removeNode", [removeVal]);  
@@ -390,7 +390,7 @@ class BSTTree {
                 //Redraws the tree to remove any unecessary brances.
                 // this.queue.addCommand("redrawTree", [this.getRoot, maxNode]);
                 var arrayRep = this.traverse(this.getRoot);
-                this.queue.addCommand("redrawFromArray", [arrayRep, null]);
+                this.queue.addCommand("redrawTree", [arrayRep, null]);
 
                 this.queue.addCommand("highlightLine", ["L7"]);
                 this.queue.addCommand("highlightLine", ["L8"]);

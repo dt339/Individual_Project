@@ -163,7 +163,7 @@ class CDLinkedList {
     get(e) {
         if (this.getHead!=null) {
             var curElem = this.getHead;
-            var toOutput = null;
+            var toOutput = null; 
             var finished = false;
 
             while (!finished) {
@@ -396,7 +396,7 @@ class FibonacciHeap {
                         this.recursiveCut(parent);
                         // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
                         var currentState = this.rootList.getState();
-                        this.queue.addCommand("allignFromList", [currentState]);  
+                        this.queue.addCommand("allignFib", [currentState]);  
                    
                     }
                 }
@@ -482,7 +482,7 @@ class FibonacciHeap {
             this.changeNumOfNodes(-1);
 
             var currentState = this.rootList.getState();
-            this.queue.addCommand("allignFromList", [currentState]);  
+            this.queue.addCommand("allignFib", [currentState]);  
 
             this.setMinNode = this.rootList.findMin();
 
@@ -561,7 +561,7 @@ class FibonacciHeap {
         this.queue.addCommand("highlightLine", ["L8"]);
         // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
         var currentState = this.rootList.getState();
-        this.queue.addCommand("allignFromList", [currentState]);  
+        this.queue.addCommand("allignFib", [currentState]);  
         this.setMinNode = this.rootList.findMin();
     }
 
@@ -577,7 +577,7 @@ class FibonacciHeap {
         
         var currentState = this.rootList.getState();
 
-        this.queue.addCommand("allignFromList", [currentState]);   
+        this.queue.addCommand("allignFib", [currentState]);   
 
         // this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);   
     }

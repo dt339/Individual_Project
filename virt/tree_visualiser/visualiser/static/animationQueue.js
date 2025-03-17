@@ -121,20 +121,20 @@ class AnimQueue {
             updateId(paramArray[0], paramArray[1]);
         } else if (com.getType=="preRotationAllignment") {
             clearCanvas();  
-            redrawTreeFromArray(paramArray[3], paramArray[1].getId);
+            redrawTree(paramArray[3], paramArray[1].getId);
             preRotationAllignment(paramArray[0], paramArray[1], paramArray[2]);
-        } else if (com.getType=="allignFromList") {
+        } else if (com.getType=="allignFib") {
             clearCanvas();
-            allignFromList(paramArray[0]);
-        } else if (com.getType=="redrawFromArray") {
+            allignFib(paramArray[0]);
+        } else if (com.getType=="redrawTree") {
             clearCanvas();
-            redrawTreeFromArray(paramArray[0], paramArray[1]);
-        } else if (com.getType=="recMoveArr") {
-            recursiveMoveArray(paramArray[0], paramArray[1]);
-        } else if (com.getType == "initMoveArr") {
-            initMoveArray(paramArray[0], paramArray[1], paramArray[2], paramArray[3], paramArray[4]);
-        } else if (com.getType == "moveToRootArray") {
-            moveToRootArray(paramArray[0]);
+            redrawTree(paramArray[0], paramArray[1]);
+        } else if (com.getType=="recMove") {
+            recursiveMove(paramArray[0], paramArray[1]);
+        } else if (com.getType == "initMove") {
+            initMove(paramArray[0], paramArray[1], paramArray[2], paramArray[3], paramArray[4]);
+        } else if (com.getType == "moveToRoot") {
+            moveToRoot(paramArray[0]);
         }
         
         

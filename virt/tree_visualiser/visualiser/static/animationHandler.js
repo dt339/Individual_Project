@@ -1,6 +1,6 @@
 //Moves a node to a specified location.
 //Then moves the child subtrees of that node to the correct positions.
-function initMoveArray(movingNode, parentNode, destinationNode, movingArr, movingDepth=1) {
+function initMove(movingNode, parentNode, destinationNode, movingArr, movingDepth=1) {
 
     //Gets the html elements for the canvas and the nodes being moves.
     const cont = document.getElementById('treeBox');
@@ -49,7 +49,7 @@ function initMoveArray(movingNode, parentNode, destinationNode, movingArr, movin
                 //This function prevents them.
                 fixPosition(movingNode, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                recursiveMoveArray(movingArr, movingDepth);
+                recursiveMove(movingArr, movingDepth);
                 //Creates a new branch between the moved node and its parent.
 
                 if (parentNode!=null) {
@@ -73,7 +73,7 @@ function initMoveArray(movingNode, parentNode, destinationNode, movingArr, movin
                 //This function prevents them.
                 fixPosition(movingNode, destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                recursiveMoveArray(movingArr, movingDepth);
+                recursiveMove(movingArr, movingDepth);
                 //Creates a new branch between the moved node and its parent.
                 if (parentNode!=null) {
                     drawLine(parentNode, movingNode);
@@ -92,7 +92,7 @@ function initMoveArray(movingNode, parentNode, destinationNode, movingArr, movin
 }
 
 //Moves all nodes from a starting node to their correct position relative to their parents
-function recursiveMoveArray(curArr, depth=1) {
+function recursiveMove(curArr, depth=1) {
     //Gets the html element of the parent node that has just been moved.
     const movedNode = document.getElementById(curArr[0]);
     const movedNodePos = movedNode.getBoundingClientRect();
@@ -144,7 +144,7 @@ function recursiveMoveArray(curArr, depth=1) {
                     //To move any children of the newly moved node.
                     var tempDepth = depth;
                     tempDepth++;
-                    recursiveMoveArray(curArr[1], tempDepth);
+                    recursiveMove(curArr[1], tempDepth);
                 } else {
                     xPosL+=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
@@ -162,7 +162,7 @@ function recursiveMoveArray(curArr, depth=1) {
                     //To move any children of the newly moved node.
                     var tempDepth = depth;
                     tempDepth++;
-                    recursiveMoveArray(curArr[1], tempDepth);
+                    recursiveMove(curArr[1], tempDepth);
                 } else {
                     xPosL-=xIncrementL;
                     toMoveL.style.left = xPosL + "px";
@@ -213,7 +213,7 @@ function recursiveMoveArray(curArr, depth=1) {
                     //To move any children of the newly moved node.
                     var tempDepth = depth;
                     tempDepth++;
-                    recursiveMoveArray(curArr[2], tempDepth);
+                    recursiveMove(curArr[2], tempDepth);
                 } else {
                     xPos+=xIncrement;
                     toMove.style.left = xPos + "px";
@@ -231,7 +231,7 @@ function recursiveMoveArray(curArr, depth=1) {
                     //To move any children of the newly moved node.
                     var tempDepth = depth;
                     tempDepth++;
-                    recursiveMoveArray(curArr[2], tempDepth);
+                    recursiveMove(curArr[2], tempDepth);
                 } else {
                     xPos-=xIncrement;
                     toMove.style.left = xPos + "px";
@@ -245,7 +245,7 @@ function recursiveMoveArray(curArr, depth=1) {
 
 //Moves the secified node to the root position.
 //Used when rotations leave the root position empty.
-function moveToRootArray(toMoveArr) {
+function moveToRoot(toMoveArr) {
     
     //Gets the html elements for the canvas and the nodes being moves.
     const cont = document.getElementById('treeBox');
@@ -293,7 +293,7 @@ function moveToRootArray(toMoveArr) {
                 //This function prevents them.
                 fixPosition(toMoveArr[0], destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                recursiveMoveArray(toMoveArr);
+                recursiveMove(toMoveArr);
             } else {
                 //Moves the node html element by a small amount
                 xPos+=xIncrement;
@@ -311,7 +311,7 @@ function moveToRootArray(toMoveArr) {
                 //This function prevents them.
                 fixPosition(toMoveArr[0], destX, destY);
                 //Calls a function to move any nodes connected to the moved node.
-                recursiveMoveArray(toMoveArr);
+                recursiveMove(toMoveArr);
                 
             } else {
                 //Moves the node html element by a small amount
@@ -375,17 +375,17 @@ function updateId(toUpdate, newVal) {
 
 //Redraws the tree until a specified node is found.
 //Can be used for any tree type due to it using an array to draw lines from.
-function redrawTreeFromArray(curArray, stopNode) {
+function redrawTree(curArray, stopNode) {
     if (curArray[0]!=stopNode) {        
         //Draws a line from the current node to its left child.
         if (curArray[1] != null) {
             drawLine(curArray[0], curArray[1][0]);
-            redrawTreeFromArray(curArray[1], stopNode);
+            redrawTree(curArray[1], stopNode);
         }        
         //Draws a line from the current node to its right child.
         if (curArray[2] != null) {
             drawLine(curArray[0], curArray[2][0]);
-            redrawTreeFromArray(curArray[2], stopNode);
+            redrawTree(curArray[2], stopNode);
         }
     }
 } 
@@ -586,13 +586,13 @@ function addFibRoot(rootId, rootArr) {
     
     clearCanvas();
     ///Calls a function to move all roots to their new correct positions.
-    allignFromList(rootArr);
+    allignFib(rootArr);
     // allignAll(rootArr);
 }
 
 //Moves a node to its correct position.
 //Then moves all connected nodes to their correct position relative to the moved node.
-function allignFromList(curArr, parent=null, posArea=null) {
+function allignFib(curArr, parent=null, posArea=null) {
     const containerDiv = document.getElementById('treeBox');
     const containerPos = containerDiv.getBoundingClientRect();
 
@@ -637,13 +637,13 @@ function allignFromList(curArr, parent=null, posArea=null) {
             }
             
             //Moves the current node.
-            listMove(curArr[i][0], initX, initY, destX, destY, parent, spacing, curArr, i);  
+            moveFibNode(curArr[i][0], initX, initY, destX, destY, parent, spacing, curArr, i);  
         }
     }
 }
 
 //Performs the movement for nodes in a fibonacci heap
-function listMove(toMove, initPosX, initPosY, destX, destY, parent, spacing, curArr, i) {
+function moveFibNode(toMove, initPosX, initPosY, destX, destY, parent, spacing, curArr, i) {
     //Sets up movement info.
     var id = null;
     var elem = document.getElementById(toMove);
@@ -680,7 +680,7 @@ function listMove(toMove, initPosX, initPosY, destX, destY, parent, spacing, cur
                     drawLine(parent, toMove);
                 }
                 //Moves all children of the moves node to the correct position.
-                allignFromList(curArr[i][1],toMove, spacing);
+                allignFib(curArr[i][1],toMove, spacing);
             } else {
                 xPos+=xIncrement;
                 elem.style.left = xPos + "px";
@@ -702,7 +702,7 @@ function listMove(toMove, initPosX, initPosY, destX, destY, parent, spacing, cur
                     //If the moved node is not a root.  
                     drawLine(parent, toMove);
                 }
-                allignFromList(curArr[i][1],toMove, spacing);
+                allignFib(curArr[i][1],toMove, spacing);
             } else {
                 xPos-=xIncrement;
                 elem.style.left = xPos + "px";

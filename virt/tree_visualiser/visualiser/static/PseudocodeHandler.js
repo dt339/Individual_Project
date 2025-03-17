@@ -434,35 +434,3 @@ function unHighlightAll() {
         codeLine.style.backgroundColor = "lightcyan";
     }
 }
-
-//#region dragging
-
-let isDragging = false;
-let offsetX = null;
-let offsetY = null;
-
-
-
-codeBox.addEventListener("mousedown", (e) => {
-    isDragging = true;
-    draggable.style.cursor = "grabbing";
-
-    offsetX = e.clientX - draggable.offsetLeft;
-    offsetY = e.clientY - draggable.offsetTop;
-});
-
-document.addEventListener("mousemove", (e) => {
-    if (isDragging) {
-        draggable.style.left = e.clientX - offsetX + "px";
-        draggable.style.top = e.clientY - offsetY + "px";
-
-    }
-});
-
-document.addEventListener("mouseup", () => {
-    alert(codeBox);
-    isDragging = false;
-    draggable.style.cursor = "grab";
-})
-
-//#endregion

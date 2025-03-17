@@ -1,3 +1,4 @@
+//Holds the data for each piece of information.
 class infoStructure {
     constructor(title,timeComp, block) {
         this.title = title;
@@ -18,6 +19,7 @@ class infoStructure {
     }
 }
 
+//Sets the data for each piece of information
 var BSTbase = new infoStructure("BINARY SEARCH TREE", "", ["Data is stored in a hierarchal structure where each node is connected to up to two nodes in a parent-child relationship.", "- Each left child of a node N must have a key less than that of N.", "- Each right child of N must have a key greater than that of N.", "This property is utilised for all of its operations."]);
 var BSTinsert = new infoStructure("INSERTION", "O(N)", ["Nodes are compared against the new value starting from the root until an empty position is found for the new node to be inserted into."]);
 var BSTremove = new infoStructure("REMOVAL", "O(N)", ["The specified value is searched for and if found it is removed and replaced by its precessor if possible."])
@@ -89,27 +91,30 @@ function getProcessInfo(structure, process) {
     alert(info);
 }  
 
+//Shows a specified piece of information about a process or structure.
 function showInfo(structure, process) {
     if (!infoIsShowing) {
         infoIsShowing=true;
 
+        //Gets the data
         var d = structureDictionary[structure];
         var info = d[process];
 
+        //Creates the info box
         const infoBox = document.createElement('div');
         infoBox.className="infoBox";
         infoBox.id = "infoBox";
 
-        // Create the title
+        //Create the title
         const title = document.createElement('h1');
         title.textContent = info.getTitle;
         infoBox.appendChild(title);
 
+        //Creates an element for the time complexity 
         if (info.getTimeComp!="") {
             const timeComplexityLabel = document.createElement('div');
             timeComplexityLabel.textContent = "Worst-Case Time Complexity:";
     
-            // Create the time complexity
             const timeComplexity = document.createElement('h1');
             timeComplexity.textContent = info.getTimeComp;
 
@@ -117,8 +122,8 @@ function showInfo(structure, process) {
             infoBox.appendChild(timeComplexity);
         }
 
+        //Creates an HTML element for each line of text in the description
         for (line in info.getBlock) {
-            // Create the text block
             const textBlock = document.createElement('p');
             textBlock.textContent = info.getBlock[line];
             infoBox.appendChild(textBlock);
@@ -128,6 +133,7 @@ function showInfo(structure, process) {
         const textBlock = document.createElement('p');
         textBlock.textContent = info.getBlock;
 
+        //Adds a close button
         const closeButton = document.createElement('Button');
         closeButton.textContent = "Close";
         closeButton.addEventListener('click', () => {closeInfo()});
