@@ -12,14 +12,6 @@ class RedBlackTree {
         this.rootNode = r;
     }
 
-    lmaolmao() {
-        alert(this.getRoot.getId + " - " + this.getRoot.getRight);
-    }
-
-    asdf() {
-        alert("root: " + this.getRoot.getId + " - left: " + this.getRoot.getLeft.getId + " - right: " + this.getRoot.getRight.getId);
-    }
-
     traverse(node) {
         if (node != null) {
             if (node.getIsNull) {
@@ -34,6 +26,8 @@ class RedBlackTree {
     search(curNode, toFind) {
         if (curNode.getIsNull==false) {
             this.queue.addCommand("highlightBorder", [curNode.getId, "blue"]);
+        } else {
+            return null;
         }
         if (curNode.getParent!=null) {
             this.queue.addCommand("highlightBorder", [curNode.getParent.getId, "black"]);

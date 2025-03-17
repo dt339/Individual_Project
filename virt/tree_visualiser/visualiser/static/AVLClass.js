@@ -387,6 +387,9 @@ class AVLTree {
 
     //Searches for a specified value.
     search(currentNode, targetNode) {
+        if (currentNode == null) {
+            return null;
+        }
         this.queue.addCommand("highlightLine", ["L1"]);
         this.queue.addCommand("highlightNode", [currentNode.getId, "lightblue"]);
 

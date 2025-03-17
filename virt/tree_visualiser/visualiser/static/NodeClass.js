@@ -7,7 +7,6 @@ class Node {
     }
 
     //getters and setters for node values
-
     get getLeft() {
         return this.left;
     }
@@ -36,6 +35,7 @@ class Node {
         this.parent = parentId;
     }
 
+    //Calculates the depth of the node by traversing upwards through the tree.
     calcDepth() {
         var curNode = this;
         var depth = 0;
@@ -43,11 +43,13 @@ class Node {
             depth++;
             curNode=curNode.getParent;
         }
-        //alert(this.getId + " = " + depth);
         return depth;
     }
 }
 
+
+//Specialised form of the node class for red-black trees
+//Holds the colour and isNull values for each node
 class RedBlackNode extends Node {
     constructor(id, red, isNull) {
         super(id);        
@@ -73,6 +75,8 @@ class RedBlackNode extends Node {
 
 }
 
+//A specialised node for fibonacci heaps
+//Stores the degree of a node and the marked attribute.
 class FibonacciNode {
     constructor(id) {
         this.id = id;

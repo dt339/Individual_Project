@@ -368,44 +368,48 @@ class FibonacciHeap {
         var check = this.search(this.rootList.getAll("node") ,newVal);
         
         var toDecrease = this.search(this.rootList.getAll("node") ,nodeId);
-        //alert("to decrease - " + toDecrease)
+        alert("past search")
 
         if (check != null) {
             alert("A node already exists with the new value.")
         } else {
-            if (newVal > toDecrease.getId) {
-                this.queue.addCommand("highlightLine", ["L7"]);
-                this.queue.addCommand("highlightLine", ["L8"]);
-                alert("New value greater than node's current value");
-            } else {
-                this.queue.addCommand("highlightLine", ["L0"]);
-                this.queue.addCommand("highlightLine", ["L1"]);
-                this.queue.addCommand("highlightNode", [toDecrease.getId, "red"] );
-                this.queue.addCommand("updateId", [toDecrease.getId, newVal] );
-                toDecrease.setId = newVal;
-                
-                var parent = toDecrease.getParent;
-                if (parent != null) {
-                    this.queue.addCommand("highlightLine", ["L2"]);
-                    if (toDecrease.getId < parent.getId) {
-                        this.queue.addCommand("highlightLine", ["L3"]);
-                        this.queue.addCommand("highlightLine", ["L4"]);
-                        this.queue.addCommand("highlightLine", ["L5"]);
-                        
-                        this.cut(toDecrease, parent);
-                        this.recursiveCut(parent);
-                        // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
-                        var currentState = this.rootList.getState();
-                        this.queue.addCommand("allignFib", [currentState]);  
-                   
+            if (toDecrease != null) {
+                if (newVal > toDecrease.getId) {
+                    this.queue.addCommand("highlightLine", ["L7"]);
+                    this.queue.addCommand("highlightLine", ["L8"]);
+                    alert("New value greater than node's current value");
+                } else {
+                    this.queue.addCommand("highlightLine", ["L0"]);
+                    this.queue.addCommand("highlightLine", ["L1"]);
+                    this.queue.addCommand("highlightNode", [toDecrease.getId, "red"] );
+                    this.queue.addCommand("updateId", [toDecrease.getId, newVal] );
+                    toDecrease.setId = newVal;
+                    
+                    var parent = toDecrease.getParent;
+                    if (parent != null) {
+                        this.queue.addCommand("highlightLine", ["L2"]);
+                        if (toDecrease.getId < parent.getId) {
+                            this.queue.addCommand("highlightLine", ["L3"]);
+                            this.queue.addCommand("highlightLine", ["L4"]);
+                            this.queue.addCommand("highlightLine", ["L5"]);
+                            
+                            this.cut(toDecrease, parent);
+                            this.recursiveCut(parent);
+                            // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+                            var currentState = this.rootList.getState();
+                            this.queue.addCommand("allignFib", [currentState]);  
+                       
+                        }
                     }
+                    this.queue.addCommand("highlightNode", [toDecrease.getId, "white"] );
                 }
-                this.queue.addCommand("highlightNode", [toDecrease.getId, "white"] );
-            }     
+                this.queue.addCommand("highlightLine", ["L6"]);
+                this.checkMinNode(toDecrease);
+            }
+                 
         }
 
-        this.queue.addCommand("highlightLine", ["L6"]);
-        this.checkMinNode(toDecrease);
+ 
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }

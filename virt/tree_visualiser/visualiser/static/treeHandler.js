@@ -1,10 +1,7 @@
 let newTree = null;
 
-// const path = window.location.pathname;
-// const currentPage = path.split('/').filter(Boolean).pop();
-
+//Gets the current tree being visualised from the page name.
 var thisPage = getTreeType();
-//alert(thisPage);
 if (thisPage == "BST") {
     newTree = new BSTTree();
 } else if (thisPage == "AVL") {
@@ -17,30 +14,12 @@ if (thisPage == "BST") {
     newTree = new FibonacciHeap();
 }
 
-function getName() {
-    //newTree.getTreeName();
-    var num =  2;
-    var bin = num.toString(2);
-    alert(bin);
-
-}
-
+//Changes the binary heap between a min heap and a max heap.
 function changeHeapType() {
     newTree.changeIsMin();
 }
 
-function displayTree() {
-    alert("Please");
-    let bill = newTree.traverse(newTree.getRoot);
-    alert(bill);
-}
-
-function qwert() {
-    alert("Please");
-    let bill = newTree.traverse(newTree.getRoot);
-    alert(bill);
-}
-
+//Handles input data for inserting a node.
 function userInputNode() {
     //Reads the value of the input field.
     var inVal = document.getElementById("nodeInsert").value;
@@ -94,6 +73,7 @@ function userInputNode() {
     document.getElementById("nodeInsert").value = '';
 }
 
+//handles input data for removing a node.
 function userRemoveNode() {
     if (thisPage=="BH") {
         newTree.remove();   
@@ -143,19 +123,6 @@ function userRemoveNode() {
                     newTree.remove(intInput, [intInput]);          
                 }
             }
-
-
-            // //Checks that the entered value is a number.
-            // if (isNaN(inVal))
-            // {
-            //     alert("Must input numbers!");
-            // } else {
-            //     //Sets the current process.
-            //     var intInput = parseInt(inVal, 10);  
-            //     setCurrProcess("remove");  
-            //     //Calls the removal function. 
-            //     newTree.remove(intInput);     
-            // }
         }
         //Empties the input field.
         document.getElementById("nodeRemove").value = '';
@@ -163,6 +130,7 @@ function userRemoveNode() {
     
 }
 
+//Handles input data for decreasing the key of a node.
 function userDecreaseNode() {
     //Reads the input field.
     var inId = document.getElementById("decreaseNodeId").value;
@@ -198,26 +166,14 @@ function userDecreaseNode() {
     
 }
 
+//Removes the minimum value from the strcuture.
+//No user input needed
 function userRemoveMin() {
     setCurrProcess("removeMin");  
     newTree.removeMin();
 }
 
-function lmao() {
-    const elem = document.createElement('p');
-    elem.id = 1;
-    elem.className = "codeLine";
-    elem.textContent = "bILL";
-
-    const parentDiv = document.getElementById('codePanel');
-
-    parentDiv.appendChild(elem);
-}
-
-function myFunction() {
-    alert('Hello');
-}
-
+//Handles user input for searching for a node
 function userSearchNode() {
     //Reads the input field.
     var inVal = document.getElementById("nodeSearch").value;
@@ -245,15 +201,4 @@ function userSearchNode() {
     }
     //Empties the input field.
     document.getElementById("nodeSearch").value = '';
-}
-
-function myFun(test) {
-    document.getElementById("bill").innerHTML = test;
-}
-
-function callRedraw() {
-    // recursiveMove(newTree.getRoot);
-    // clearCanvas();
-    redrawTree(newTree.getRoot, null);
-
 }

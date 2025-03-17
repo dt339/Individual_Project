@@ -172,6 +172,9 @@ class BSTTree {
     }
 
     search(curNode, searchNode) {
+        if (curNode == null) {
+            return null;
+        }
         this.queue.addCommand("highlightLine", ["L1"]);
         this.queue.addCommand("highlightNode", [curNode.getId, "lightblue"]);
         if (curNode.getParent) {

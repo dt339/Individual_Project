@@ -59,12 +59,13 @@ function resizeCanvas() {
     treeBox.offsetHeight = window.innerHeight *0.9;
     ctx.canvas.width  = window.innerWidth *0.9;
     ctx.canvas.height = window.innerHeight * 0.9;
-
-    //callRedraw();
 }
 
+
+//Prevents the user from starting a new process while one is already in action.
 function setInputFields(toEnable) {
     if (toEnable) {
+        //Allows the user to start a new operation by enabling the input fields.
         var insertButton = document.getElementById("nodeInsertButton");
         insertButton.disabled = false;
         
@@ -85,6 +86,7 @@ function setInputFields(toEnable) {
             
         }
     } else {
+        //Prevents the user from starting a new operation by disabling the input fields.
         var insertButton = document.getElementById("nodeInsertButton");
         insertButton.disabled = true;
         

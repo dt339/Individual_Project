@@ -1,5 +1,4 @@
 //Stores the lines of pseudocode for the different processes.
-//CHANGE TO FILE OR SOMETHING
 const noneProcess = ["No current process!"];
 
 const bSTSearchProcess = [
@@ -110,7 +109,6 @@ var binaryHeapRemove = [
     "Remove Minimum Node",
     "Perform heap order priority check downwards on the heap"];
     
-//Use if removing root and replacing it with lower node
 var minHeapifyDown = [
     "If current node C has one child Then",
     "  If C > the only child of C Then",
@@ -266,11 +264,6 @@ const RBDeleteFixupProcess = [
     "     Set the opposite child of S to black",
     "     Rotate around P",
     ];
-        
-        
-
-// const fr = new FileReader();
-// const filePath = new F
 
 var currProcess = noneProcess;
 var codeBox = null;
@@ -281,8 +274,7 @@ var searchProcess = null;
 var insertProcess = null;
 var removeProcess = null;
 
-// const path = window.location.pathname;
-// const currentPage = path.split('/').filter(Boolean).pop();
+//Sets the basic operations of each structure to have their correspponding pseudocode.
 var curPage = getTreeType();
 if (curPage == "BST") {
     searchProcess = bSTSearchProcess;
@@ -306,7 +298,7 @@ if (curPage == "BST") {
     removeProcess = FHRemoveProcess;
 }
 
-//alert(removeProcess);
+
 
 function setCurrProcess(p) {
     
@@ -315,7 +307,6 @@ function setCurrProcess(p) {
         emptyBox();
     }
     
-    //Stores the new current process.
     //Stores the new current process.
     if (p == "none") {
         currProcess = noneProcess;
@@ -355,8 +346,13 @@ function setCurrProcess(p) {
     
 }
 
+//Returns the current process.
 function getCurrProcess() {
     return currProcess;
+}
+
+function getIsShowing() {
+    return isShowing;
 }
 
 function showCodeBox() {
@@ -381,16 +377,13 @@ function showCodeBox() {
     isShowing = true;
 }
 
+//Removes the box from the scene.
 function hideCodeBox() {
-    //Removes the box from the scene.
-
     codeBox.style.visibility = "hidden";
     isShowing = false;
 }
 
-function getIsShowing() {
-    return isShowing;
-}
+
 
 function fillCodeBox() {
 
