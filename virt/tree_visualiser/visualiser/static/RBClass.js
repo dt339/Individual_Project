@@ -272,6 +272,7 @@ class RedBlackTree {
         this.queue.addCommand("highlightLine", ["L0"]);
         var toRemove = null;
         if (this.getRoot.getIsNull==false) {
+            this.queue.addCommand("setProcess", ["search"]);
             toRemove = this.search(this.getRoot, removeVal);      
         }  
         
@@ -511,7 +512,7 @@ class RedBlackTree {
             if (tempParent!=null) {
                 lineParent = tempParent.getId;
             }
-            this.queue.addCommand("initMove", [child.getId, lineParent, parent.getId, this.traverse(child), child.calcDepth()]);
+            this.queue.addCommand("initMove", [child.getId, lineParent, parent.getId, this.traverse(child), child.calcDepth()+1]);
         }
     }
 
@@ -563,7 +564,7 @@ class RedBlackTree {
         if (parent != null) {
             // this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
             this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), parent.getId]);
-            this.queue.addCommand("recMove", [this.traverse(parent), parent.calcDepth()+1]); 
+            this.queue.addCommand("recMove", [this.traverse(parent), parent.calcDepth()]); 
         } else {
             // this.queue.addCommand("moveToRoot", [child]);
             this.queue.addCommand("moveToRoot", [this.traverse(child)]);
@@ -620,7 +621,7 @@ class RedBlackTree {
         if (parent != null) {
             // this.queue.addCommand("RBRecMove", [parent, parent.calcDepth()]);
             this.queue.addCommand("redrawTree", [this.traverse(this.getRoot), parent.getId]);
-            this.queue.addCommand("recMove", [this.traverse(parent), parent.calcDepth()+1]); 
+            this.queue.addCommand("recMove", [this.traverse(parent), parent.calcDepth()]); 
         } else {
             // this.queue.addCommand("moveToRoot", [child]);
             this.queue.addCommand("moveToRoot", [this.traverse(child)]);

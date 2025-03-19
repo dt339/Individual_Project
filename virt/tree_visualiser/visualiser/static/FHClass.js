@@ -368,7 +368,6 @@ class FibonacciHeap {
         var check = this.search(this.rootList.getAll("node") ,newVal);
         
         var toDecrease = this.search(this.rootList.getAll("node") ,nodeId);
-        alert("past search")
 
         if (check != null) {
             alert("A node already exists with the new value.")

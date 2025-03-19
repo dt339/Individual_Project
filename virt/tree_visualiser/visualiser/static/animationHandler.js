@@ -376,18 +376,21 @@ function updateId(toUpdate, newVal) {
 //Redraws the tree until a specified node is found.
 //Can be used for any tree type due to it using an array to draw lines from.
 function redrawTree(curArray, stopNode) {
-    if (curArray[0]!=stopNode) {        
-        //Draws a line from the current node to its left child.
-        if (curArray[1] != null) {
-            drawLine(curArray[0], curArray[1][0]);
-            redrawTree(curArray[1], stopNode);
-        }        
-        //Draws a line from the current node to its right child.
-        if (curArray[2] != null) {
-            drawLine(curArray[0], curArray[2][0]);
-            redrawTree(curArray[2], stopNode);
+    if (curArray!=null) {
+        if (curArray[0]!=stopNode) {        
+            //Draws a line from the current node to its left child.
+            if (curArray[1] != null) {
+                drawLine(curArray[0], curArray[1][0]);
+                redrawTree(curArray[1], stopNode);
+            }        
+            //Draws a line from the current node to its right child.
+            if (curArray[2] != null) {
+                drawLine(curArray[0], curArray[2][0]);
+                redrawTree(curArray[2], stopNode);
+            }
         }
     }
+ 
 } 
 
 //Creates a new html element at the root position.

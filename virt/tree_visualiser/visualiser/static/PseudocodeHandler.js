@@ -71,11 +71,11 @@ const aVLBalanceProcess = [
     "Check current node N",
     "Calculate the balance factor of N",
     "If the balance factor of N > 1 Then",
-    "  If the right child R of N and the right child of R are not alligned Then",
+    "  If the right child R of N and the right child of R are not aligned Then",
     "     Perform a clockwise rotation",
     "  Perform an anticlockwise rotation",
     "Else if the balance factor of N < -1 Then",
-    "  If the left child L of N and the left child of L are not alligned Then",
+    "  If the left child L of N and the left child of L are not aligned Then",
     "     Perform a anticlockwise rotation",
     "  Perform an clockwise rotation",
     "Else if the balance factor of N < 1 and > -1 Then",
@@ -100,12 +100,12 @@ const aVLRemoveProcess = [
     "  R does not exist so cannot be removed"];
 
 const binaryHeapInsert = [
-    "Insert node at next availlable position",
-    "Next availlable position is the next empty space on the lowest depth going left to right",
+    "Insert node at next available  position",
+    "Next available  position is the next empty space on the lowest depth going left to right",
     "Then check heap order priority upwards from the new node"];
     
 var binaryHeapRemove = [
-    "Swap the mininum node with the node in the most recently inserted position",
+    "Swap the minimum node with the node in the most recently inserted position",
     "Remove Minimum Node",
     "Perform heap order priority check downwards on the heap"];
     
@@ -141,7 +141,7 @@ var minHeapifyUp = [
     "     Take no further action"];
 
 const FHInsertProcess = [
-    "Create a node N with the gievn value",
+    "Create a node N with the given value",
     "Insert N into the root list",
     "If the root list was empty Then",
     "   Set N as the minimum node",

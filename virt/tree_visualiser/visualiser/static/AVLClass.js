@@ -60,9 +60,9 @@ class AVLTree {
                     
                 }
                 
-                this.queue.addCommand("removeNode", [toRemove.getId]);
                 this.queue.addCommand("highlightLine", ["L3"]);
                 this.queue.addCommand("highlightLine", ["L4"]);
+                
 
             //If the removed node has only a right child.
             } else if (toRemove.getLeft == null && toRemove.getRight != null) {
@@ -183,7 +183,10 @@ class AVLTree {
             this.queue.addCommand("setProcess", ["balance"]);
 
             //Calls a function that checks if the tree is balanced after the operation.
-            this.checkBalance(balanceStart);
+            if (balanceStart!=null) {
+                this.checkBalance(balanceStart);
+            }
+            
 
             var arrayRep = this.traverse(this.getRoot);
             this.queue.addCommand("redrawTree", [arrayRep, null]);

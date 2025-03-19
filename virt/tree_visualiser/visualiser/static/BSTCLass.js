@@ -13,10 +13,7 @@ class BSTTree {
         this.rootNode = r;
     }
 
-    getTreeName() {
-        alert("I'm a BST");
-    }
-
+    //Gets the current state of the tree through pre-order traversal
     traverse(curNode) {
         if (curNode != null) {
             return [curNode.getId, this.traverse(curNode.getLeft), this.traverse(curNode.getRight)];                 
@@ -25,6 +22,7 @@ class BSTTree {
         }
     }
 
+    //Inserts a value into the tree
     insert(newNodeVal, nodeArr) {
         //Creates a new node from the value given.
         var newNode = new Node(parseInt(newNodeVal, 10));
@@ -56,6 +54,7 @@ class BSTTree {
 
     }
 
+    //Traverses the tree to insert the new value into the tree into its correct position
     recursiveInsert(newNode, curNode, depth, nodeArr) {
 
         //Highlights the current node and un-highlights the previous node
@@ -127,7 +126,6 @@ class BSTTree {
             } else {
                 //If a left child exists, compare the new node and the left child.
                 depth++;
-                //this.recursiveInsert(newNode, curNode.getLeft, depth);
                 this.queue.addCommand("highlightLine", ["L10"]);
                 this.recursiveInsert(newNode, curNode.getLeft, depth, nodeArr)
             }
@@ -171,6 +169,7 @@ class BSTTree {
         }
     }
 
+    //Searches for a value by traversing the tree.
     search(curNode, searchNode) {
         if (curNode == null) {
             return null;
@@ -186,8 +185,6 @@ class BSTTree {
             this.queue.addCommand("highlightLine", ["L3"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "lime"]);
             this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-            // this.queue.addCommand("setProcess", ["none"]);
-            // this.queue.runCommands();
             return curNode;
         } else {
             if (searchNode>curNode.getId) {
@@ -197,8 +194,6 @@ class BSTTree {
                     this.queue.addCommand("highlightLine", ["L8"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-                    // this.queue.addCommand("setProcess", ["none"]);
-                    // this.queue.runCommands();
                     return null;
                 } else {
                     this.queue.addCommand("highlightLine", ["L5"]);
@@ -212,8 +207,6 @@ class BSTTree {
                     this.queue.addCommand("highlightLine", ["L13"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "red"]);
                     this.queue.addCommand("highlightNode", [curNode.getId, "white"]);
-                    // this.queue.addCommand("setProcess", ["none"]);
-                    // this.queue.runCommands();
                     return null;
                 } else {
                     this.queue.addCommand("highlightLine", ["L10"]);
@@ -224,6 +217,7 @@ class BSTTree {
         }
     }
 
+    //Removes a node from the tree
     remove(removeVal, nodeArr) {
         this.queue.addCommand("highlightLine", ["L0"]);   
 
@@ -255,9 +249,6 @@ class BSTTree {
                 //Deletes the node from the user's view.
                 this.queue.addCommand("removeNode", [removeVal]);                
 
-                //Redraws the tree so that there are no unecessary branches.
-                // this.queue.addCommand("redrawTree", [this.getRoot, null]);
-
                 if (this.getRoot!=null) {
                     var arrayRep = this.traverse(this.getRoot);
                     this.queue.addCommand("redrawTree", [arrayRep, null]);
@@ -280,9 +271,6 @@ class BSTTree {
                 }
                 nodeToRem.getRight.setParent = nodeToRem.getParent;
 
-                //Calls a function to visually move nodes to be in the correct position.
-                // this.queue.addCommand("initMove", [nodeToRem.getRight, nodeToRem.getId]);
-
                 var parent = nodeToRem.getRight.getParent;
                 var lineParent = null;
                 if (parent!=null) {
@@ -293,9 +281,6 @@ class BSTTree {
                 //Deletes the node from the user's view.
                 this.queue.addCommand("removeNode", [removeVal]);                         
                 
-                //Redraws the tree so there are no unecessary branches.
-                // this.queue.addCommand("redrawTree", [this.getRoot, nodeToRem.getRight]);
-
                 var arrayRep = this.traverse(this.getRoot);
                 this.queue.addCommand("redrawTree", [arrayRep, null]);
 
@@ -317,9 +302,6 @@ class BSTTree {
                 
                 nodeToRem.getLeft.setParent = nodeToRem.getParent;
 
-                //Calls a function to visually move nodes to be in the correct position.
-                // this.queue.addCommand("initMove", [nodeToRem.getLeft, nodeToRem.getId]);
-
                 var parent = nodeToRem.getLeft.getParent;
                 var lineParent = null;
                 if (parent!=null) {
@@ -331,7 +313,6 @@ class BSTTree {
                 this.queue.addCommand("removeNode", [removeVal]);                  
                 
                 //Redraws the tree so there are no unecessary branches.
-                // this.queue.addCommand("redrawTree", [this.getRoot, null]);
                 var arrayRep = this.traverse(this.getRoot);
                 this.queue.addCommand("redrawTree", [arrayRep, null]);
 
@@ -377,9 +358,6 @@ class BSTTree {
                     }        
                 }
 
-                //Calls a function to visualy move all necessary nodes.
-                // this.queue.addCommand("initMove", [maxNode, nodeToRem.getId]);
-
                 var parent = maxNode.getParent;
                 var lineParent = null;
                 if (parent!=null) {
@@ -391,7 +369,6 @@ class BSTTree {
                 this.queue.addCommand("removeNode", [removeVal]);  
                 
                 //Redraws the tree to remove any unecessary brances.
-                // this.queue.addCommand("redrawTree", [this.getRoot, maxNode]);
                 var arrayRep = this.traverse(this.getRoot);
                 this.queue.addCommand("redrawTree", [arrayRep, null]);
 
@@ -415,12 +392,8 @@ class BSTTree {
             this.queue.addCommand("setProcess", ["none"]);
             this.queue.runCommands();
         }
-        // this.queue.addCommand("setProcess", ["none"]);
-        // this.queue.runCommands();
 
-    }
-
-    
+    }   
 
 }
 

@@ -62,7 +62,9 @@ class AnimQueue {
     //Runs each function in the queue sequentially with a delay.
     runCommands() {
         //Gets and removes the command at the front of the queue.
-        var currentCommand = this.getQueue.shift();        
+        var currentCommand = this.getQueue.shift(); 
+        
+        // alert("cur command - " + currentCommand.getType)
         
         //Calls for the command to run the corresponding function in animationHandler
         this.exeCommand(currentCommand);
