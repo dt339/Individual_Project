@@ -1,4 +1,5 @@
 class CDLLNode {
+    //Stores the node of a linked list for the fibonacci heap
     constructor(n) {
         this.heldNode = n;
         this.leftPointer = null;
@@ -52,10 +53,13 @@ class CDLinkedList {
         this.length = l;
     }
 
+    //Adjusts the length variable by a given amount.
     chnangeLength(changeValue) {
         this.setLength = this.getLength + changeValue;
     }
 
+    //Returns the current arrangement of the heap in an array of arrays.
+    //Used for animations
     getState() {
         if (this.getHead!=null) {
             var curElem = this.getHead;
@@ -63,6 +67,7 @@ class CDLinkedList {
             var finished = false;
 
             while (!finished) {
+                //Adds the elements first then its child list as an array second
                 var thisTuple = [curElem.getHeldNode.getId, curElem.getHeldNode.getChildList.getState()];
                 curState.push(thisTuple);
                 curElem = curElem.getRightPointer;
@@ -160,13 +165,16 @@ class CDLinkedList {
         }
     }
 
+    //Searches for a specified value in the root list.
     get(e) {
         if (this.getHead!=null) {
             var curElem = this.getHead;
             var toOutput = null; 
             var finished = false;
 
+            //Loops through the current list of nodes
             while (!finished) {
+                //Checks the current node
                 if (curElem.getHeldNode.getId==e) {
                     toOutput = curElem.getHeldNode;
                     finished=true;
@@ -281,6 +289,7 @@ class FibonacciHeap {
         
     }
 
+    //Searches for a value in the entire root list
     search(curArr, nodeVal) {
         //Takes in the current list to be searched and the value to search for.
         //Performs depth first search.
@@ -315,6 +324,7 @@ class FibonacciHeap {
         }
     }
 
+    //Inserts a new value into the heap
     insert(nodeVal, nodeArr) {
         this.queue.addCommand("setProcess", ["insert"]);
         if (nodeVal > 0) {
@@ -325,12 +335,13 @@ class FibonacciHeap {
             //Inserts the new node into the root list
             this.rootList.insertElement(newNode);
             this.changeNumOfNodes(1);
-            // this.rootList.print();
+
             this.queue.addCommand("highlightLine", ["L0"]);
             this.queue.addCommand("highlightLine", ["L1"]);
             //Rearranges the display the include the new inserted element
             this.queue.addCommand("addFibRoot", [nodeVal, this.rootList.getState()]);    
 
+            //Updates the minimum node
             if (this.getMinNode==null) {
                 this.queue.addCommand("highlightLine", ["L2"]);
                 this.queue.addCommand("highlightLine", ["L3"]);
@@ -360,13 +371,12 @@ class FibonacciHeap {
             this.queue.runCommands();
         }
 
-        // this.queue.addCommand("setProcess", ["none"]);
-        // this.queue.runCommands();
     }
 
+    //Decreases the key of a specified node
     decrease(nodeId, newVal) {
-        var check = this.search(this.rootList.getAll("node") ,newVal);
-        
+        //Searches for the specified node and checks to see if any other node has a key value that matches the new decreased value.
+        var check = this.search(this.rootList.getAll("node") ,newVal);        
         var toDecrease = this.search(this.rootList.getAll("node") ,nodeId);
 
         if (check != null) {
@@ -387,6 +397,9 @@ class FibonacciHeap {
                     var parent = toDecrease.getParent;
                     if (parent != null) {
                         this.queue.addCommand("highlightLine", ["L2"]);
+
+                        //Removes the node from its parent and adds it to the root list
+                        //If necessary
                         if (toDecrease.getId < parent.getId) {
                             this.queue.addCommand("highlightLine", ["L3"]);
                             this.queue.addCommand("highlightLine", ["L4"]);
@@ -406,9 +419,7 @@ class FibonacciHeap {
                 this.checkMinNode(toDecrease);
             }
                  
-        }
-
- 
+        } 
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }
@@ -423,6 +434,7 @@ class FibonacciHeap {
         curNode.setMarked = false;
     }
 
+    //Removes the mode from its parents child list of it is marked
     recursiveCut(curNode) {
         var parent = curNode.getParent;
         if (parent != null) {
@@ -435,8 +447,8 @@ class FibonacciHeap {
         }
     }
 
+    //Removes a node from the heap
     remove(nodeVal) {
-
         var toRemove = this.search(this.rootList.getAll("node"), nodeVal);
         if (toRemove!=null) {
             this.queue.addCommand("highlightLine", ["L0"]);
@@ -461,6 +473,7 @@ class FibonacciHeap {
         this.queue.runCommands();
     }
 
+    //Removes the minimum value from the rootlist
     removeMin() {
         var toRemove = this.getMinNode;
         if (toRemove!= null) {
@@ -505,13 +518,12 @@ class FibonacciHeap {
             this.queue.addCommand("highlightLine", ["L8"]);
         }
         
-        this.rootList.print();
         this.queue.addCommand("setProcess", ["none"]);
         this.queue.runCommands();
     }
 
-    consolidate() {
-        
+    //Merges all nodes in the root list so no two nodes have the same degree value
+    consolidate() {        
         this.queue.addCommand("setProcess", ["FHConsolidate"]);
         //Creates an array with the length equal to the number of nodes in the heap.
         //Each position in the array is initialised to null
@@ -562,14 +574,14 @@ class FibonacciHeap {
         }
         this.queue.addCommand("highlightLine", ["L7"]);
         this.queue.addCommand("highlightLine", ["L8"]);
-        // this.queue.addCommand("allignAll", [this.rootList.getAll("node")]);
+        
         var currentState = this.rootList.getState();
         this.queue.addCommand("allignFib", [currentState]);  
         this.setMinNode = this.rootList.findMin();
     }
 
+    //Joins two nodes together
     joinRoots(smallNode, largeNode) {
-        //this.queue.addCommand("allignRoots", [this.rootList.getAll("node")]);
         //Removes the larger root from the root list
         this.rootList.removeElement(largeNode.getId);
         //Adds the larger root to the child list of the smaller root
@@ -581,8 +593,6 @@ class FibonacciHeap {
         var currentState = this.rootList.getState();
 
         this.queue.addCommand("allignFib", [currentState]);   
-
-        // this.queue.addCommand("allignChildren", [smallNode, this.rootList.getAll("node")]);   
     }
 
 }

@@ -299,7 +299,6 @@ if (curPage == "BST") {
 }
 
 
-
 function setCurrProcess(p) {
     
     //Removes previous lines from box.
@@ -355,10 +354,9 @@ function getIsShowing() {
     return isShowing;
 }
 
+//Creates a new code box if it has not been previously shown.
+//Shows the code box if it already exists.
 function showCodeBox() {
-    //Creates a new code box if it has not been previously shown.
-    //Shows the code box if it already exists.
-
     if (codeBox == null) {
         codeBox = document.createElement('div');
         codeBox.id = 'codePanel';
@@ -384,7 +382,7 @@ function hideCodeBox() {
 }
 
 
-
+//Fills the box with each line of code for the current process
 function fillCodeBox() {
 
     //Runs through the current process that is stored as an array of lines of code.
@@ -399,13 +397,13 @@ function fillCodeBox() {
     }
 }
 
+//Removes all lines of code from the box
 function emptyBox() {
-    //Runs through the current process and removes each line.
     codeBox.textContent = "PseudoCode:";
-
     currHigh = "L0";
 }
 
+//Highlights a specified line of pseudocode
 function highlightLine(x) {
     if (codeBox != null) {
         //Unhighlights the previously highlighted line of code.
@@ -420,8 +418,8 @@ function highlightLine(x) {
     }
 }
 
+//Unhighlights all lines of code.
 function unHighlightAll() {
-    //Unhighlights all lines of code.
     for (line in currProcess) {
         var codeLine = document.getElementById(line);
         codeLine.style.backgroundColor = "lightcyan";

@@ -63,9 +63,7 @@ class AnimQueue {
     runCommands() {
         //Gets and removes the command at the front of the queue.
         var currentCommand = this.getQueue.shift(); 
-        
-        // alert("cur command - " + currentCommand.getType)
-        
+                
         //Calls for the command to run the corresponding function in animationHandler
         this.exeCommand(currentCommand);
         this.setBack = this.getBack - 1;        
